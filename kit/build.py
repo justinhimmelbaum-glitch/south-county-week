@@ -30,10 +30,67 @@ then writes the page and prints counts as JSON.
 """
 import json, re, sys, glob, os, difflib, unicodedata, hashlib
 
-CITIES = {"boca raton": "Boca Raton", "boca": "Boca Raton", "west boca": "Boca Raton", "west boca raton": "Boca Raton",
+CITIES = {"highland beach": "Boca Raton", "gulf stream": "Delray Beach", "gulfstream": "Delray Beach","boca raton": "Boca Raton", "boca": "Boca Raton", "west boca": "Boca Raton", "west boca raton": "Boca Raton",
           "delray beach": "Delray Beach", "delray": "Delray Beach",
           "boynton beach": "Boynton Beach", "boynton": "Boynton Beach"}
-FIELDS = ["title", "date", "end_date", "time", "city", "venue", "address", "category", "price", "url", "source", "desc"]
+FIELDS = ["title", "date", "end_date", "time", "city", "venue", "address", "category", "price", "url", "source", "desc", "image"]
+SECTIONS = ("main", "civic", "library", "bar_weekly")
+CIVIC = re.compile(r"\b(commission|council|board|committee|cra\b|planning|zoning|advisory|workshop meeting|public hearing|town hall meeting)\b", re.I)
+BARW = re.compile(r"\b(trivia|karaoke|bingo|open mic|taco tuesday|happy hour|wing night|ladies night|industry night)\b", re.I)
+LIBADULT = re.compile(r"\b(computer|tech help|esl|english conversation|language exchange|quilt|crochet|knit|mahjong|book club|homework help|resume|genealogy|tax help|citizenship|canva|excel|iphone|ipad|3d print|chess club|writers|meditation|chair yoga|tai chi)\b", re.I)
+
+
+def section_of(e, given):
+    if given in SECTIONS:
+        return given
+    t = f"{e['title']} {e['venue']}"
+    if e["category"] == "Community & Civic" and CIVIC.search(e["title"]):
+        return "civic"
+    if "kids" not in e.get("tags", []) and re.search(r"librar", t + " " + e["source"], re.I) and (LIBADULT.search(e["title"]) or e["category"] in ("Classes & Talks", "Other")):
+        return "library"
+    if BARW.search(e["title"]) and e["category"] in ("Nightlife", "Food & Drink", "Music", "Other") and not e.get("end_date"):
+        return "bar_weekly"
+    return "main"
+
+
+def ages_of(e, given):
+    if "kids" not in e.get("tags", []):
+        return []
+    a = [x for x in (given or []) if x in ("baby", "kid", "teen")]
+    if a:
+        return sorted(set(a))
+    t = (e["title"] + " " + e["desc"]).lower()
+    if re.search(r"\b(baby|babies|toddler|tots?|lapsit|preschool|pre-k|ages? [0-3]\b|0-5|birth|newborn|prenatal|childbirth|breastfeed|postpartum|mommy|music together|little ones)\b", t):
+        a.append("baby")
+    if re.search(r"\b(teen|tween|middle school|high school|ages? 1[1-8])\b", t):
+        a.append("teen")
+    if not a or re.search(r"\b(kids|children|family|families|ages? [4-9]|elementary|santa|storytime)\b", t):
+        a.append("kid")
+    return sorted(set(a))
+
+
+def vslug(v):
+    t = unicodedata.normalize("NFKD", v or "").encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z0-9]+", "-", t).strip("-")[:48]
+
+
+CAT_W = {"Holiday": 3, "Festivals & Markets": 3, "Music": 2, "Arts & Theater": 2, "Charity & Galas": 1, "Food & Drink": 1}
+
+
+def score_of(e, pick_ids):
+    s = 0.0
+    if e["id"] in pick_ids:
+        s += 50
+    s += 4 * len(e.get("also", []))
+    m = re.search(r"([\d,]+) people interested", e.get("desc", ""))
+    if m:
+        s += min(20, int(m.group(1).replace(",", "")) / 40)
+    s += CAT_W.get(e["category"], 0)
+    if e.get("end_date"):
+        s -= 2
+    if e.get("section") != "main":
+        s -= 10
+    return round(s, 1)
 STOP = {"the", "a", "an", "at", "in", "of", "and", "&", "with", "presents", "live", "event", "2026", "boca", "raton",
         "delray", "beach", "boynton", "fl", "florida"}
 
@@ -73,7 +130,7 @@ def extract(page, out):
     h = open(page, encoding="utf-8").read()
     m = re.search(r"/\*__DATA__\*/(.*?)/\*__END__\*/", h, re.S)
     d = json.loads(m.group(1).replace("<\\/", "</"))
-    evs = [{k: e.get(k, "") for k in FIELDS + ["tags"]} for e in d["events"]]
+    evs = [{k: e.get(k, "") for k in FIELDS + ["tags", "section", "ages"] if k in e or k in FIELDS} for e in d["events"]]
     json.dump(evs, open(out, "w"), ensure_ascii=False, indent=0)
     print(json.dumps({"extracted": len(evs), "range": [d.get("range_start"), d.get("range_end")],
                       "picks": d.get("picks", [])}))
@@ -118,8 +175,10 @@ def main():
             if not isinstance(e, dict):
                 continue
             given = e.get("tags") if isinstance(e.get("tags"), list) else []
+            gsec, gages = e.get("section"), e.get("ages") if isinstance(e.get("ages"), list) else []
             e = {k: str(e.get(k) or "").strip() for k in FIELDS}
             e["tags"] = tag(e, given)
+            e["_gsec"], e["_gages"] = gsec, gages
             city = CITIES.get(e["city"].lower())
             if re.search(r"\b(cancel+ed|postponed)\b", e["title"] + " " + e["time"], re.I):
                 bad += 1
@@ -168,6 +227,9 @@ def main():
             hi = max(hit["end_date"] or hit["date"], e["end_date"] or e["date"])
             hit["date"], hit["end_date"] = lo, (hi if hi > lo else "")
             hit["tags"] = sorted(set(hit.get("tags", [])) | set(e.get("tags", [])))
+            hit["_gages"] = sorted(set(hit.get("_gages") or []) | set(e.get("_gages") or []))
+            if hit.get("_gsec") in (None, "", "main") and e.get("_gsec") in SECTIONS:
+                hit["_gsec"] = e["_gsec"]
             for k in FIELDS:
                 if not hit.get(k) and e.get(k):
                     hit[k] = e[k]
@@ -185,9 +247,31 @@ def main():
                 if a["url"] not in seen:
                     seen.add(a["url"]); al.append(a)
             e["also"] = al[:4]
+    for e in merged:
+        e["section"] = section_of(e, e.pop("_gsec", None))
+        e["ages"] = ages_of(e, e.pop("_gages", None))
+        if not e["ages"]:
+            del e["ages"]
+        if e["image"] and not e["image"].startswith("https://"):
+            e["image"] = ""
+        if not e["image"]:
+            del e["image"]
+        bad_venue = (not e["venue"]) or re.match(r"^\d", e["venue"]) or re.search(r"\b(online|virtual|various|tba|tbd|multiple locations|private residence)\b", e["venue"], re.I)
+        e["vslug"] = "" if bad_venue else vslug(e["venue"])
     picks, miss = resolve_picks(meta.get("picks", []), merged)
+    pick_ids = {p["id"] for p in picks}
+    venues = {}
+    for e in merged:
+        e["score"] = score_of(e, pick_ids)
+        if e["vslug"] and e["section"] != "civic":
+            v = venues.setdefault(e["vslug"], {"slug": e["vslug"], "name": e["venue"], "city": e["city"], "address": e["address"], "count": 0})
+            v["count"] += 1
+            if not v["address"] and e["address"]:
+                v["address"] = e["address"]
     data = {"generated": label, "range_start": rs, "range_end": re_, "events": merged, "picks": picks,
             "share_url": meta.get("share_url", "https://justinhimmelbaum-glitch.github.io/south-county-week/"),
+            "hello": meta.get("hello", ""), "openings": meta.get("openings", []), "config": meta.get("config", {}),
+            "venues": sorted([v for v in venues.values() if v["count"] >= 2], key=lambda v: (-v["count"], v["name"])),
             "sources": meta.get("sources", []), "notes": meta.get("notes", [])}
     blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     html = open(tpl).read()

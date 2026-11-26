@@ -1,0 +1,303 @@
+{
+ "sources": [
+  "City of Boca Raton",
+  "Downtown Boca",
+  "Boca Raton Public Library",
+  "Palm Beach County Library",
+  "City of Delray Beach",
+  "Downtown Delray Beach",
+  "Delray Chamber",
+  "Delray Beach Public Library",
+  "Old School Square",
+  "Arts Garage",
+  "Arts Warehouse",
+  "Morikami",
+  "City of Boynton Beach",
+  "Boynton Beach City Library",
+  "Green Cay Nature Center",
+  "Daggerwing",
+  "Gumbo Limbo",
+  "Sandoway",
+  "FAU and OLLI",
+  "Lynn University",
+  "The Symphonia",
+  "The Wick",
+  "The Studio at Mizner Park",
+  "Funky Biscuit",
+  "Crazy Uncle Mike's",
+  "Boca Black Box",
+  "Biergarten Boca",
+  "Copperpoint",
+  "Deck 84",
+  "Doghouse Theater",
+  "Chabad centers",
+  "B'nai Torah",
+  "Town Center at Boca Raton",
+  "Boynton Beach Mall",
+  "Eventbrite",
+  "AllEvents",
+  "Facebook Events",
+  "Meetup",
+  "Patch",
+  "Macaroni KID",
+  "Miami on the Cheap",
+  "The Coastal Star",
+  "Boca Raton Observer",
+  "Songkick",
+  "Fever",
+  "RunSignup",
+  "HappeningNext",
+  "Audubon Society of the Everglades"
+ ],
+ "notes": [
+  "Delray's Chanukah festival and menorah lighting is Sun Dec 6 per the city, Downtown Delray and the Chamber. One tourism listing says Dec 14; that looks like last year's date.",
+  "Boca's Holiday Street Parade (Wed Dec 2) runs a new route along NE Mizner Blvd this year because of road work on Federal Hwy.",
+  "The Boca PAL Holiday Mile (Dec 2) and the Boca Raton Tribune expos (Dec 5) were canceled and are left off.",
+  "Many weekly classes and bar nights skip Thanksgiving Day; only events confirmed for Nov 26 are listed."
+ ],
+ "picks": [
+  {
+   "title": "Boca Ballet Theatre's The Nutcracker",
+   "date": "2026-11-28",
+   "note": "The local holiday classic, with Friday night and two Saturday shows."
+  },
+  {
+   "title": "Legends Live Tribute Festival",
+   "date": "2026-11-27",
+   "note": "An afternoon of tribute bands under the sky at Sunset Cove. Easy Black Friday plan."
+  },
+  {
+   "title": "Coke Florida Holiday Caravan",
+   "date": "2026-11-28",
+   "note": "The Coca-Cola trucks roll up for The Boca Raton's tree lighting. Free and great for kids."
+  },
+  {
+   "title": "Shop Small Sidewalk Sale",
+   "date": "2026-11-28",
+   "note": "Atlantic Avenue shops put deals out front for Small Business Saturday."
+  },
+  {
+   "title": "Sharks, Scales & Santa Tales",
+   "date": "2026-11-29",
+   "note": "Breakfast with Santa next to the sharks at Sandoway. Book ahead."
+  },
+  {
+   "title": "Delray's 100-Ft Christmas Tree Lighting",
+   "date": "2026-12-01",
+   "note": "The big one: the 100-foot tree lights up at 7 and the holiday village opens."
+  },
+  {
+   "title": "54th Annual Holiday Street Parade",
+   "date": "2026-12-02",
+   "note": "Boca's nighttime parade, on a new Mizner Blvd route this year."
+  },
+  {
+   "title": "First Friday Art Walk (Holiday Edition)",
+   "date": "2026-12-04",
+   "note": "Galleries stay open late across downtown Delray, with new shows at Arts Warehouse."
+  },
+  {
+   "title": "Wildlife Celebration 2026",
+   "date": "2026-12-05",
+   "note": "A free day of animals, crafts and boardwalk walks at Green Cay."
+  },
+  {
+   "title": "Holiday POPS Concert",
+   "date": "2026-12-05",
+   "note": "The Symphonia's holiday show at the Mizner Park Amphitheater, with a free kids pre-show."
+  },
+  {
+   "title": "55th Annual Holiday Tree Lighting",
+   "date": "2026-12-05",
+   "note": "Boynton lights its tree at Centennial Park, with a drone show."
+  },
+  {
+   "title": "26th Annual Downtown Delray Beach Art Festival",
+   "date": "2026-12-05",
+   "note": "Two days of artists' booths along the street. Free to walk."
+  },
+  {
+   "title": "Cars & Coffee Palm Beach Holiday Toy Drive",
+   "date": "2026-12-06",
+   "note": "Hundreds of cars, and bring a new toy to donate."
+  },
+  {
+   "title": "Chanukah Festival & Menorah Lighting",
+   "date": "2026-12-06",
+   "city": "Delray Beach",
+   "note": "Free festival at Old School Square; the menorah is lit at 6."
+  },
+  {
+   "title": "Holiday Spectacular with Tony DeSare and The Palm Beach Pops",
+   "date": "2026-12-08",
+   "city": "Boca Raton",
+   "note": "The Pops' big holiday show, with Tony DeSare's standards at the piano."
+  },
+  {
+   "title": "Zusha Live in Concert: Chanukah in Downtown Boca",
+   "date": "2026-12-08",
+   "city": "Boca Raton",
+   "note": "Chanukah concert under the sky in Sanborn Square. Kids get a lower price."
+  },
+  {
+   "title": "Holiday Boat Parade",
+   "date": "2026-12-11",
+   "city": "Boynton Beach",
+   "note": "Lit-up boats on the Intracoastal. Free, and Boynton Harbor Marina is the best seat."
+  },
+  {
+   "title": "Mindi Abair: I Can't Wait for Christmas (6 PM)",
+   "date": "2026-12-12",
+   "city": "Boca Raton",
+   "note": "Mindi Abair's Christmas show at the Funky Biscuit, one of four this weekend."
+  },
+  {
+   "title": "Delray Beach Holiday Parade: Neon North Pole",
+   "date": "2026-12-12",
+   "city": "Delray Beach",
+   "note": "The big one down Atlantic Ave. Free. Get there early for a curb spot."
+  },
+  {
+   "title": "Blue Lights & Holiday Nights",
+   "date": "2026-12-12",
+   "city": "Boynton Beach",
+   "note": "Free family night at Boynton police headquarters."
+  },
+  {
+   "title": "Lynn University Gingerbread Holiday Concert",
+   "date": "2026-12-13",
+   "city": "Boca Raton",
+   "note": "An easy Sunday afternoon holiday concert for the whole family."
+  },
+  {
+   "title": "Delray Beach Twilight Tree Market",
+   "date": "2026-12-17",
+   "city": "Delray Beach",
+   "note": "Evening holiday market at Old School Square. Free to walk."
+  },
+  {
+   "title": "Delray Beach Jingle Bell Jog",
+   "date": "2026-12-19",
+   "city": "Delray Beach",
+   "note": "Saturday morning holiday run from Anchor Park, by the beach."
+  },
+  {
+   "title": "Legends on the Lawn: Soundsations",
+   "date": "2026-12-19",
+   "city": "Boynton Beach",
+   "note": "Free concert on the lawn at Canyon Amphitheater. Bring chairs."
+  },
+  {
+   "title": "Winter Wonderland at the Chickee",
+   "date": "2026-12-22",
+   "city": "Boca Raton",
+   "note": "Winter break fun for kids at the Explorium."
+  }
+ ],
+ "hello": "Boca's holiday parade has a new route this year because of the Federal Highway work. It runs along NE Mizner Blvd on Wednesday, Dec 2 at 7:30 PM, so plan on parking west of Mizner Park.",
+ "openings": [
+  {
+   "status": "Opened",
+   "name": "Pinecrest Bakery",
+   "city": "Boynton Beach",
+   "where": "9929 S. Military Trail",
+   "date": "",
+   "note": "Miami Cuban-American bakery chain's newest store, with pastelitos, croquetas and cafe con leche, in a former Boston Market",
+   "url": "https://en.cibercuba.com/noticias/2026-11-19-u1-e129488-s27061-nid346019-panaderias-cafeterias-cubanas-miami-siguen-creciendo"
+  },
+  {
+   "status": "Opened",
+   "name": "Boca Paddle by CityPickle and Farmer's Kitchen",
+   "city": "Boca Raton",
+   "where": "North Park",
+   "date": "Nov 18",
+   "note": "New 25-court pickleball and padel club with Farmer's Kitchen dining and lounges, the first building in the new public North Park",
+   "url": "https://www.bocaratontribune.com/bocaratonnews/2026/11/boca-paddle-opens-in-public-park/"
+  },
+  {
+   "status": "Opened",
+   "name": "Maman",
+   "city": "Delray Beach",
+   "where": "Sundy Village, Atlantic and Swinton avenues",
+   "date": "",
+   "note": "NYC French bakery cafe now pouring coffee and serving sandwiches and pastries from one of Sundy Village's historic houses",
+   "url": "https://www.bocaratontribune.com/bocaratonnews/2026/11/saturday-afternoon-at-sundy-village-delray-beach/"
+  },
+  {
+   "status": "Opened",
+   "name": "Joe's Pizza",
+   "city": "Boca Raton",
+   "where": "9874 Yamato Road",
+   "date": "",
+   "note": "Hollywood kosher pizzeria's first Palm Beach County spot, in the former Jimmy Brooklyn's Pizza Parlor space",
+   "url": "https://bocaratonobserver.com/food-and-drink/restaurant-news/joe%E2%80%99s-pizza-expands-to-west-boca/"
+  },
+  {
+   "status": "Opened",
+   "name": "The Gringo",
+   "city": "Delray Beach",
+   "where": "1191 N. Federal Highway, Unit 5",
+   "date": "",
+   "note": "Local Argentinian empanada favorite moved from SE Fifth Avenue to a bigger space across from PopStroke",
+   "url": "https://www.bocamag.com/the-gringo-opens-in-new-delray-beach-location/"
+  },
+  {
+   "status": "Opened",
+   "name": "Limani Grille",
+   "city": "Boca Raton",
+   "where": "Town Center at Boca Raton (former Grand Lux Cafe)",
+   "date": "",
+   "note": "New York Greek seafood restaurant's first Florida location, with a raw bar and whole fish off the grill",
+   "url": "https://www.bocaratontribune.com/bocaratonnews/2026/11/limani-grille-opens-in-boca-finally/"
+  },
+  {
+   "status": "Opened",
+   "name": "Preface Wine",
+   "city": "Delray Beach",
+   "where": "Pineapple Grove",
+   "date": "Oct 23",
+   "note": "Wine shop by day that turns into a wine bar at 4 p.m., from Instagram wine educator Jonathan Frutkin",
+   "url": "https://www.bocamag.com/preface-wine-opens-in-delray-beach/"
+  },
+  {
+   "status": "Opened",
+   "name": "Crema Gourmet",
+   "city": "Boca Raton",
+   "where": "3011 W. Yamato Road",
+   "date": "Oct 22",
+   "note": "All-day European-style breakfast and lunch cafe adds a West Boca location",
+   "url": "https://www.bocamag.com/crema-gourmet-to-open-west-boca-location/"
+  },
+  {
+   "status": "Opening soon",
+   "name": "Madame Smash",
+   "city": "Delray Beach",
+   "where": "123 E. Atlantic Ave.",
+   "date": "Nov 27",
+   "note": "Counter-service wagyu smashburgers with a sauce bar and Belgian-style fries; soft opens Nov 27, grand opening Dec 11",
+   "url": "https://www.bocamag.com/madame-smash-coming-soon-to-delray-beach/"
+  },
+  {
+   "status": "Opening soon",
+   "name": "CaliBurger",
+   "city": "Boca Raton",
+   "where": "508 Via De Palmas, Royal Palm Place",
+   "date": "",
+   "note": "California-style burger concept's first Florida location; team targeted 2026 but has not set a date",
+   "url": "https://whatnow.com/miami/restaurants/caliburger-debuting-in-florida-with-new-boca-raton-location/"
+  },
+  {
+   "status": "Opening soon",
+   "name": "BrickTop's",
+   "city": "Delray Beach",
+   "where": "12 NE Fifth Ave.",
+   "date": "Mar 2027",
+   "note": "Nashville-based steak, seafood and sushi restaurant, its third in Palm Beach County",
+   "url": "https://whatnow.com/miami/restaurants/bricktops-targets-spring-2027-opening-in-delray-beach/"
+  }
+ ],
+ "config": {
+  "ml_account": "867109",
+  "ml_form": "205162874792838197"
+ }
+}

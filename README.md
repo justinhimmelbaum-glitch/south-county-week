@@ -1,4 +1,4 @@
-# South County Week
+# Event Calendar
 
 Every public event in Boca Raton, Delray Beach and Boynton Beach, FL, for the next two weeks.
 Put together by Justin Himmelbaum and refreshed every Sunday.

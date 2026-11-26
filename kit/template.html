@@ -3,260 +3,324 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>South County Week</title>
-<meta name="description" content="Every event in Boca Raton, Delray Beach and Boynton Beach for the next two weeks.">
-<meta name="theme-color" content="#0b6b80">
+<title>Event Calendar</title>
+<meta name="description" content="Every event in Boca Raton, Delray Beach and Boynton Beach for the next month, updated every day.">
+<meta name="theme-color" content="#0e8a8f">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="SoCo Week">
+<meta name="apple-mobile-web-app-title" content="Event Calendar">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:title" content="Event Calendar: Boca, Delray & Boynton">
+<meta property="og:description" content="Every event in Boca Raton, Delray Beach and Boynton Beach, with Justin's picks.">
+<meta property="og:image" content="icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Nunito:wght@400;600;700;800&display=swap">
 <style>
-/* VOICE: a friendly, local weekly guide you forward to the group chat.
-   IDEA: the town-kiosk events board, rebuilt as a phone-first schedule.
-   PICTURE: the picks rail and the day-by-day schedule with large hanging times.
-   COLOUR and TYPE: Intracoastal blue band, white sheet, hibiscus accent; city colours for Boca, Delray, Boynton. DM Serif Display titles, Figtree text.
-   LAYOUT: header band, picks rail, sticky filters, day sections, footer. */
+/* VOICE: a relaxed beach-town guide from a friend who knows every spot.
+   IDEA: a 70s surf-shop postcard rack: sunset sign up top, postcards below.
+   PICTURE: the drawn sunset over moving waves, then postcard event cards.
+   COLOUR and TYPE: Intracoastal blue-green and sunset orange on white; ocean at night in dark mode. Shrikhand for signs, Nunito for reading.
+   LAYOUT: hero sign, picks rail, sticky filters, day-by-day postcards, bottom tab bar like an app. */
 :root{color-scheme:light dark;
-  --bg:light-dark(#ffffff,#0d1a1f);--sheet:light-dark(#f4f8f9,#13252c);--ink:light-dark(#11232a,#e6f0f2);--muted:light-dark(#566b72,#9db3ba);
-  --line:light-dark(#dde7ea,#24404a);--band:light-dark(#0b6b80,#0a3a47);--band-ink:#ffffff;--accent:light-dark(#d6336c,#ff6b9a);
-  --boca:light-dark(#c2364f,#ff8296);--boca-bg:light-dark(#fde8ec,#3b1a22);--delray:light-dark(#0b7d70,#55d3c1);--delray-bg:light-dark(#dff4f0,#123a35);
-  --boynton:light-dark(#2d5fc0,#8db2ff);--boynton-bg:light-dark(#e5edfc,#1b2a4a);--kids:light-dark(#a2520a,#f5b06c);--kids-bg:light-dark(#fdf0e1,#3a2a17);
-  --outdoor:light-dark(#3a7a1d,#9fd47a);--outdoor-bg:light-dark(#eaf5e1,#1f3318);--free:light-dark(#2e7d32,#7cc983);
-  --serif:"DM Serif Display",Georgia,"Times New Roman",serif;--sans:"Figtree",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  --bg:light-dark(#ffffff,#0a1d24);--sheet:light-dark(#f1f8f7,#0f262d);--sheet2:light-dark(#e3f3f1,#14343e);--card:light-dark(#ffffff,#112831);
+  --ink:light-dark(#10303a,#e8f4f3);--muted:light-dark(#557079,#9ab8bd);--line:light-dark(#d7e8e6,#21434d);
+  --teal:light-dark(#0e8a8f,#3cc2c0);--teal-d:light-dark(#0b6b70,#5fd3d0);--orange:light-dark(#e85d0c,#ff8a3d);--orange-bg:light-dark(#fff0e6,#3a2012);
+  --boca:light-dark(#d9482a,#ff8a5c);--delray:light-dark(#0e8a8f,#4fd0cc);--boynton:light-dark(#2f6fd0,#8db5ff);
+  --free:light-dark(#1f7a44,#6fd39a);--shadow:light-dark(0 2px 10px rgba(16,48,58,.08),0 2px 10px rgba(0,0,0,.35));
+  --disp:"Shrikhand",Georgia,serif;--sans:"Nunito",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 120px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--sans);overflow-x:clip;padding-bottom:env(safe-area-inset-bottom,0px)}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
-.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-a{color:inherit}
-button{font:inherit;color:inherit;cursor:pointer}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-header.top{background:var(--band);color:var(--band-ink);padding-top:env(safe-area-inset-top,0px)}
-header.top .wrap{padding-block:26px 22px;display:grid;gap:10px}
-h1{font:400 clamp(34px,6.2vw,52px)/1.05 var(--serif);margin:0;text-wrap:balance}
-.meta{font-size:15px;opacity:.92;display:flex;flex-wrap:wrap;gap:4px 14px}
-.meta b{font-weight:700}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-.btn{border:0;border-radius:999px;padding:10px 16px;min-height:44px;font-weight:600;font-size:15px;background:#fff;color:#0b4f5f}
-.btn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.45)}
-.install{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:6px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);font-size:15px}
-.install>div{flex:1 1 240px}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;z-index:20;max-width:90vw}
-.copybox{margin-top:8px;background:var(--sheet);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px;width:100%;font:14px/1.45 var(--sans);min-height:120px}
-section.picks{background:var(--sheet);border-bottom:1px solid var(--line)}
-section.picks .wrap{padding-block:18px 20px}
-h2{font:400 26px/1.1 var(--serif);margin:0 0 10px}
-.rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
-.card{scroll-snap-align:start;flex:0 0 min(300px,82%);background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px}
-.card .when{font-weight:700;color:var(--accent);font-size:14px;font-variant-numeric:tabular-nums}
-.card .t{font:400 21px/1.15 var(--serif)}
-.card .t a{text-decoration:none}
-.card .why{font-size:15px;color:var(--muted)}
-.card .row{margin-top:auto}
-.railnav{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
-.railnav button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg)}
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
-.bar .wrap{padding-block:10px;display:grid;gap:8px}
-.r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.search{flex:1 1 220px;font:16px var(--sans);padding:10px 12px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
-select{font:16px var(--sans);padding:9px 10px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);max-width:100%}
-.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;overflow-x:auto}
-.seg button{border:0;background:none;padding:8px 12px;min-height:40px;font-weight:600;font-size:14px;white-space:nowrap;color:var(--muted)}
-.seg button[aria-pressed=true]{background:var(--band);color:#fff}
-.chip,.seg button,.btn{flex:none}
-.chip{border:1.5px solid var(--line);border-radius:999px;background:var(--bg);padding:6px 12px;min-height:36px;font-size:14px;font-weight:600;color:var(--muted);white-space:nowrap}
-.chip[aria-pressed=true]{color:#fff;background:var(--ink);border-color:var(--ink)}
-.chip.boca[aria-pressed=true]{background:var(--boca-bg);color:var(--boca);border-color:var(--boca)}
-.chip.delray[aria-pressed=true]{background:var(--delray-bg);color:var(--delray);border-color:var(--delray)}
-.chip.boynton[aria-pressed=true]{background:var(--boynton-bg);color:var(--boynton);border-color:var(--boynton)}
-.chip.kids[aria-pressed=true]{background:var(--kids-bg);color:var(--kids);border-color:var(--kids)}
-.chip.outdoor[aria-pressed=true]{background:var(--outdoor-bg);color:var(--outdoor);border-color:var(--outdoor)}
-.finder{padding-block:14px 4px}
-.chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.chips::-webkit-scrollbar{display:none}
-.count{margin-left:auto;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
-main{padding-block:6px 30px}
-section.day{margin-top:24px}
-.dayhead{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;padding-bottom:8px;border-bottom:2px solid var(--ink);position:relative}
-.dayhead h3{font:400 30px/1.05 var(--serif);margin:0}
-.dayhead .sub{color:var(--muted);font-size:15px}
-.dayhead .hol{font-weight:700;color:var(--accent);font-size:14px}
-ol.ev{list-style:none;margin:0;padding:0}
-li.e{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
-li.e.hl{background:linear-gradient(90deg,var(--kids-bg),transparent);border-radius:8px}
-.tm{font-weight:700;font-size:17px;line-height:1.2;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.tm small{display:block;font-weight:500;font-size:13px;color:var(--muted);white-space:normal}
-.ti{font-weight:700;font-size:17px;line-height:1.3;text-decoration:none}
-a.ti:hover{text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px}
-.where{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin-top:4px;font-size:15px;color:var(--muted)}
-.city,.badge{font-size:13px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
-.city.boca{background:var(--boca-bg);color:var(--boca)}.city.delray{background:var(--delray-bg);color:var(--delray)}.city.boynton{background:var(--boynton-bg);color:var(--boynton)}
-.badge.kids{background:var(--kids-bg);color:var(--kids)}.badge.outdoor{background:var(--outdoor-bg);color:var(--outdoor)}
-.price{font-weight:700;color:var(--ink)}.price.free{color:var(--free)}
-.desc{margin:5px 0 0;font-size:15px;max-width:66ch}
-.row{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:14px}
-.row a,.row button{color:var(--muted);background:none;border:0;padding:6px 0;min-height:32px;text-decoration:underline;text-underline-offset:3px;font-size:14px}
-.row .src{color:var(--muted);padding:6px 0}
-.more{margin-top:10px;width:100%;min-height:44px;border:1px dashed var(--line);border-radius:12px;background:none;font-weight:600;color:var(--muted)}
-.empty{padding:40px 0;color:var(--muted);text-align:center}
-.earlier{margin-top:14px;background:none;border:0;color:var(--muted);text-decoration:underline;min-height:44px}
-footer{background:var(--sheet);border-top:1px solid var(--line);margin-top:20px}
-footer .wrap{padding-block:24px;display:grid;gap:10px;font-size:15px}
-footer .by{font:400 22px/1.2 var(--serif)}
-footer details{color:var(--muted)}
-footer summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:32px}
-.fine{font-size:13px;color:var(--muted)}
-@media(max-width:560px){li.e{grid-template-columns:4.6em minmax(0,1fr);gap:10px}.tm{font-size:15px}.dayhead h3{font-size:26px}}
-@media(prefers-reduced-motion:no-preference){li.e.hl{transition:background 1.2s}}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 150px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--sans);overflow-x:clip;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+a{color:inherit}button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hero{position:relative;overflow:hidden;color:#fff;padding-top:env(safe-area-inset-top,0px);isolation:isolate}
+.hero svg.scene{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.hero .wrap{padding-block:18px 96px;display:grid;gap:6px}
+body.sub .hero .wrap{padding-block:14px 56px}body.sub .hero .sub,body.sub .hero .stats{display:none}body.sub h1{font-size:clamp(32px,8vw,48px)}
+.by{display:flex;align-items:center;gap:10px;font-weight:800;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.by img{width:40px;height:40px;border-radius:50%;border:2px solid #fff;background:#ff6a13;object-fit:cover}
+h1{font:400 clamp(40px,10vw,64px)/1.05 var(--disp);margin:10px 0 0;text-shadow:0 2px 0 rgba(0,0,0,.12),0 3px 14px rgba(0,0,0,.25);letter-spacing:.5px}
+.sub{font-weight:800;font-size:17px;letter-spacing:.3px;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.stats{justify-self:start;font-weight:800;font-size:14px;background:rgba(8,60,66,.42);border-radius:999px;padding:3px 12px;margin-top:2px}
+.wave{animation:drift 14s linear infinite}.wave.w2{animation-duration:20s;animation-direction:reverse}.wave.w3{animation-duration:26s}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-100px)}}
+@media(prefers-reduced-motion:reduce){.wave{animation:none}}
+.sky1{stop-color:light-dark(#3fb8b5,#0b2a33)}.sky2{stop-color:light-dark(#f7b98a,#123d48)}.sky3{stop-color:light-dark(#ff8a3d,#1b4d58)}
+.sun{fill:light-dark(#ff6a13,#f3ecd6)}.sea1{fill:light-dark(#0b6b70,#0e4b56)}.sea2{fill:light-dark(#0e8a8f,#13606b)}.sea3{fill:light-dark(#5cc4c0,#1a7480)}
+.hello{margin-top:-28px;position:relative;background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:16px;display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;align-items:start;border:1px solid var(--line)}
+.hello img{width:48px;height:48px;border-radius:50%;background:#ff6a13}
+.label{font-weight:800;font-size:13px;color:var(--orange);letter-spacing:.4px}
+.hello p{margin:2px 0 0;font-size:16px}
+h2{font:400 28px/1.15 var(--disp);margin:26px 0 12px;color:var(--teal)}
+h2 small{font:700 14px var(--sans);color:var(--muted);margin-left:8px}
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:none}.rail::-webkit-scrollbar{display:none}
+.pick{scroll-snap-align:start;flex:0 0 min(290px,80%);background:var(--card);border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.pick .top{background:linear-gradient(135deg,#0e8a8f,#e85d0c);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.pick .top b{font:400 22px/1 var(--disp)}.pick .top span{font-weight:800;font-size:13px;text-align:right}
+.pick .bd{padding:12px 16px 14px;display:grid;gap:6px;flex:1;align-content:start}
+.pick .t{font-weight:800;font-size:18px;line-height:1.25;text-decoration:none}
+.pick .why{color:var(--muted);font-size:15px}
+.strip{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}.strip::-webkit-scrollbar{display:none}
+.dbtn{flex:none;width:62px;border:1.5px solid var(--line);border-radius:16px;background:var(--card);padding:8px 4px;text-align:center;line-height:1.1}
+.dbtn .w{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.dbtn .n{font:400 24px/1.15 var(--disp);color:var(--teal);margin:2px 0}
+.dbtn .c{font-size:12px;font-weight:700;color:var(--muted)}
+.dbtn .wx{font-size:11px;font-weight:800;color:var(--orange)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);padding-block:10px 8px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.row::-webkit-scrollbar{display:none}
+.row+.row{margin-top:8px}
+.search{width:100%;font:16px var(--sans);padding:11px 14px;min-height:44px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);margin-bottom:8px}
+.big{flex:none;display:flex;align-items:center;gap:8px;border:0;border-radius:14px;padding:10px 14px;min-height:44px;font-weight:800;font-size:15px;background:var(--sheet2);color:var(--teal-d)}
+.big svg,.chip svg{width:18px;height:18px;flex:none}
+.big[aria-pressed=true]{background:var(--orange);color:#fff}
+.chip{flex:none;display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;min-height:38px;font-weight:700;font-size:14px;background:var(--card);color:var(--muted);text-decoration:none;white-space:nowrap}
+.chip[aria-pressed=true]{background:var(--teal);border-color:var(--teal);color:#fff}
+.chip.c-boca[aria-pressed=true]{background:var(--boca);border-color:var(--boca)}.chip.c-boynton[aria-pressed=true]{background:var(--boynton);border-color:var(--boynton)}
+.day{margin-top:26px}
+.dh{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin-bottom:10px}
+.dh h3{font:400 30px/1.1 var(--disp);margin:0;color:var(--ink)}
+.dh .meta{color:var(--muted);font-weight:700;font-size:14px}.dh .hol{color:var(--orange);font-weight:800;font-size:14px}
+.dh .wx{margin-left:auto;font-weight:800;font-size:14px;color:var(--orange)}
+.cards{display:grid;gap:12px}
+.pc{position:relative;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--delray);border-radius:16px;box-shadow:var(--shadow);padding:12px 14px}
+.pc.boca{border-left-color:var(--boca)}.pc.boynton{border-left-color:var(--boynton)}
+.pc .hd{display:flex;align-items:center;gap:8px;color:var(--teal-d);font-weight:800;font-size:14px;padding-right:44px}
+.pc .hd svg{width:20px;height:20px;flex:none;color:var(--teal)}
+.pc .ti{display:block;width:100%;text-align:left;background:none;border:0;padding:0;margin:4px 0 4px;font-weight:800;font-size:17px;line-height:1.3}
+.mt{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font-size:14px;color:var(--muted);font-weight:600}
+.mt a{color:inherit}
+.pill{font-size:12px;font-weight:800;padding:2px 9px;border-radius:999px;background:var(--sheet2);color:var(--teal-d);white-space:nowrap}
+.pill.boca{background:color-mix(in srgb,var(--boca) 14%,transparent);color:var(--boca)}.pill.delray{background:color-mix(in srgb,var(--delray) 14%,transparent);color:var(--teal-d)}.pill.boynton{background:color-mix(in srgb,var(--boynton) 14%,transparent);color:var(--boynton)}
+.pill.free{background:color-mix(in srgb,var(--free) 14%,transparent);color:var(--free)}
+.heart{position:absolute;top:6px;right:6px;width:44px;height:44px;border-radius:50%;border:0;background:none;display:grid;place-items:center;color:var(--muted)}
+.heart svg{width:24px;height:24px}.heart[aria-pressed=true]{color:var(--orange)}.heart[aria-pressed=true] path{fill:currentColor}
+.more{display:none;margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+.pc.open .more{display:block}
+.more p{margin:0 0 8px;font-size:15px}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.act{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:12px;padding:7px 12px;min-height:42px;font-weight:800;font-size:14px;text-decoration:none;background:var(--bg);color:var(--teal-d)}
+.act.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.src{font-size:12px;color:var(--muted);margin-top:8px}
+.showmore{width:100%;min-height:44px;margin-top:10px;border:1.5px dashed var(--line);border-radius:14px;background:none;font-weight:800;color:var(--teal-d)}
+.empty{text-align:center;padding:40px 10px;color:var(--muted);font-weight:700}
+.empty b{display:block;font:400 26px var(--disp);color:var(--teal);margin-bottom:6px}
+.mon{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:var(--shadow);margin-bottom:16px}
+.mon h3{font:400 24px var(--disp);margin:0 0 8px;color:var(--teal)}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.grid .dw{font-size:12px;font-weight:800;color:var(--muted);padding:4px 0}
+.cell{aspect-ratio:1;border:0;border-radius:12px;background:var(--sheet);display:grid;place-content:center;font-weight:800;font-size:15px;max-width:100%;line-height:1.1}
+.cell small{font-size:10px;font-weight:700;color:var(--muted)}
+.cell.has{background:var(--sheet2)}.cell.hot{background:color-mix(in srgb,var(--orange) 22%,var(--card))}
+.cell.off{visibility:hidden}.cell:disabled{opacity:.35;cursor:default}.cell[aria-current=true]{background:var(--teal);color:#fff}.cell[aria-current=true] small{color:#fff}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-top:14px}
+.panel h3{font:400 22px/1.2 var(--disp);margin:0 0 6px;color:var(--teal)}
+.li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);text-decoration:none;font-weight:700;min-height:44px}
+.li:last-child{border-bottom:0}
+.li span{color:var(--muted);font-weight:700;white-space:nowrap}
+form{display:grid;gap:10px}
+label{font-weight:800;font-size:14px;display:grid;gap:4px}
+input,select,textarea{font:16px var(--sans);padding:10px 12px;min-height:44px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);width:100%}
+.btn{display:inline-block;text-align:center;text-decoration:none;border:0;border-radius:14px;padding:12px 18px;min-height:48px;font-weight:800;font-size:16px;background:var(--orange);color:#fff}
+.btn.alt{background:var(--teal)}
+.move{background:linear-gradient(135deg,#0b6b70,#0e8a8f);color:#fff;border:0}
+.move h3{color:#fff}.move a{color:#fff;font-weight:800}
+.fine{font-size:14px;color:var(--muted)}
+.vhead{padding-top:20px}.vhead h2{margin:4px 0 6px}
+.back{background:none;border:0;padding:14px 0 0;font-weight:800;color:var(--teal-d);min-height:44px}
+.install{margin-top:14px;background:var(--orange-bg);border-radius:16px;padding:12px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:15px}
+.install>div{flex:1 1 220px}
+footer{margin-top:30px;padding:20px 0 10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:9;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:6px max(8px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right,0px))}
+.tabs a{display:grid;justify-items:center;gap:2px;text-decoration:none;font-size:11px;font-weight:800;color:var(--muted);padding:4px 0;min-height:48px}
+.tabs svg{width:24px;height:24px}
+.tabs a[aria-current=page]{color:var(--orange)}
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-weight:800;z-index:20;max-width:90vw;text-align:center}
+@media(min-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap">
-  <h1>What's happening in Boca, Delray &amp; Boynton</h1>
-  <div class="meta" id="meta"></div>
-  <div class="actions">
-    <button class="btn" id="shareWeekend">Send this weekend's picks</button>
-    <button class="btn ghost" id="sharePage">Share this app</button>
+<header class="hero">
+  <svg class="scene" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop class="sky1" offset="0"/><stop class="sky2" offset=".8"/><stop class="sky3" offset="1"/></linearGradient>
+    <path id="wv" d="M0 10 Q 25 0 50 10 T 100 10 T 150 10 T 200 10 T 250 10 T 300 10 T 350 10 T 400 10 T 450 10 T 500 10 T 550 10 T 600 10 V 90 H 0 Z"/></defs>
+    <rect width="400" height="260" fill="url(#sky)"/>
+    <circle class="sun" cx="318" cy="206" r="38"/>
+    <g transform="translate(0 196)"><use href="#wv" class="sea3 wave w3"/></g>
+    <g transform="translate(-30 214)"><use href="#wv" class="sea2 wave w2"/></g>
+    <g transform="translate(0 232)"><use href="#wv" class="sea1 wave"/></g>
+  </svg>
+  <div class="wrap">
+    <div class="by"><img src="justin.png" alt="Justin Himmelbaum" width="40" height="40"><span>by Justin Himmelbaum</span></div>
+    <h1>Event Calendar</h1>
+    <div class="sub">Boca · Delray · Boynton</div>
+    <div class="stats" id="stats"></div>
   </div>
-  <textarea class="copybox" id="copybox" hidden readonly aria-label="Text to copy"></textarea>
-  <div class="install" id="install" hidden>
-    <div><b>Keep it on your phone like an app.</b> <span id="howto"></span> It updates every week on its own, so this one link always shows what's coming up.</div>
-    <button class="btn" id="installBtn" hidden>Install</button><button class="btn" id="gotit">Got it</button>
-  </div>
-</div></header>
-
-<section class="picks" id="picks" hidden><div class="wrap">
-  <h2>Worth leaving the house for</h2>
-  <div class="rail" id="rail"></div>
-  <div class="railnav"><button id="prev" aria-label="Previous picks">&#8592;</button><button id="next" aria-label="Next picks">&#8594;</button></div>
-</div></section>
-
-<div class="wrap finder"><div class="r">
-    <input id="q" class="search" type="search" placeholder="Search events, venues, artists" aria-label="Search events">
-    <select id="cat" aria-label="Type of event"><option value="">All types</option></select>
-</div></div>
-<div class="bar"><div class="wrap">
-  <div class="r">
-    <div class="seg" id="win" role="group" aria-label="When">
-      <button data-w="today">Today</button><button data-w="weekend">This weekend</button><button data-w="week">Next 7 days</button><button data-w="all">Everything</button>
-    </div>
-    <span class="count" id="count"></span>
-  </div>
-  <div class="r chips" id="chips">
-    <button class="chip boca" data-city="Boca Raton">Boca</button>
-    <button class="chip delray" data-city="Delray Beach">Delray</button>
-    <button class="chip boynton" data-city="Boynton Beach">Boynton</button>
-    <button class="chip kids" data-tag="kids">Kids &amp; parents</button>
-    <button class="chip outdoor" data-tag="outdoor">Outdoors</button>
-    <button class="chip" data-flag="free">Free</button>
-    <button class="chip" data-flag="holiday">Holiday</button>
-    <button class="chip" data-flag="music">Live music</button>
-  </div>
-</div></div>
-
-<div class="wrap"><main id="list"></main><button class="earlier" id="earlier" hidden>Show earlier days</button></div>
-
-<footer><div class="wrap">
-  <div class="by">Put together every week by Justin Himmelbaum</div>
-  <div>Know an event we missed? <a href="https://ig.me/m/himmelsellssouthflorida">Send it to Justin on Instagram</a> (@himmelsellssouthflorida) and it'll make next week's list.</div>
-  <details><summary>Where these come from</summary><div id="notes"></div></details>
-  <div class="fine">New events are added every week, and this link always shows the latest. Times and prices change, so tap an event to check its own page before you go. The Himmelbaum Group | Keller Williams Realty Boca Raton</div>
-</div></footer>
-
+</header>
+<main class="wrap" id="view"></main>
+<nav class="tabs" id="tabs" aria-label="Sections">
+  <a href="#events" data-v="events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Events</a>
+  <a href="#calendar" data-v="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Calendar</a>
+  <a href="#music" data-v="music"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Live music</a>
+  <a href="#plans" data-v="plans"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.6-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.4-9.3 9-9.3 9z"/></svg>My Plans</a>
+  <a href="#more" data-v="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>More</a>
+</nav>
 <script>
-const DATA = /*__DATA__*/{"generated":"","range_start":"","range_end":"","events":[],"picks":[],"share_url":"","sources":[],"notes":[]}/*__END__*/;
+const DATA = /*__DATA__*/{"generated":"","range_start":"","range_end":"","events":[],"picks":[],"venues":[],"openings":[],"hello":"","config":{},"share_url":"","sources":[],"notes":[]}/*__END__*/;
 {
-const CC={"Boca Raton":"boca","Delray Beach":"delray","Boynton Beach":"boynton"}, SH={"Boca Raton":"Boca","Delray Beach":"Delray","Boynton Beach":"Boynton"};
-const HOL={"11-26":"Thanksgiving","11-27":"Black Friday","11-28":"Small Business Saturday","12-04":"Hanukkah begins at sundown","12-24":"Christmas Eve","12-25":"Christmas","12-31":"New Year's Eve","01-01":"New Year's Day","02-14":"Valentine's Day","03-17":"St. Patrick's Day","07-04":"Fourth of July","10-31":"Halloween","11-11":"Veterans Day"};
-const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const pd=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)}, iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return iso(d)};
-const dayLong=s=>pd(s).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"}), dayShort=s=>pd(s).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
-let TODAY; try{TODAY=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date())}catch(_){TODAY=iso(new Date())}
-const fmtT=m=>{const h=Math.floor(m/60),mi=m%60;return`${h%12||12}${mi?":"+String(mi).padStart(2,"0"):""} ${h<12?"AM":"PM"}`};
-const isFree=p=>/^\s*free/i.test(p||""), isMusic=e=>e.category==="Music", isHol=e=>e.category==="Holiday";
-function tparse(t){const m=String(t||"").match(/(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m/i);if(!m)return null;let h=+m[1]%12;if(m[3].toLowerCase()==="p")h+=12;return h*60+(+m[2]||0)}
-function tend(t){const parts=String(t||"").split(/\s*[-–]\s*|\s+to\s+/i);if(parts.length<2)return null;const e=tparse(parts[1]);if(e==null)return null;const s=tparse(parts[0]);return s!=null&&e<=s?e+720:e}
+const $=s=>document.querySelector(s),V=$("#view"),CFG=DATA.config||{};
+const PHONE="(561) 546-0329",PHONE_TEL="+15615460329";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pd=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)},iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`,addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return iso(d)};
+const dS=s=>pd(s).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}),wk=s=>pd(s).toLocaleDateString("en-US",{weekday:"long"}),md=s=>pd(s).toLocaleDateString("en-US",{month:"long",day:"numeric"});
+let TODAY;try{TODAY=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date())}catch(_){TODAY=iso(new Date())}
+if(DATA.range_start&&TODAY<DATA.range_start)TODAY=DATA.range_start;
+const CC={"Boca Raton":"boca","Delray Beach":"delray","Boynton Beach":"boynton"},SH={"Boca Raton":"Boca","Delray Beach":"Delray","Boynton Beach":"Boynton"};
+const HOL={"11-26":"Thanksgiving","11-27":"Black Friday","11-28":"Small Business Saturday","12-04":"Hanukkah begins","12-24":"Christmas Eve","12-25":"Christmas","12-31":"New Year's Eve","01-01":"New Year's Day","02-14":"Valentine's Day","03-17":"St. Patrick's Day","07-04":"Fourth of July","10-31":"Halloween","11-11":"Veterans Day"};
+const tp=t=>{const m=String(t||"").match(/(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m/i);if(!m)return null;let h=+m[1]%12;if(m[3].toLowerCase()==="p")h+=12;return h*60+(+m[2]||0)};
+const te=t=>{const p=String(t||"").split(/\s*[-–]\s*|\s+to\s+/i);if(p.length<2)return null;const e=tp(p[1]);if(e==null)return null;const s=tp(p[0]);return s!=null&&e<=s?e+720:e};
+const fT=m=>{const h=Math.floor(m/60)%24,mi=m%60;return`${h%12||12}${mi?":"+String(mi).padStart(2,"0"):""} ${h<12?"AM":"PM"}`};
+const free=p=>/^\s*free/i.test(p||"");
+const price=p=>String(p||"").replace(/\$(\d+)\.(\d)(?!\d)/g,"$$$1.$20").replace(/\$(\d+)\.00\b/g,"$$$1");
+const I={music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',art:'<path d="M12 3a9 9 0 1 0 0 18c1 0 1.5-.8 1.5-1.6 0-1.3-1-1.6-1-2.6 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.2-9-7.2z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15.5" cy="7.5" r="1"/>',fest:'<path d="M4 21V4M4 4h13l-3 4 3 4H4"/>',food:'<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 21V3c-2 1.5-3 4-3 7v3h3"/>',kids:'<circle cx="12" cy="6" r="3"/><path d="M12 9v7M8 21l4-5 4 5M7 12h10"/>',holiday:'<path d="M12 2l3 5h-2l3 5h-2l3 5H7l3-5H8l3-5H9z"/><path d="M12 17v4"/>',civic:'<path d="M3 21h18M5 10h14M6 10v8M10 10v8M14 10v8M18 10v8M12 3l9 5H3z"/>',fit:'<circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2v4M14 9l-3 3-3-2-3 2M14 9l3 3 3-1"/>',talk:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.2A8 8 0 1 1 21 12z"/>',night:'<path d="M20 15A8 8 0 1 1 9 4a6 6 0 0 0 11 11z"/>',biz:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',gift:'<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8S10 3 7.5 4.5 9 8 12 8s6-2 4.5-3.5S12 8 12 8"/>',out:'<path d="M12 22v-7M7 15c-2.5 0-4-2-4-4 0-2.5 2-4 4-4 0-2.5 2-4 5-4s5 1.5 5 4c2 0 4 1.5 4 4 0 2-1.5 4-4 4z"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',heart:'<path d="M12 21s-7-4.6-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.4-9.3 9-9.3 9z"/>',free:'<path d="M20 12l-8 8-9-9V4h7z"/><circle cx="7.5" cy="7.5" r="1.5"/>',date:'<path d="M8 3l-1 6a5 5 0 0 0 10 0l-1-6z"/><path d="M12 14v7M8 21h8"/>',beach:'<path d="M3 20c3-2 6-2 9 0s6 2 9 0"/><path d="M4 12a8 8 0 0 1 16 0zM12 12l-3 8"/>'};
+const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]||I.star}</svg>`;
+const CI={"Music":"music","Arts & Theater":"art","Festivals & Markets":"fest","Food & Drink":"food","Family & Kids":"kids","Holiday":"holiday","Community & Civic":"civic","Sports & Fitness":"fit","Classes & Talks":"talk","Nightlife":"night","Networking & Business":"biz","Charity & Galas":"gift","Outdoors & Nature":"out","Other":"star"};
+const tags=e=>e.tags||[];
+const isDate=e=>["Music","Arts & Theater","Food & Drink","Nightlife"].includes(e.category)&&!tags(e).includes("kids")&&(tp(e.time)??0)>=17*60;
+const FL={kids:e=>tags(e).includes("kids"),date:isDate,free:e=>free(e.price),outdoor:e=>tags(e).includes("outdoor"),music:e=>e.category==="Music",food:e=>e.category==="Food & Drink",fitness:e=>e.category==="Sports & Fitness",network:e=>e.category==="Networking & Business"};
 const DAYS=[];for(let d=DATA.range_start;d&&d<=DATA.range_end;d=addD(d,1))DAYS.push(d);
-const ROWS=[];for(const e of DATA.events){const end=e.end_date&&e.end_date>e.date?e.end_date:e.date;for(const d of DAYS)if(d>=e.date&&d<=end)ROWS.push({...e,_d:d,_multi:end!==e.date,_end:end})}
-const BYID=Object.fromEntries(DATA.events.map(e=>[e.id,e]));
-const cats=[...new Set(DATA.events.map(e=>e.category).filter(Boolean))].sort();
-$("#cat").insertAdjacentHTML("beforeend",cats.map(c=>`<option>${esc(c)}</option>`).join(""));
-const nC=c=>DATA.events.filter(e=>e.city===c).length;
-$("#meta").innerHTML=DAYS.length?`<span><b>${DATA.events.length}</b> events, ${esc(dayShort(DAYS[0]))} to ${esc(dayShort(DAYS.at(-1)))}</span><span>Boca ${nC("Boca Raton")} · Delray ${nC("Delray Beach")} · Boynton ${nC("Boynton Beach")}</span>${DATA.generated?`<span>Updated ${esc(DATA.generated)}</span>`:""}`:"";
-function weekendRange(){const dow=pd(TODAY).getDay();if(dow===0)return[TODAY,TODAY];if(dow===6)return[TODAY,addD(TODAY,1)];if(dow===5)return[TODAY,addD(TODAY,2)];const fri=addD(TODAY,5-dow);return[fri,addD(fri,2)]}
-const S={q:"",cat:"",win:"week",cities:new Set(),tags:new Set(),flags:new Set(),earlier:false,open:new Set()};
-try{const s=JSON.parse(localStorage.getItem("scw2")||"null");if(s){S.win=s.win||S.win;(s.cities||[]).forEach(c=>S.cities.add(c))}}catch(_){}
-function save(){try{localStorage.setItem("scw2",JSON.stringify({win:S.win,cities:[...S.cities]}))}catch(_){}}
-function winRange(){if(S.win==="today")return[TODAY,TODAY];if(S.win==="weekend")return weekendRange();if(S.win==="week")return[TODAY,addD(TODAY,6)];return[DAYS[0]||TODAY,DAYS.at(-1)||TODAY]}
-function match(r){if(S.cities.size&&!S.cities.has(r.city))return false;if(S.cat&&r.category!==S.cat)return false;
- for(const t of S.tags)if(!(r.tags||[]).includes(t))return false;
- if(S.flags.has("free")&&!isFree(r.price))return false;if(S.flags.has("holiday")&&!isHol(r))return false;if(S.flags.has("music")&&!isMusic(r))return false;
- if(S.q){const h=`${r.title} ${r.venue} ${r.address} ${r.desc} ${r.category} ${r.city}`.toLowerCase();if(!S.q.split(/\s+/).every(w=>h.includes(w)))return false}return true}
-const sortK=r=>(r._multi&&!r.time)?3000:(tparse(r.time)??(/all\s*day/i.test(r.time)?-1:2000));
-function gcal(e,d){const p=x=>String(x).padStart(2,"0"),D=d.replace(/-/g,"");let dates;const s=tparse(e.time);
- if(s==null||e._multi&&!e.time){dates=`${D}/${addD(d,1).replace(/-/g,"")}`}else{let en=tend(e.time);if(en==null)en=s+120;const f=m=>`${D}T${p(Math.floor(m/60)%24)}${p(m%60)}00`;dates=`${f(s)}/${en>=1440?addD(d,1).replace(/-/g,"")+"T"+p(Math.floor((en-1440)/60))+p(en%60)+"00":f(en)}`}
- const u=new URLSearchParams({action:"TEMPLATE",text:e.title,dates,ctz:"America/New_York",details:`${e.desc||""}\n${e.url||""}`.trim(),location:[e.venue,e.address||e.city+", FL"].filter(Boolean).join(", ")});return"https://calendar.google.com/calendar/render?"+u}
+const UP=DAYS.filter(d=>d>=TODAY);
+const BYID=Object.fromEntries(DATA.events.map(e=>[e.id,e])),VEN=Object.fromEntries((DATA.venues||[]).map(v=>[v.slug,v]));
+function rowsFor(pred){const R=[];for(const e of DATA.events){if(!pred(e))continue;const end=e.end_date&&e.end_date>e.date?e.end_date:e.date;for(const d of UP)if(d>=e.date&&d<=end)R.push({...e,_d:d,_multi:end!==e.date,_end:end})}return R}
+const sec=e=>e.section||"main";
+const MAIN=rowsFor(e=>sec(e)==="main");
+const ls={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(_){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}};
+const SAVED=new Set(ls.get("ec-saved",[])),FOLLOW=new Set(ls.get("ec-follow",[]));
+const S={q:"",flags:new Set(),cities:new Set(),ages:new Set(),open:new Set(),openDays:new Set(),calDay:null};
+const W={};let cur="events",pend=null;
+function toast(m){document.querySelectorAll(".toast").forEach(x=>x.remove());const t=document.createElement("div");t.className="toast";t.setAttribute("role","status");t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2200)}
+function track(path,title){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path,title:title||path,event:true})}catch(_){}}
+async function share(text){if(navigator.share){try{await navigator.share({text});return}catch(e){if(e&&e.name==="AbortError")return}}try{await navigator.clipboard.writeText(text);toast("Copied. Paste it anywhere.")}catch(_){toast("Couldn't copy here. Try from the app.")}}
+const gcal=(e,d)=>{const p=x=>String(x).padStart(2,"0"),D=d.replace(/-/g,"");const s=tp(e.time);let dates;
+ if(s==null){dates=`${D}/${addD(d,1).replace(/-/g,"")}`}else{let en=te(e.time);if(en==null)en=s+120;const f=m=>`${m>=1440?addD(d,1).replace(/-/g,""):D}T${p(Math.floor(m/60)%24)}${p(m%60)}00`;dates=`${f(s)}/${f(en)}`}
+ return"https://calendar.google.com/calendar/render?"+new URLSearchParams({action:"TEMPLATE",text:e.title,dates,ctz:"America/New_York",details:`${e.desc||""}\n${e.url||""}`.trim(),location:[e.venue,e.address||e.city+", FL"].filter(Boolean).join(", ")})};
 const maps=e=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent([e.venue,e.address,(e.address||"").includes(e.city)?"":e.city+", FL"].filter(Boolean).join(", "));
-const link=id=>(DATA.share_url||"")+(id?"#e-"+id:"");
-function shareText(e,d){return`${e.title}\n${dayShort(d)}${e.time?", "+e.time:""} · ${e.venue?e.venue+", ":""}${SH[e.city]||e.city}${e.price?" · "+e.price:""}\n${e.url||link(e.id)}`}
-function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2200)}
-async function copy(text,msg){try{await navigator.clipboard.writeText(text);toast(msg)}catch(_){const b=$("#copybox");b.hidden=false;b.value=text;b.focus();b.select();toast("Select the text below and copy it")}}
-function item(r){const c=CC[r.city]||"",tg=r.tags||[];
- const ti=r.url?`<a class="ti" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:`<span class="ti">${esc(r.title)}</span>`;
- const st=tparse(r.time),en=tend(r.time);
- const tm=st!=null?`${fmtT(st)}${en!=null?`<small>to ${fmtT(en%1440)}</small>`:""}`:r.time?`<small style="font-size:14px;color:var(--ink)">${esc(r.time)}</small>`:(r._multi?"All day":"<small>Time TBA</small>");
- const also=(r.also||[]).slice(0,2).map(a=>`<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.source||"another listing")}</a>`).join(" ");
- return`<li class="e" id="e-${esc(r.id)}-${r._d}"><div class="tm">${tm}${r._multi?`<small>through ${esc(dayShort(r._end).replace(/^\w+, /,""))}</small>`:""}</div><div>${ti}
- <div class="where"><span class="city ${c}">${esc(SH[r.city]||r.city)}</span>${r.venue?`<span>${esc(r.venue)}</span>`:""}${r.price?`<span class="price ${isFree(r.price)?"free":""}">${esc(r.price)}</span>`:""}${tg.includes("kids")?`<span class="badge kids">Kids &amp; parents</span>`:""}${tg.includes("outdoor")?`<span class="badge outdoor">Outdoors</span>`:""}</div>
- ${r.desc?`<p class="desc">${esc(r.desc)}</p>`:""}
- <div class="row"><a href="${esc(gcal(r,r._d))}" target="_blank" rel="noopener">Add to calendar</a><a href="${esc(maps(r))}" target="_blank" rel="noopener">Directions</a><button data-share="${esc(r.id)}" data-d="${r._d}">Share</button>${r.source?`<span class="src">via ${esc(r.source)}${also?" · also "+also:""}</span>`:""}</div></div></li>`}
-function render(){const[a,b]=winRange();const lo=S.earlier?(DAYS[0]||a):(a<TODAY&&S.win==="all"?TODAY:a);
- const vis=ROWS.filter(r=>r._d>=lo&&r._d<=b&&match(r));
- $("#count").textContent=`${new Set(vis.map(r=>r.id)).size} events`;
- const hasPast=S.win==="all"&&DAYS[0]<TODAY;$("#earlier").hidden=!hasPast;$("#earlier").textContent=S.earlier?"Hide earlier days":"Show earlier days";
- const out=[];for(const d of DAYS){if(d<lo||d>b)continue;const L=vis.filter(r=>r._d===d).sort((x,y)=>sortK(x)-sortK(y)||x.title.localeCompare(y.title));if(!L.length)continue;
-  const lim=S.open.has(d)||S.q?L.length:14,h=HOL[d.slice(5)];
-  out.push(`<section class="day" id="d-${d}"><div class="dayhead"><h3>${d===TODAY?"Today":esc(pd(d).toLocaleDateString("en-US",{weekday:"long"}))}</h3><span class="sub">${esc(pd(d).toLocaleDateString("en-US",{month:"long",day:"numeric"}))} · ${L.length} event${L.length>1?"s":""}</span>${h?`<span class="hol">${esc(h)}</span>`:""}</div><ol class="ev">${L.slice(0,lim).map(item).join("")}</ol>${L.length>lim?`<button class="more" data-open="${d}">Show all ${L.length} on ${esc(pd(d).toLocaleDateString("en-US",{weekday:"long"}))}</button>`:""}</section>`)}
- $("#list").innerHTML=out.join("")||`<p class="empty">Nothing matches these filters. Try another day or clear a filter.</p>`}
-function rail(){const P=(DATA.picks||[]).map(p=>({...BYID[p.id],note:p.note})).filter(e=>e.id&&(e.end_date||e.date)>=TODAY);if(!P.length)return;$("#picks").hidden=false;
- $("#rail").innerHTML=P.map(e=>{const d=e.date<TODAY?TODAY:e.date;return`<article class="card"><div class="when">${esc(dayShort(d))}${tparse(e.time)!=null?" · "+fmtT(tparse(e.time)):""}</div><div class="t">${e.url?`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a>`:esc(e.title)}</div><div class="where"><span class="city ${CC[e.city]}">${esc(SH[e.city])}</span>${e.venue?`<span>${esc(e.venue)}</span>`:""}${e.price?`<span class="price ${isFree(e.price)?"free":""}">${esc(e.price)}</span>`:""}</div>${e.note?`<div class="why">${esc(e.note)}</div>`:""}<div class="row"><a href="${esc(gcal(e,d))}" target="_blank" rel="noopener">Add to calendar</a><button data-share="${esc(e.id)}" data-d="${d}">Share</button></div></article>`}).join("")}
-function syncUI(){document.querySelectorAll("#win button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.w===S.win));
- document.querySelectorAll("#chips .chip").forEach(x=>x.setAttribute("aria-pressed",x.dataset.city?S.cities.has(x.dataset.city):x.dataset.tag?S.tags.has(x.dataset.tag):S.flags.has(x.dataset.flag)))}
-$("#q").addEventListener("input",e=>{S.q=e.target.value.trim().toLowerCase();render()});
-$("#cat").addEventListener("change",e=>{S.cat=e.target.value;render()});
-$("#win").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.win=b.dataset.w;save();syncUI();render()});
-$("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const set=b.dataset.city?S.cities:b.dataset.tag?S.tags:S.flags,k=b.dataset.city||b.dataset.tag||b.dataset.flag;set.has(k)?set.delete(k):set.add(k);save();syncUI();render()});
-$("#earlier").addEventListener("click",()=>{S.earlier=!S.earlier;render()});
-async function share(text,msg){if(navigator.share){try{await navigator.share({text});return}catch(err){if(err&&err.name==="AbortError")return}}copy(text,msg)}
-document.addEventListener("click",e=>{const s=e.target.closest("[data-share]");if(s){const ev=BYID[s.dataset.share];if(ev)share(shareText({...ev},s.dataset.d),"Copied. Paste it in your group chat.");return}
- const m=e.target.closest("[data-open]");if(m){S.open.add(m.dataset.open);render()}});
-$("#sharePage").addEventListener("click",()=>share(`Everything happening in Boca, Delray and Boynton this week: ${DATA.share_url}`,"Link copied"));
-$("#shareWeekend").addEventListener("click",()=>{const[a,b]=weekendRange();let P=(DATA.picks||[]).map(p=>BYID[p.id]).filter(e=>e&&e.date<=b&&(e.end_date||e.date)>=a);
- if(!P.length)P=DATA.events.filter(e=>e.date>=a&&e.date<=b).slice(0,8);
- const lines=P.map(e=>`- ${e.title} (${dayShort(e.date<a?a:e.date).replace(/,.*/,"")}${tparse(e.time)!=null?" "+fmtT(tparse(e.time)):""}, ${SH[e.city]})`);
- share(`This weekend around Boca, Delray and Boynton:\n${lines.join("\n")}\n\nEverything else: ${DATA.share_url}`,"Weekend picks copied")});
-$("#prev").addEventListener("click",()=>$("#rail").scrollBy({left:-$("#rail").clientWidth*.8,behavior:"smooth"}));
-$("#next").addEventListener("click",()=>$("#rail").scrollBy({left:$("#rail").clientWidth*.8,behavior:"smooth"}));
-const PRE={today:{win:"today"},weekend:{win:"weekend"},week:{win:"week"},kids:{tag:"kids"},outdoors:{tag:"outdoor"},free:{flag:"free"},holiday:{flag:"holiday"},music:{flag:"music"},boca:{city:"Boca Raton"},delray:{city:"Delray Beach"},boynton:{city:"Boynton Beach"}};
-function route(){const h=location.hash.slice(1);if(!h)return false;if(PRE[h]){const p=PRE[h];if(p.win)S.win=p.win;if(p.tag)S.tags.add(p.tag);if(p.flag)S.flags.add(p.flag);if(p.city)S.cities.add(p.city);return true}
- const m=h.match(/^e-([0-9a-f]{8})$/);if(m&&BYID[m[1]]){const e=BYID[m[1]];S.win="all";S.earlier=e.date<TODAY;syncUI();render();const el=document.querySelector(`[id^="e-${m[1]}-"]`);if(el){el.classList.add("hl");el.scrollIntoView({block:"center"})}return"done"}return false}
-{const standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
- let deferred=null;addEventListener("beforeinstallprompt",ev=>{ev.preventDefault();deferred=ev;if(!standalone){$("#howto").textContent="Tap Install to add it to your home screen.";$("#installBtn").hidden=false;$("#install").hidden=false}});
- $("#installBtn").addEventListener("click",async()=>{if(!deferred)return;deferred.prompt();try{await deferred.userChoice}catch(_){}deferred=null;$("#install").hidden=true});
- if(!standalone&&window.self===window.top&&"serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(()=>{})}
- const ua=navigator.userAgent||"",ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),andr=/Android/.test(ua);
- let seen=false;try{seen=localStorage.getItem("scw-install")==="1"}catch(_){}
- if((ios||andr)&&!seen&&!standalone){$("#howto").textContent=ios?"In Safari, tap the Share button, then Add to Home Screen.":"In Chrome, tap the menu (three dots), then Add to Home screen.";$("#install").hidden=false}
- $("#gotit").addEventListener("click",()=>{$("#install").hidden=true;try{localStorage.setItem("scw-install","1")}catch(_){}})}
-$("#notes").innerHTML=`${(DATA.notes||[]).length?`<ul>${DATA.notes.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>`:""}${(DATA.sources||[]).length?`<p>Checked this week: ${DATA.sources.map(esc).join(", ")}.</p>`:""}`;
-const r=route();rail();if(r!=="done"){syncUI();render()}
-addEventListener("hashchange",()=>{if(route()!=="done"){syncUI();render()}});
+const facts=(e,d)=>`${e.title}\n${dS(d)}${e.time?", "+e.time:""}\n${[e.venue,SH[e.city]||e.city].filter(Boolean).join(", ")}${e.price?"\n"+e.price:""}\n${DATA.share_url}#e-${e.id}`;
+const tdisp=e=>{const s=tp(e.time),n=te(e.time);return s!=null?fT(s)+(n!=null?" to "+fT(n%1440):""):(e.time||(e._multi?"All day":"Time TBA"))};
+function card(e){const c=CC[e.city]||"",sv=SAVED.has(e.id),op=S.open.has(e.id+e._d),t=tags(e);
+ return`<article class="pc ${c}${op?" open":""}" id="c-${e.id}-${e._d}"><div class="hd">${svg(CI[e.category]||"star")}<span>${esc(tdisp(e))}${e._multi?` · through ${esc(md(e._end))}`:""}</span></div>
+ <button class="heart" data-save="${e.id}" aria-pressed="${sv}" aria-label="${sv?"Remove from":"Save to"} My Plans">${svg("heart")}</button>
+ <button class="ti" data-open="${e.id}|${e._d}" aria-expanded="${op}">${esc(e.title)}</button>
+ <div class="mt"><span class="pill ${c}">${esc(SH[e.city]||e.city)}</span>${e.venue?(e.vslug&&VEN[e.vslug]?`<a href="#venue-${esc(e.vslug)}">${esc(e.venue)}</a>`:`<span>${esc(e.venue)}</span>`):""}${e.price?`<span class="pill ${free(e.price)?"free":""}">${esc(price(e.price))}</span>`:""}${t.includes("kids")?`<span class="pill">Kids</span>`:""}${t.includes("outdoor")?`<span class="pill">Outdoors</span>`:""}</div>
+ <div class="more">${e.desc?`<p>${esc(e.desc)}</p>`:""}${e.address?`<p class="fine">${esc(e.address)}</p>`:""}<div class="acts"><a class="act pri" href="${esc(gcal(e,e._d))}" target="_blank" rel="noopener">Add to calendar</a><a class="act" href="${esc(maps(e))}" target="_blank" rel="noopener">Directions</a><button class="act" data-share="${e.id}|${e._d}">Share</button>${e.url?`<a class="act" href="${esc(e.url)}" target="_blank" rel="noopener">Event page</a>`:""}</div><div class="src">${e.source?`Found on ${esc(e.source)}`:""}${(e.also||[]).length?` and ${e.also.length} other listing${e.also.length>1?"s":""}`:""}</div></div></article>`}
+const wxT=d=>W[d]&&W[d].hi!=null?`${W[d].hi}°${W[d].pop!=null&&W[d].pop>=20?" · "+W[d].pop+"% rain":""}`:"";
+function dayBlocks(rows,opt={}){const out=[];for(const d of UP){const L=rows.filter(r=>r._d===d).sort((a,b)=>(b.score||0)-(a.score||0)||(tp(a.time)??900)-(tp(b.time)??900));if(!L.length)continue;
+ const lim=S.openDays.has(d)||S.q?L.length:(opt.lim||12),h=HOL[d.slice(5)];
+ out.push(`<section class="day" id="d-${d}"><div class="dh"><h3>${d===TODAY?"Today":d===addD(TODAY,1)?"Tomorrow":esc(wk(d))}</h3><span class="meta">${esc(md(d))} · ${L.length} event${L.length>1?"s":""}</span>${h?`<span class="hol">${esc(h)}</span>`:""}<span class="wx">${esc(wxT(d))}</span></div><div class="cards">${L.slice(0,lim).map(card).join("")}</div>${L.length>lim?`<button class="showmore" data-day="${d}">Show all ${L.length} on ${esc(wk(d))}</button>`:""}</section>`)}
+ return out.join("")||`<div class="empty"><b>Nothing here.</b>Beach day? Try clearing a filter.</div>`}
+const foot=()=>`<footer>Event Calendar is put together by Justin Himmelbaum. Times and prices change, so check the event page before you go. Updated ${esc(DATA.generated||"")}.<br>The Himmelbaum Group | Keller Williams Realty Boca Raton</footer>`;
+function match(r){if(S.cities.size&&!S.cities.has(r.city))return false;for(const f of S.flags)if(!FL[f](r))return false;
+ if(S.flags.has("kids")&&S.ages.size&&!(r.ages||[]).some(a=>S.ages.has(a)))return false;
+ if(S.q){const h=`${r.title} ${r.venue} ${r.desc} ${r.category} ${r.city}`.toLowerCase();if(!S.q.split(/\s+/).every(w=>h.includes(w)))return false}return true}
+function evView(){const vis=MAIN.filter(match),cnt={};vis.forEach(r=>cnt[r._d]=(cnt[r._d]||0)+1);
+ const P=(DATA.picks||[]).map(p=>BYID[p.id]?{...BYID[p.id],note:p.note}:null).filter(e=>e&&(e.end_date||e.date)>=TODAY);P.sort((a,b)=>(a.date<TODAY?TODAY:a.date).localeCompare(b.date<TODAY?TODAY:b.date));
+ const B=(k,f,l)=>`<button class="big" data-flag="${f}" aria-pressed="${S.flags.has(f)}">${svg(k)}${l}</button>`,C=(f,l,k)=>`<button class="chip" data-flag="${f}" aria-pressed="${S.flags.has(f)}">${svg(k)}${l}</button>`,CT=(c,l,k)=>`<button class="chip c-${k}" data-city="${c}" aria-pressed="${S.cities.has(c)}">${l}</button>`,AG=(a,l)=>`<button class="chip" data-age="${a}" aria-pressed="${S.ages.has(a)}">${l}</button>`;
+ return`${DATA.hello?`<div class="hello"><img src="justin.png" alt="" width="48" height="48"><div><div class="label">Local tip from Justin</div><p>${esc(DATA.hello)}</p></div></div>`:""}
+ <div id="install"></div>
+ ${P.length?`<h2>Justin's Picks</h2><div class="rail">${P.map(e=>{const d=e.date<TODAY?TODAY:e.date;return`<article class="pick"><div class="top"><b>${esc(pd(d).toLocaleDateString("en-US",{weekday:"short"}))}</b><span>${esc(md(d))}${tp(e.time)!=null?"<br>"+fT(tp(e.time)):""}</span></div><div class="bd"><a class="t" href="#e-${e.id}">${esc(e.title)}</a><div class="mt"><span class="pill ${CC[e.city]||""}">${esc(SH[e.city]||e.city)}</span>${e.price?`<span class="pill ${free(e.price)?"free":""}">${esc(price(e.price))}</span>`:""}</div>${e.note?`<div class="why">${esc(e.note)}</div>`:""}</div></article>`}).join("")}</div>`:""}
+ <h2>Every event <small>${new Set(vis.map(r=>r.id)).size} coming up</small></h2>
+ <div class="strip">${UP.slice(0,21).map(d=>`<button class="dbtn" data-jump="${d}" aria-label="${esc(dS(d))}, ${cnt[d]||0} events"><div class="w">${d===TODAY?"Today":esc(pd(d).toLocaleDateString("en-US",{weekday:"short"}))}</div><div class="n">${pd(d).getDate()}</div><div class="c">${cnt[d]||0}</div>${W[d]&&W[d].hi!=null?`<div class="wx">${W[d].hi}°</div>`:""}</button>`).join("")}</div>
+ <div class="bar"><input class="search" id="q" type="search" placeholder="Search events, venues, bands" aria-label="Search events" value="${esc(S.q)}">
+ <div class="row">${B("kids","kids","Kids &amp; family")}${B("date","date","Date night")}${B("free","free","Free")}${B("beach","outdoor","Outdoors &amp; beach")}</div>
+ ${S.flags.has("kids")?`<div class="row">${AG("baby","Babies &amp; toddlers")}${AG("kid","Kids 4 to 10")}${AG("teen","Tweens &amp; teens")}</div>`:""}
+ <div class="row">${C("music","Live music","music")}${C("food","Food &amp; drink","food")}${C("fitness","Fitness","fit")}${C("network","Networking","biz")}${CT("Boca Raton","Boca","boca")}${CT("Delray Beach","Delray","delray")}${CT("Boynton Beach","Boynton","boynton")}</div></div>
+ ${dayBlocks(vis)}${foot()}`}
+function calView(){const months=[...new Set(UP.map(d=>d.slice(0,7)))],cnt={};MAIN.forEach(r=>cnt[r._d]=(cnt[r._d]||0)+1);const sel=S.calDay||TODAY,cv=UP.map(d=>cnt[d]||0).sort((a,b)=>a-b),hotN=cv[Math.floor(cv.length*.8)]||1e9;
+ const mon=m=>{const[y,mo]=m.split("-").map(Number),first=new Date(y,mo-1,1),n=new Date(y,mo,0).getDate();let cells="";for(let i=0;i<first.getDay();i++)cells+=`<span class="cell off"></span>`;
+  for(let i=1;i<=n;i++){const d=`${m}-${String(i).padStart(2,"0")}`,c=cnt[d]||0,inR=d>=TODAY&&d<=DATA.range_end;cells+=`<button class="cell${c?" has":""}${c&&c>=hotN?" hot":""}" ${inR?`data-cal="${d}"`:"disabled"} aria-current="${d===sel}" aria-label="${esc(md(d))}${inR?", "+c+" events":""}">${i}${inR&&c?`<small>${c}</small>`:""}</button>`}
+  return`<div class="mon"><h3>${esc(first.toLocaleDateString("en-US",{month:"long",year:"numeric"}))}</h3><div class="grid">${"SMTWTFS".split("").map(x=>`<span class="dw">${x}</span>`).join("")}${cells}</div></div>`};
+ return`<div class="vhead"><h2>Calendar</h2><p class="fine">Tap a day to see what's on. The small number is how many events, and the orange days are the busiest.</p></div>${months.map(mon).join("")}${dayBlocks(MAIN.filter(r=>r._d===sel),{lim:40})}${foot()}`}
+function musicView(){const R=rowsFor(e=>e.category==="Music"&&sec(e)!=="civic"),vs={};R.forEach(r=>{if(r.vslug&&VEN[r.vslug])vs[r.vslug]=(vs[r.vslug]||0)+1});
+ const top=Object.entries(vs).sort((a,b)=>b[1]-a[1]).slice(0,14);
+ return`<div class="vhead"><h2>Live music</h2><p class="fine">Every show we could find this month, from bar sets to the amphitheater. Follow a venue to keep it in My Plans.</p></div>${top.length?`<div class="row">${top.map(([s,n])=>`<a class="chip" href="#venue-${esc(s)}">${esc(VEN[s].name)} · ${n}</a>`).join("")}</div>`:""}${dayBlocks(R,{lim:30})}${foot()}`}
+function plansView(){const R=[];for(const id of SAVED){const e=BYID[id];if(!e||(e.end_date||e.date)<TODAY)continue;const d=e.date<TODAY?TODAY:e.date;R.push({...e,_d:d,_multi:!!e.end_date&&e.end_date>e.date,_end:e.end_date||e.date})}
+ R.sort((a,b)=>a._d.localeCompare(b._d)||(tp(a.time)??900)-(tp(b.time)??900));
+ const fv=[...FOLLOW].filter(s=>VEN[s]);
+ return`<div class="vhead"><h2>My Plans</h2></div>${R.length?`<div class="cards">${R.map(card).join("")}</div>`:`<div class="empty"><b>No plans yet.</b>Tap the heart on anything that looks fun and it lands here. Open it for a one-tap calendar reminder.</div>`}
+ <div class="panel"><h3>Venues you follow</h3>${fv.length?`<div>${fv.map(s=>`<a class="li" href="#venue-${esc(s)}">${esc(VEN[s].name)}<span>${new Set(rowsFor(e=>e.vslug===s).map(r=>r.id)).size} coming up</span></a>`).join("")}</div>`:`<p class="fine">Open any venue and tap Follow to keep its shows handy.</p>`}</div>
+ <p class="fine">Saves stay on this phone. Justin sees an anonymous count of how often events get saved, never who saved them.</p>${foot()}`}
+const secRows=s=>rowsFor(e=>sec(e)===s),nU=R=>new Set(R.map(r=>r.id)).size;
+function moreView(){const O=DATA.openings||[];
+ return`<div class="vhead"><h2>More</h2></div>
+ ${O.length?`<div class="panel" id="openings"><h3>New in town</h3><p class="fine">Restaurants and bars that just opened or are about to.</p><div>${O.map(o=>`<a class="li" href="${esc(o.url||"#more")}" target="_blank" rel="noopener"><div>${esc(o.name)}<div class="fine">${esc(o.status||"")}${o.date?" "+esc(o.date):""} · ${esc(SH[o.city]||o.city||"")}${o.where?" · "+esc(o.where):""}${o.note?"<br>"+esc(o.note):""}</div></div></a>`).join("")}</div></div>`:""}
+ <div class="panel"><h3>More listings</h3><p class="fine">Kept out of the main list so it stays easy to scan.</p><div><a class="li" href="#section-bar_weekly">Weekly bar nights<span>${nU(secRows("bar_weekly"))}</span></a><a class="li" href="#section-library">Library classes<span>${nU(secRows("library"))}</span></a><a class="li" href="#section-civic">City meetings<span>${nU(secRows("civic"))}</span></a><a class="li" href="#venues">All venues<span>${(DATA.venues||[]).length}</span></a></div></div>
+ <div class="panel" id="add"><h3>Add your event</h3><p class="fine">Run a venue or putting on something public in Boca, Delray or Boynton? Send it in. Justin and Jacque review every one.</p>
+ <form id="addf"><label>Event name<input name="event" required></label><label>Date<input name="date" type="date" required></label><label>Time<input name="time" placeholder="7 PM to 10 PM"></label><label>Venue<input name="venue" required></label><label>City<select name="city"><option>Boca Raton</option><option>Delray Beach</option><option>Boynton Beach</option></select></label><label>Link<input name="link" type="url" placeholder="https://"></label><label>Your name<input name="name" required autocomplete="name"></label><label>Your email<input name="email" type="email" required autocomplete="email"></label><label>Anything else<textarea name="notes" rows="3"></textarea></label><button class="btn" type="submit">Send it</button></form></div>
+ <div class="panel"><h3>Weekend picks by email</h3><p class="fine">One short email Thursday with the weekend's best. Unsubscribe anytime.</p><form id="mailf"><label>Email<input name="email" type="email" required autocomplete="email"></label><button class="btn alt" type="submit">Sign me up</button></form></div>
+ ${CFG.onesignal?`<div class="panel"><h3>Phone alerts</h3><p class="fine">A heads-up Sunday when the new weeks post and Thursday for the weekend.</p><button class="btn alt" id="pushb">Turn on alerts</button></div>`:""}
+ <div class="panel"><h3>Share Event Calendar</h3><p class="fine">Know someone who always asks what's going on this weekend?</p><button class="btn alt" id="shareapp">Share the app</button></div>
+ <div class="panel move"><h3>Thinking about a move?</h3><p>If you or someone you know is buying or selling around here, I'm happy to help or just answer questions.</p><p>Justin Himmelbaum<br><a href="tel:${PHONE_TEL}">${PHONE}</a>${CFG.contact_email?`<br>${esc(CFG.contact_email)}`:""}<br><a href="https://thehimmelbaumgroup.com" target="_blank" rel="noopener">thehimmelbaumgroup.com</a></p></div>
+ ${(DATA.notes||[]).length?`<div class="panel"><h3>Good to know</h3>${DATA.notes.map(n=>`<p class="fine">${esc(n)}</p>`).join("")}</div>`:""}${foot()}`}
+function venuesView(){const vs=(DATA.venues||[]).slice().sort((a,b)=>a.name.localeCompare(b.name));return`<button class="back" data-back>Back</button><div class="vhead"><h2>Venues</h2></div><div class="panel">${vs.map(v=>`<a class="li" href="#venue-${esc(v.slug)}">${esc(v.name)}<span>${esc(SH[v.city]||v.city)} · ${v.count}</span></a>`).join("")}</div>${foot()}`}
+function venueView(s){const v=VEN[s];if(!v)return evView();track("venue/"+s,v.name);const R=rowsFor(e=>e.vslug===s&&sec(e)!=="civic"),f=FOLLOW.has(s);
+ return`<button class="back" data-back>Back</button><div class="vhead"><div class="label">${esc(SH[v.city]||v.city)}</div><h2>${esc(v.name)}</h2>${v.address?`<p class="fine">${esc(v.address)}</p>`:""}<div class="acts"><button class="act pri" data-follow="${esc(s)}" aria-pressed="${f}">${f?"Following":"Follow"}</button><a class="act" href="${esc(maps({venue:v.name,address:v.address,city:v.city}))}" target="_blank" rel="noopener">Directions</a><button class="act" data-sharev="${esc(s)}">Share</button></div></div>${dayBlocks(R,{lim:30})}<div class="panel"><h3>Own or run ${esc(v.name)}?</h3><p class="fine">Send your events in and they'll show up here and in the main list.</p><a class="btn" href="#add">Add your events</a></div>${foot()}`}
+function secView(s){const T={civic:["City meetings","Commission, CRA and board meetings open to the public."],library:["Library classes","Classes, clubs and talks at local libraries."],bar_weekly:["Weekly bar nights","Standing trivia, karaoke, bingo and open mic nights."]}[s]||["Listings",""];
+ return`<button class="back" data-back>Back</button><div class="vhead"><h2>${T[0]}</h2><p class="fine">${T[1]}</p></div>${dayBlocks(secRows(s),{lim:40})}${foot()}`}
+function installBox(){const el=$("#install");if(!el)return;const st=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;if(st||ls.get("ec-inst",0))return;
+ const ua=navigator.userAgent||"",ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),andr=/Android/.test(ua);if(!ios&&!andr&&!window.__bip)return;
+ el.innerHTML=`<div class="install"><div><b>Keep it on your home screen.</b> ${ios?"In Safari, tap Share, then Add to Home Screen.":"Tap Install and it opens like an app."} It updates on its own.</div>${window.__bip?`<button class="btn" id="instb">Install</button>`:""}<button class="act" id="instx">Got it</button></div>`}
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();window.__bip=e;installBox()});
+const VIEWS={events:evView,calendar:calView,music:musicView,plans:plansView,more:moreView,venues:venuesView};
+function render(){const h=decodeURIComponent(location.hash.slice(1))||"events";let v=h,html;
+ if(h.startsWith("venue-")){html=venueView(h.slice(6));v=VEN[h.slice(6)]?"more":"events"}
+ else if(h.startsWith("section-")){html=secView(h.slice(8));v="more"}
+ else if(h.startsWith("e-")&&BYID[h.slice(2)]){const e=BYID[h.slice(2)],d=e.date<TODAY?TODAY:e.date;S.open.add(e.id+d);S.flags.clear();S.cities.clear();S.q="";S.openDays.add(d);
+  if(sec(e)!=="main"){html=secView(sec(e));v="more"}else{html=evView();v="events"}pend=`c-${e.id}-${d}`}
+ else if(h==="add"||h==="openings"){html=moreView();v="more";pend=h}
+ else{v=VIEWS[h]?h:"events";html=VIEWS[v]()}
+ cur=v;document.body.classList.toggle("sub",v!=="events");V.innerHTML=html;document.querySelectorAll("#tabs a").forEach(a=>a.setAttribute("aria-current",a.dataset.v===v?"page":"false"));installBox();
+ if(pend){const el=document.getElementById(pend);pend=null;if(el)setTimeout(()=>el.scrollIntoView({block:"center"}),40)}}
+function rerender(){const y=window.scrollY;render();window.scrollTo(0,y)}
+addEventListener("hashchange",()=>{const h=location.hash.slice(1);render();if(!/^(e-|add$|openings$)/.test(h))window.scrollTo(0,0)});
+V.addEventListener("input",e=>{if(e.target.id==="q"){S.q=e.target.value.trim().toLowerCase();clearTimeout(window.__qt);window.__qt=setTimeout(()=>{const pos=e.target.selectionStart;rerender();const q=$("#q");if(q){q.focus({preventScroll:true});try{q.setSelectionRange(pos,pos)}catch(_){}}},250)}});
+V.addEventListener("submit",async e=>{e.preventDefault();const f=e.target,fd=new FormData(f);
+ if(f.id==="mailf"){const body=new FormData();body.append("fields[email]",fd.get("email"));body.append("ml-submit","1");body.append("anticsrf","true");
+  try{await fetch(`https://assets.mailerlite.com/jsonp/${CFG.ml_account||"867109"}/forms/${CFG.ml_form||"205162874792838197"}/subscribe`,{method:"POST",body,mode:"no-cors"});f.innerHTML=`<p><b>Almost done.</b> Check your inbox and confirm, and the weekend picks start Thursday.</p>`;track("signup/email","Email signup")}catch(_){toast("That didn't go through. Try again in a minute.")}}
+ if(f.id==="addf"){const o=Object.fromEntries(fd.entries());track("submit/event","Event submitted");const subj="Event Calendar submission: "+o.event,body=Object.entries(o).map(([k,v])=>`${k}: ${v}`).join("\n");
+  if(CFG.formspree){try{const r=await fetch(CFG.formspree,{method:"POST",headers:{Accept:"application/json","Content-Type":"application/json"},body:JSON.stringify({...o,_subject:subj})});if(!r.ok)throw 0;f.innerHTML=`<p><b>Got it, thank you.</b> Justin and Jacque will take a look and add it.</p>`}catch(_){toast("That didn't send. Try again in a minute.")}}
+  else{location.href=CFG.contact_email?`mailto:${CFG.contact_email}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`:`sms:${PHONE_TEL}?&body=${encodeURIComponent(subj+"\n"+body)}`;if(!f.querySelector(".fine"))f.insertAdjacentHTML("beforeend",`<p class="fine">Your ${CFG.contact_email?"email":"messages"} app should open with everything filled in. Just hit send. If it didn't, text the details to ${PHONE}.</p>`)}}});
+document.addEventListener("click",e=>{const t=e.target.closest("button,a");if(!t)return;const ds=t.dataset;
+ if(ds.flag){const k=ds.flag;S.flags.has(k)?S.flags.delete(k):S.flags.add(k);if(k==="kids"&&!S.flags.has("kids"))S.ages.clear();rerender();return}
+ if(ds.city){const k=ds.city;S.cities.has(k)?S.cities.delete(k):S.cities.add(k);rerender();return}
+ if(ds.age){const k=ds.age;S.ages.has(k)?S.ages.delete(k):S.ages.add(k);rerender();return}
+ if(ds.open){const[id,d]=ds.open.split("|"),k=id+d,el=document.getElementById(`c-${id}-${d}`);S.open.has(k)?S.open.delete(k):S.open.add(k);if(el){el.classList.toggle("open",S.open.has(k));t.setAttribute("aria-expanded",S.open.has(k))}return}
+ if(ds.save){const id=ds.save,ev=BYID[id];if(SAVED.has(id)){SAVED.delete(id);toast("Removed. More time for the beach.")}else{SAVED.add(id);toast("Saved. See you there.");track("save/"+id,ev?ev.title:id)}ls.set("ec-saved",[...SAVED]);document.querySelectorAll(`[data-save="${id}"]`).forEach(b=>{b.setAttribute("aria-pressed",SAVED.has(id));b.setAttribute("aria-label",(SAVED.has(id)?"Remove from":"Save to")+" My Plans")});if(cur==="plans")rerender();return}
+ if(ds.share){const[id,d]=ds.share.split("|");share(facts(BYID[id],d));track("share/"+id,BYID[id].title);return}
+ if(ds.sharev){const v=VEN[ds.sharev];share(`${v.name}: upcoming events\n${DATA.share_url}#venue-${v.slug}`);return}
+ if(ds.follow){const s=ds.follow;if(FOLLOW.has(s)){FOLLOW.delete(s);toast("Unfollowed.")}else{FOLLOW.add(s);toast("Following. Find it in My Plans.");track("follow/"+s,VEN[s]&&VEN[s].name)}ls.set("ec-follow",[...FOLLOW]);rerender();return}
+ if(ds.day){S.openDays.add(ds.day);rerender();return}
+ if(ds.jump){const el=document.getElementById("d-"+ds.jump);if(el)el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});else toast("Nothing matches on that day.");return}
+ if(ds.cal){S.calDay=ds.cal;rerender();const el=document.getElementById("d-"+S.calDay);if(el)el.scrollIntoView({behavior:"smooth"});return}
+ if(t.hasAttribute("data-back")){history.length>1?history.back():(location.hash="more");return}
+ if(t.id==="shareapp"){share(`Every event in Boca, Delray and Boynton, in one app:\n${DATA.share_url}`);return}
+ if(t.id==="instx"){ls.set("ec-inst",1);$("#install").innerHTML="";return}
+ if(t.id==="instb"&&window.__bip){window.__bip.prompt();window.__bip=null;$("#install").innerHTML="";return}
+ if(t.id==="pushb"&&window.OneSignalDeferred){window.OneSignalDeferred.push(async os=>{try{await os.Notifications.requestPermission()}catch(_){}});return}});
+{const ids=new Set(MAIN.map(r=>r.id)),E=[...ids].map(i=>BYID[i]);$("#stats").textContent=`${ids.size.toLocaleString()} events · ${E.filter(e=>free(e.price)).length} free · ${E.filter(e=>tags(e).includes("kids")).length} for kids · ${E.filter(e=>e.category==="Music").length} shows`}
+(async()=>{try{const c=ls.get("ec-wx",null);if(c&&Date.now()-c.t<3*3600e3){Object.assign(W,c.w);rerender();return}
+ const p=await (await fetch("https://api.weather.gov/points/26.4615,-80.0728")).json();const f=await (await fetch(p.properties.forecast)).json();
+ for(const x of f.properties.periods){const d=x.startTime.slice(0,10);W[d]=W[d]||{};const pop=x.probabilityOfPrecipitation?x.probabilityOfPrecipitation.value:null;if(x.isDaytime){W[d].hi=x.temperature;W[d].pop=pop}else{W[d].lo=x.temperature;if(W[d].pop==null)W[d].pop=pop}}
+ ls.set("ec-wx",{t:Date.now(),w:W});rerender()}catch(_){}})();
+const real=window.self===window.top&&location.protocol==="https:";
+if(real&&"serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+if(real&&CFG.goatcounter){const s=document.createElement("script");s.async=true;s.src="https://gc.zgo.at/count.js";s.dataset.goatcounter=`https://${CFG.goatcounter}.goatcounter.com/count`;document.head.append(s)}
+if(real&&CFG.onesignal){window.OneSignalDeferred=window.OneSignalDeferred||[];const s=document.createElement("script");s.defer=true;s.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";document.head.append(s);window.OneSignalDeferred.push(async os=>{await os.init({appId:CFG.onesignal})})}
+render();
 }
 </script>
 </body>
