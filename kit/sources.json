@@ -1,0 +1,4395 @@
+{
+ "updated": "2026-11-25",
+ "slices": {
+  "boca_aggregators": [
+   {
+    "name": "Eventbrite keyword 'boca' search (per day)",
+    "url": "https://www.eventbrite.com/d/fl--boca-raton/boca/?start_date={date}&end_date={date}&page={n}",
+    "status": "works",
+    "tip": "curl OK; parse window.__SERVER_DATA__ search_data.events.results; Boca items only on p1-4 (p4 rarely has 1)."
+   },
+   {
+    "name": "Eventbrite all-events per day (all pages)",
+    "url": "https://www.eventbrite.com/d/fl--boca-raton/all-events/?start_date={date}&end_date={date}&page={n}",
+    "status": "works",
+    "tip": "Read pagination.page_count from p1 (21-49 pages/day); Boca items still appear on p17-31, so crawl every page; filter primary_venue.address.city."
+   },
+   {
+    "name": "Eventbrite event pages (ld+json)",
+    "url": "https://www.eventbrite.com/e/{id}",
+    "status": "works",
+    "tip": "/e/{id} redirects to full slug; ld+json gives offers low/high and eventStatus (3 cancellations caught: Ramen Lab bingo, 2 Tribune expos). Pages without ld+json are sold out/sales ended."
+   },
+   {
+    "name": "Eventbrite series parents to skip",
+    "url": "https://www.eventbrite.com/e/{id}",
+    "status": "works",
+    "tip": "Items whose start_date is weeks before the query date (JCC programs, JBiz membership, Mai LG Fazzingo listing, 123 Main webinars) are series parents or junk; skip them."
+   },
+   {
+    "name": "AllEvents.in category + weekday crawl",
+    "url": "https://allevents.in/boca-raton/{category|monday..sunday|december|santa|hanukkah|charity|networking}",
+    "status": "works",
+    "tip": "curl OK; crawl linked event pages 3-5 levels deep (1,100 ld events); IDs starting 10000 are Eventbrite mirrors, 3300... 'X in Boca Raton' listings are auto-generated and wrong (e.g. Seven Lions 2 PM)."
+   },
+   {
+    "name": "AllEvents.in event pages",
+    "url": "https://allevents.in/boca-raton/{slug}/{id}",
+    "status": "works",
+    "tip": "Use the 'About the event' text for weekday and recurrence; Tower of Games (499 NE Spanish River Blvd) posts many weekly card-game nights."
+   },
+   {
+    "name": "AllEvents Candlelight listing (wrong)",
+    "url": "https://allevents.in/boca-raton/candlelight-the-soundtrack-of-the-60´s-boca-raton/200030442690125",
+    "status": "fails",
+    "tip": "Listed a Dec 4 Beatles Candlelight that Fever does not have; Fever shows Fleetwood Mac 6:30 and Michael Jackson 8:30."
+   },
+   {
+    "name": "Fever Candlelight Boca",
+    "url": "https://feverup.com/en/boca-raton-fl-us/candlelight",
+    "status": "works",
+    "tip": "WebFetch OK; Dec 4 two shows at St. Gregory's with prices; next dates Dec 18-19."
+   },
+   {
+    "name": "Patch Boca calendar",
+    "url": "https://patch.com/florida/boca-raton/calendar",
+    "status": "works",
+    "tip": "Now carries City of Boca rec classes (no links) plus Candlelight event pages with eventvesta ticket links; event pages at /calendar/event/{yyyymmdd}/{uuid}/{slug}."
+   },
+   {
+    "name": "Meetup find mirror",
+    "url": "https://pro.meetup.com/find/us--fl--boca-raton/",
+    "status": "works",
+    "tip": "Needs trailing slash (308 redirect); walk __NEXT_DATA__ for dateTime/title/eventUrl; ~55 events, about 13 Boca in range."
+   },
+   {
+    "name": "Meetup event pages",
+    "url": "https://www.meetup.com/{group}/events/{id}/",
+    "status": "works",
+    "tip": "curl OK; ld+json gives venue/address; some have no venue (skip address)."
+   },
+   {
+    "name": "Songkick Funky Biscuit calendar",
+    "url": "https://www.songkick.com/venues/1496413-funky-biscuit/calendar",
+    "status": "works",
+    "tip": "WebFetch; added Crazy Fingers Dec 1 and David Nail night 2 Dec 5 ($40-55)."
+   },
+   {
+    "name": "Songkick Sunset Cove calendar",
+    "url": "https://www.songkick.com/venues/68894-sunset-cove-amphitheater/calendar",
+    "status": "works",
+    "tip": "Shows Cyclops Cove 4 (Subtronics fest) Dec 4-6; venue overview page shows only 5 items, use /calendar."
+   },
+   {
+    "name": "Songkick Mizner Park Amphitheater / Studio at Mizner Park",
+    "url": "https://songkick.com/venues/442-mizner-park-amphitheater",
+    "status": "empty",
+    "tip": "Nothing Nov 25-Dec 6 (Studio has Dec 8 Chris Ruggiero)."
+   },
+   {
+    "name": "Crazy Uncle Mike's events list",
+    "url": "https://www.crazyunclemikes.com/events",
+    "status": "works",
+    "tip": "curl OK; ld+json list with recurring Country Night (Mon) and Taco Tuesday Latin Night; closed Thanksgiving. Times in ld are local despite +00:00."
+   },
+   {
+    "name": "HappeningNext category pages",
+    "url": "https://happeningnext.com/boca+raton/{live-music|comedy|festivals|holiday|christmas|kids}",
+    "status": "works",
+    "tip": "365 links, but all in-range items duplicated Eventbrite/AllEvents; /this-weekend and /next-week 404."
+   },
+   {
+    "name": "The Coastal Star calendar by day",
+    "url": "https://thecoastalstar.com/events/list/on/{YYYY-MM-DD}",
+    "status": "works",
+    "tip": "Event links have ?context=date-; OLLI at FAU lectures (Nov 30-Dec 3) were the only new Boca items; times like 3:00 mean PM."
+   },
+   {
+    "name": "Boca Raton Observer upcoming events",
+    "url": "https://bocaratonobserver.com/search/event/upcoming-events/?page={n}",
+    "status": "works",
+    "tip": "Pages 1-18 cover Nov 25-Dec 6 (10/page); city field wrong for Broward/Miami items, filter by street address; found Lynn White Christmas, Caring Santa."
+   },
+   {
+    "name": "JewishBoca weekly calendar",
+    "url": "https://jewishboca.org/events/week/{YYYY-MM-DD}/",
+    "status": "works",
+    "tip": "ld+json per week; mostly internal Federation meetings; public: Comedy Heals (Rapaport) Dec 1, B'nai Torah Hanukkah Dec 6."
+   },
+   {
+    "name": "RunSignup Boca race pages",
+    "url": "https://runsignup.com/Race/FL/BocaRaton/{RaceName}",
+    "status": "works",
+    "tip": "ld+json date/venue; /Race/Events/... page shows price tiers. CityHouse River Run 5K Dec 5; Boca PAL Holiday Mile Dec 2 is CANCELED."
+   },
+   {
+    "name": "FindTheRun Boca races",
+    "url": "https://www.findtherun.com/races/boca-raton-fl",
+    "status": "works",
+    "tip": "WebFetch; good regional race list with dates, no times; confirms canceled races."
+   },
+   {
+    "name": "Miami on the Cheap Palm Beach monthly",
+    "url": "https://miamionthecheap.com/top-things-to-do-in-december-in-palm-beach-county",
+    "status": "works",
+    "tip": "2026 page; linked article gives Boca Holiday Street Parade Wed Dec 2 7:30-9 PM (route TBD)."
+   },
+   {
+    "name": "The Symphonia event page",
+    "url": "https://thesymphonia.org/attend/calendar/holiday-pops-with-the-symphonia1/",
+    "status": "works",
+    "tip": "Holiday Pops Dec 5 7 PM, doors 6 PM with free kids pop-up."
+   },
+   {
+    "name": "Trip.com Boca events collection",
+    "url": "https://www.trip.com/events/58779-boca-raton-collection",
+    "status": "works",
+    "tip": "curl OK but only duplicates (lists Big Something at Studio at Mizner Park in error)."
+   },
+   {
+    "name": "Visit Palm Beaches December roundup",
+    "url": "https://www.thepalmbeaches.com/blog/54923-2",
+    "status": "fails",
+    "tip": "Still the 2025 roundup; English slug URL returns client_error."
+   },
+   {
+    "name": "Visit Palm Beaches parade event page",
+    "url": "https://www.thepalmbeaches.com/event/city-of-boca-ratons-holiday-street-parade",
+    "status": "fails",
+    "tip": "Undated 2025 (53rd) page."
+   },
+   {
+    "name": "Boca Magazine events",
+    "url": "https://bocamag.com/events/month",
+    "status": "fails",
+    "tip": "curl gets bunny-shield 403; WebFetch shows undated/stale items."
+   },
+   {
+    "name": "FairsAndFestivals Boca",
+    "url": "https://www.fairsandfestivals.net/states/FL/boca-raton/",
+    "status": "empty",
+    "tip": "Statewide list; no Boca items in range (Boca Night Market is Dec 10)."
+   },
+   {
+    "name": "Eventeny",
+    "url": "https://www.eventeny.com/events/magical-meetups-the-holly-jolly-market-31603/",
+    "status": "empty",
+    "tip": "Only Boca listing found is Dec 20."
+   },
+   {
+    "name": "SweatPals Boca run clubs",
+    "url": "https://sweatpals.com/s/boca-raton/run-clubs",
+    "status": "empty",
+    "tip": "curl 404; WebFetch shows only May listings."
+   },
+   {
+    "name": "Luma / Partiful search",
+    "url": "web search 'lu.ma Boca Raton' / 'partiful.com Boca Raton'",
+    "status": "empty",
+    "tip": "No Boca public events indexed."
+   },
+   {
+    "name": "Vivid Seats Mizner Park Amphitheater",
+    "url": "https://www.vividseats.com/mizner-park-amphitheater-tickets/venue/6854",
+    "status": "empty",
+    "tip": "Only Feb 2027 listings."
+   },
+   {
+    "name": "Dice / AXS / SeeTickets / 10Times / Evvnt",
+    "url": "https://dice.fm/browse/boca_raton ; https://www.axs.com/venues/boca-raton ; https://www.seetickets.us/search?q=boca ; https://10times.com/boca-raton-us ; https://www.evvnt.com/",
+    "status": "fails",
+    "tip": "curl 404/403 (bot walls)."
+   },
+   {
+    "name": "Yelp events / Universe / Eventective",
+    "url": "https://www.yelp.com/events/boca-raton ; https://www.universe.com/discover/boca-raton-fl ; https://www.eventective.com/boca-raton-fl/",
+    "status": "fails",
+    "tip": "Yelp and Universe 404; Eventective is a venue directory with no events."
+   },
+   {
+    "name": "Palm Beach Post / Sun Sentinel weekend roundups",
+    "url": "web search",
+    "status": "empty",
+    "tip": "No 2026 Thanksgiving-weekend or early-December Boca roundups indexed."
+   },
+   {
+    "name": "Biergarten Boca (Patch mention of KRUSH Party Band Dec 4)",
+    "url": "https://patch.com/florida/boca-raton/calendar",
+    "status": "untried",
+    "tip": "Patch lists KRUSH Party Band at Biergarten Dec 4 8 PM but no event link; venue site not checked."
+   },
+   {
+    "name": "Eventbrite category pages",
+    "url": "https://www.eventbrite.com/d/fl--boca-raton/{music|charity-and-causes|food-and-drink|family-and-education|health|free}--events/?start_date={date}&end_date={date}",
+    "status": "works",
+    "tip": "Per-day category pages added 0 uniques beyond keyword+all-events this run."
+   },
+   {
+    "name": "Eventbrite venue keyword (mizner, fau, family)",
+    "url": "https://www.eventbrite.com/d/fl--boca-raton/{keyword}/?start_date={date}&end_date={date}",
+    "status": "works",
+    "tip": "Keyword appears ignored/falls back to general Boca list; low added value."
+   },
+   {
+    "name": "Eventbrite event pages",
+    "url": "https://www.eventbrite.com/e/{slug}-tickets-{id}",
+    "status": "works",
+    "tip": "ld+json (script tag has extra attrs) gives offers low/high price and eventStatus (catches cancellations)."
+   },
+   {
+    "name": "Eventbrite next-week filter",
+    "url": "https://www.eventbrite.com/d/fl--boca-raton/events--next-week/",
+    "status": "works",
+    "tip": "Relative to current date; prefer explicit start_date/end_date."
+   },
+   {
+    "name": "AllEvents.in category pages",
+    "url": "https://allevents.in/boca-raton/{music|kids|festivals|comedy|art|theatre|business|health-wellness|parties|workshops|sports|food-drinks}",
+    "status": "works",
+    "tip": "curl OK; ld+json on category pages only shows ~15 items; crawl linked event pages (allevents.in/boca-raton/slug/id) 2 levels deep to find ~60 more."
+   },
+   {
+    "name": "AllEvents.in this-weekend / this-week / all",
+    "url": "https://allevents.in/boca-raton/this-weekend",
+    "status": "works",
+    "tip": "this-weekend/today/tomorrow/thanksgiving now current but region-wide (Broward/WPB); filter by address."
+   },
+   {
+    "name": "Songkick venue calendar",
+    "url": "https://www.songkick.com/venues/{id}-{slug}/calendar",
+    "status": "works",
+    "tip": "curl gets 406; use WebFetch on songkick.com/venues/1496413-funky-biscuit (5 shows this week) and concert pages for doors/price."
+   },
+   {
+    "name": "Songkick metro date filter",
+    "url": "https://www.songkick.com/metro-areas/7342-us-miami?filters[minDate]={date}&filters[maxDate]={date}",
+    "status": "fails",
+    "tip": "Client error; use venue calendars."
+   },
+   {
+    "name": "Bandsintown city page",
+    "url": "https://www.bandsintown.com/c/boca-raton-fl",
+    "status": "fails",
+    "tip": "403 via curl."
+   },
+   {
+    "name": "Meetup find (main)",
+    "url": "https://www.meetup.com/find/?location=us--fl--Boca%20Raton&source=EVENTS&customStartDate={date}...",
+    "status": "fails",
+    "tip": "robots_disallowed; use pro.meetup.com mirror."
+   },
+   {
+    "name": "HappeningNext city page",
+    "url": "https://happeningnext.com/boca-raton",
+    "status": "fails",
+    "tip": "Client error; https://happeningnext.com/boca+raton works."
+   },
+   {
+    "name": "HappeningNext city page (plus form)",
+    "url": "https://happeningnext.com/boca+raton",
+    "status": "works",
+    "tip": "Category pages /boca+raton/{live-music|comedy|festivals|food-drinks|pop-ups} all duplicates of Eventbrite/AllEvents."
+   },
+   {
+    "name": "Luma city page",
+    "url": "https://luma.com/boca-raton",
+    "status": "fails",
+    "tip": "404."
+   },
+   {
+    "name": "Visit Palm Beach events",
+    "url": "https://www.thepalmbeaches.com/events?city=boca-raton",
+    "status": "fails",
+    "tip": "403 via curl; but press releases work via WebFetch (see new entry)."
+   },
+   {
+    "name": "BocaRaton.com events",
+    "url": "https://bocaraton.com/events/",
+    "status": "empty",
+    "tip": "Only big events (Wine & Food Fest Nov 21)."
+   },
+   {
+    "name": "Ticketmaster Baldwin Arena (FAU)",
+    "url": "https://www.ticketmaster.com/abessinio-court-at-eleanor-r-baldwin-billets-boca-raton/venue/106666",
+    "status": "empty",
+    "tip": "Showed only stale 2025-26 dates."
+   },
+   {
+    "name": "TourWax Boca concerts",
+    "url": "https://www.tourwax.com/concerts/boca-raton",
+    "status": "empty",
+    "tip": "Only 2027 listings."
+   },
+   {
+    "name": "Humanitix Boca",
+    "url": "https://humanitix.com/events/united-states/boca-raton",
+    "status": "empty",
+    "tip": "Stale/wrong-year items."
+   },
+   {
+    "name": "Palm Beach Illustrated weekly roundup",
+    "url": "https://www.palmbeachillustrated.com/3-things-to-do-this-week-in-palm-beach-county-november-14-21/",
+    "status": "fails",
+    "tip": "Search returns 2019 article; no current roundup found."
+   },
+   {
+    "name": "Boca Post Veterans Day article",
+    "url": "https://bocapost.com/news/boca-raton/celebrating-veterans-day-in-boca/",
+    "status": "fails",
+    "tip": "2025 article; not current year."
+   },
+   {
+    "name": "PBC Parks Veterans Day PDF",
+    "url": "https://discover.pbc.gov/parks/PDF/VeteransDay2026_ADA.pdf",
+    "status": "works",
+    "tip": "2026 flyer for West Boca Veteran's Memorial Park ceremony."
+   },
+   {
+    "name": "Boca Raton Observer events",
+    "url": "https://bocaratonobserver.com/events/{slug}/",
+    "status": "works",
+    "tip": "Use /search/event/upcoming-events/?page={n} with --compressed; ld+json per item; city field unreliable (check address); ~25 pages per week."
+   },
+   {
+    "name": "JamBase Boca",
+    "url": "https://www.jambase.com/venue/sunset-cove-amphitheater",
+    "status": "works",
+    "tip": "Sunset Cove page only had Holidaze fest; duplicates other sources."
+   },
+   {
+    "name": "Concerts by Consequence venue pages",
+    "url": "https://concerts.consequence.net/venues/the-funky-biscuit-tickets",
+    "status": "empty",
+    "tip": "Funky Biscuit page showed only stale Jan-Feb 2026 shows."
+   },
+   {
+    "name": "City of Boca Raton (myboca.us)",
+    "url": "https://www.myboca.us/calendar.aspx",
+    "status": "untried",
+    "tip": "Official city events, Veterans Day/Red White & Boca."
+   },
+   {
+    "name": "Boca Magazine",
+    "url": "https://bocamag.com/",
+    "status": "fails",
+    "tip": "bocamag.com/events/month/2026-11 client_error."
+   },
+   {
+    "name": "Boca Post events",
+    "url": "https://bocapost.com/events/",
+    "status": "empty",
+    "tip": "/events/ page is a stale March 2026 roundup."
+   },
+   {
+    "name": "SweatPals Boca",
+    "url": "https://sweatpals.com/s/boca-raton/social-events",
+    "status": "empty",
+    "tip": "Only a May listing."
+   },
+   {
+    "name": "Luminik conferences",
+    "url": "https://www.luminik.io/events/city/boca-raton/",
+    "status": "empty",
+    "tip": "National list, no Boca items."
+   },
+   {
+    "name": "The Craft Map Boca",
+    "url": "https://www.thecraftmap.com/fairs/florida/boca-raton",
+    "status": "works",
+    "tip": "Lists tree lighting & wine fest only; duplicates."
+   },
+   {
+    "name": "Discotech Sunset Cove",
+    "url": "https://app.discotech.me/fort-lauderdale/sunset-cove-amphitheater",
+    "status": "works",
+    "tip": "Only Holidaze fest; duplicate."
+   },
+   {
+    "name": "Fever Boca Raton",
+    "url": "https://feverup.com/en/boca-raton-fl-us/things-to-do",
+    "status": "empty",
+    "tip": "No Boca Candlelight dates this week (next Dec 4); undated self-guided games only."
+   },
+   {
+    "name": "TreasureHunter.show",
+    "url": "https://www.treasurehunter.show/show/{slug}-boca-raton-fl-{YYYY-MM-DD}",
+    "status": "works",
+    "tip": "Card/collectible shows; found via web search for a dated Boca query."
+   },
+   {
+    "name": "Yopki kids calendar",
+    "url": "https://yopki.com/explore/us/fl/boca-raton/events",
+    "status": "empty",
+    "tip": "Few dated items; mislabeled Flamingo Gardens (Davie) as Boca."
+   },
+   {
+    "name": "Macaroni Kid Boca Raton",
+    "url": "https://bocaraton.macaronikid.com",
+    "status": "empty",
+    "tip": "Homepage shows articles only; calendar URL not exposed."
+   },
+   {
+    "name": "Refresh Miami Boca tag",
+    "url": "https://refreshmiami.com/events/tag/boca-raton/{YYYY-MM}/",
+    "status": "empty",
+    "tip": "0 events for Nov 15-22 (tech/startup events)."
+   },
+   {
+    "name": "Palm Beach Culture calendar",
+    "url": "https://go.palmbeachculture.com/event/?page={n}",
+    "status": "empty",
+    "tip": "County-wide, no city in listings; city filter not URL-addressable."
+   },
+   {
+    "name": "Pearl (joinpearl.co)",
+    "url": "https://joinpearl.co/events/boca-raton",
+    "status": "empty",
+    "tip": "Only big events (wine fest, Artisans Gala)."
+   },
+   {
+    "name": "Clocate conferences",
+    "url": "https://www.clocate.com/conferences-in+boca-raton+november/Y2ktMTgxOTYrbW8=/",
+    "status": "empty",
+    "tip": "No Boca conferences this week."
+   },
+   {
+    "name": "Ticketmaster discover Boca",
+    "url": "https://www.ticketmaster.com/discover/concerts/boca-raton",
+    "status": "fails",
+    "tip": "client_error."
+   },
+   {
+    "name": "The PB Moms calendar",
+    "url": "https://thepbmoms.com/events/month/{YYYY-MM}",
+    "status": "fails",
+    "tip": "client_error."
+   },
+   {
+    "name": "AllEvents.in city main page",
+    "url": "https://allevents.in/boca-raton",
+    "status": "works",
+    "tip": "Current this run; surfaced a few items not in category pages."
+   },
+   {
+    "name": "Eventbrite all-events per-day deep pages",
+    "url": "https://www.eventbrite.com/d/fl--boca-raton/all-events/?start_date={date}&end_date={date}&page={16-30}",
+    "status": "empty",
+    "tip": "Pages 16-30 added no new Boca items."
+   },
+   {
+    "name": "AllEvents.in thanksgiving/christmas/today/tomorrow",
+    "url": "https://allevents.in/boca-raton/{thanksgiving|christmas|today|tomorrow}",
+    "status": "works",
+    "tip": "Current but mostly Broward/WPB; a few Boca items."
+   },
+   {
+    "name": "Songkick Boca Black Box / Crazy Uncle Mike's venue pages",
+    "url": "https://songkick.com/venues/3169779-boca-black-box-center-for-the-arts",
+    "status": "empty",
+    "tip": "Only dupes (John Denver tribute); Crazy Uncle Mike's id 4070849 none this week."
+   },
+   {
+    "name": "Visit Palm Beaches holiday press release",
+    "url": "https://www.thepalmbeaches.com/press-releases/holiday-happenings-in-the-palm-beaches-2026",
+    "status": "works",
+    "tip": "WebFetch OK; gave Santa Paws, Willow Theatre venue for Sinatra/Pooh, Life's a Beach hours."
+   },
+   {
+    "name": "American Arenas Boca",
+    "url": "https://americanarenas.com/city/boca-raton-events/",
+    "status": "works",
+    "tip": "Only FAU games and Alan Chamo; dupes."
+   },
+   {
+    "name": "ConcertFix Boca venues",
+    "url": "https://concertfix.com/concerts/boca-raton-fl+venues",
+    "status": "empty",
+    "tip": "Venue list only, no dates."
+   },
+   {
+    "name": "Bandsintown venue page",
+    "url": "https://bandsintown.com/v/10036975-crazy-uncle-mikes",
+    "status": "empty",
+    "tip": "No dates in range shown."
+   },
+   {
+    "name": "Mommy Poppins Thanksgiving weekend",
+    "url": "https://mommypoppins.com/miami-south-florida-kids/weekend-events/thanksgiving-weekend-things-to-do-miami-south-florida-with-kids",
+    "status": "empty",
+    "tip": "Updated 2026 but only Turkey Trot for Boca."
+   },
+   {
+    "name": "West Boca News kids roundup",
+    "url": "https://westbocanews.com/?p=117644",
+    "status": "fails",
+    "tip": "2017 article; no current roundup found."
+   },
+   {
+    "name": "FestivalNet Boca",
+    "url": "https://festivalnet.com/fairs-festivals/Florida/Boca-Raton-FL",
+    "status": "empty",
+    "tip": "Next Boca shows Dec 12-13."
+   },
+   {
+    "name": "Expedia event tickets Boca",
+    "url": "https://www.expedia.com/event-tickets/boca-raton-fl.d?page={n}",
+    "status": "empty",
+    "tip": "Lists regional pro sports, not Boca events."
+   },
+   {
+    "name": "EventWorld",
+    "url": "https://www.eventworld.com/{slug}/event/{id}",
+    "status": "fails",
+    "tip": "client_error."
+   },
+   {
+    "name": "RaceEntry Boca Turkey Trot",
+    "url": "https://www.raceentry.com/boca-raton-turkey-trot-2026/race-information",
+    "status": "fails",
+    "tip": "Redirects to calendar landing page."
+   },
+   {
+    "name": "Visit Palm Beaches weekend blog",
+    "url": "https://www.thepalmbeaches.com/blog/things-do-weekend-palm-beaches",
+    "status": "empty",
+    "tip": "Stale (Nov 13-15)."
+   }
+  ],
+  "boca_official": [
+   {
+    "name": "City of Boca Raton calendar (day view)",
+    "url": "https://www.myboca.us/calendar.aspx?view=list&year={yyyy}&month={m}&day={d}",
+    "status": "works",
+    "tip": "curl works; 36 events Nov 30-Dec 6 incl. Holiday Street Parade Dec 2, Holiday POPS Dec 5, Willow, Gumbo Limbo, Explorium, Sugar Sand classes."
+   },
+   {
+    "name": "City event detail",
+    "url": "https://www.myboca.us/Calendar.aspx?EID={id}",
+    "status": "works",
+    "tip": "curl works; text after 'specificDetail' has time, address, cost."
+   },
+   {
+    "name": "Boca Raton Public Library LibCal AJAX list",
+    "url": "https://bocalibrary.libcal.com/ajax/calendar/list?c=-1&date={yyyy-mm-dd}&perpage=100&page=1&audience=&cats=&camps=&inc=0",
+    "status": "works",
+    "tip": "curl, one day per call; 35 in-person events Nov 25-Dec 6; Nov 26 empty (closed)."
+   },
+   {
+    "name": "Palm Beach County Library BiblioCommons API",
+    "url": "https://gateway.bibliocommons.com/v2/libraries/pbclibrary/events?startDate={yyyy-mm-dd}&endDate={yyyy-mm-dd}&limit=500",
+    "status": "works",
+    "tip": "Filter branchLocationId WBOCA/GLADESRD; 15 events Nov 30-Dec 6 (none Nov 25-29)."
+   },
+   {
+    "name": "The Coastal Star day list",
+    "url": "https://thecoastalstar.com/events/list/on/{yyyy-mm-dd}",
+    "status": "works",
+    "tip": "curl; OLLI at FAU lectures, Breakfast With the Chief Dec 4; OLLI times shown in odd 12h format (3:00 = PM)."
+   },
+   {
+    "name": "FAU Localist API",
+    "url": "https://calendar.fau.edu/api/2/events?start={yyyy-mm-dd}&end={yyyy-mm-dd}&pp=100",
+    "status": "works",
+    "tip": "End date exclusive; Wind Ensemble Dec 2, BFA show Dec 4, VIRGINIA perf dates in description."
+   },
+   {
+    "name": "FAU Arts calendar",
+    "url": "https://calendar.fau.edu/arts",
+    "status": "works",
+    "tip": "Only Theatre Lab VIRGINIA Dec 6 in range."
+   },
+   {
+    "name": "Daggerwing Nature Center program calendar",
+    "url": "https://discover.pbc.gov/parks/daggerwing/programcalendar.aspx",
+    "status": "works",
+    "tip": "curl; Dec 1 Mother Nature & Me, Dec 5 Sensational Snakes, Wed-Sat animal feedings."
+   },
+   {
+    "name": "Crazy Uncle Mike's Beats calendar",
+    "url": "https://crazyunclemikes.com/beats/",
+    "status": "works",
+    "tip": "curl; also ?ical=1 at /events/?ical=1 gives full list with URLs."
+   },
+   {
+    "name": "The Funky Biscuit (own site)",
+    "url": "https://www.funkybiscuit.com/",
+    "status": "works",
+    "tip": "WebFetch; full list with door/show times and prices, seetickets URLs."
+   },
+   {
+    "name": "Songkick venue calendar",
+    "url": "https://www.songkick.com/venues/{id}/calendar",
+    "status": "works",
+    "tip": "Sunset Cove 68894 shows Cyclops Cove (Subtronics) Dec 4-6; Black Box 3169779 Southern Cross Dec 5; Mizner Amphitheater 442 and Studio 4476215 empty in range."
+   },
+   {
+    "name": "Insomniac Boca Raton events",
+    "url": "https://www.insomniac.com/events/boca-raton-fl",
+    "status": "works",
+    "tip": "NEW: confirms Cyclops Cove 4 Dec 4-6, 2026 (Bassrush)."
+   },
+   {
+    "name": "Downtown Boca (CRA) calendar",
+    "url": "https://www.downtownboca.org/m/calendar?startDate={yyyy-mm-dd}&endDate={yyyy-mm-dd}",
+    "status": "works",
+    "tip": "Old calendar.aspx now 302s to /m/calendar; curl works on new URL; listed Scrooge at Studio Dec 4, Holiday Pops Dec 5."
+   },
+   {
+    "name": "The Studio at Mizner Park (own site)",
+    "url": "https://thestudioatmiznerpark.org/shows-events/",
+    "status": "works",
+    "tip": "NEW domain .org (old .com failed); event pages /events/{slug} have times and prices."
+   },
+   {
+    "name": "Wick Theatre ThunderTix",
+    "url": "https://thewicktheatre.thundertix.com/events",
+    "status": "works",
+    "tip": "Nicolas King supper club Dec 6 6 PM; no event-id URLs in fetch."
+   },
+   {
+    "name": "Boca Raton Historical Society events",
+    "url": "https://bocahistory.org/events/",
+    "status": "works",
+    "tip": "WebFetch; Museum Store Sunday Nov 29, Free Fun Saturday (Santa) Dec 5."
+   },
+   {
+    "name": "Boca Raton Museum of Art events",
+    "url": "https://bocamuseum.org/visit/events",
+    "status": "works",
+    "tip": "Only Dec 3 Beat Movement lecture; /art and /exhibitions pages stale or blocked."
+   },
+   {
+    "name": "Jewish Federation community calendar week",
+    "url": "https://jewishboca.org/events/week/{yyyy-mm-dd}/",
+    "status": "works",
+    "tip": "Many donor-only or TBD-venue items; detail links redirect to paid registration; used for Comedy Heals Dec 1."
+   },
+   {
+    "name": "Israel Heart2Heart Comedy Heals",
+    "url": "https://israelh2h.org/ComedyHeals2026",
+    "status": "works",
+    "tip": "NEW: Michael Rapaport fundraiser Dec 1 at Boca Black Box, $180+."
+   },
+   {
+    "name": "Levis JCC events",
+    "url": "https://levisjcc.org/events",
+    "status": "works",
+    "tip": "Julie Benko Dec 2 at Zinman Hall; ticket pages tickets.levisjcc.org have prices."
+   },
+   {
+    "name": "Town Center at Boca Raton holiday page (Simon)",
+    "url": "https://www.simon.com/mall/town-center-at-boca-raton/stores/management-office/stream/its-a-holiday-thing-at-town-center-at-boca-raton-6291081",
+    "status": "works",
+    "tip": "Caring Santa Dec 6, line magician Dec 5, cocoa Dec 5-6, giftwrap Nov 27."
+   },
+   {
+    "name": "B'nai Torah Congregation events",
+    "url": "https://www.btcboca.org/events/",
+    "status": "works",
+    "tip": "Page is 140k chars, fetch with offset 100000 for Dec 3+; no Hanukkah event shown though Fire & Ice Dec 6 is listed elsewhere."
+   },
+   {
+    "name": "Miami on the Cheap Chanukah roundup",
+    "url": "https://miamionthecheap.com/event/boca-raton-chanukah-festival",
+    "status": "works",
+    "tip": "NEW: 2026 PBC Hanukkah list; only Boca item is B'nai Torah Fire & Ice Dec 6."
+   },
+   {
+    "name": "Boca Raton Observer RSS",
+    "url": "https://bocaratonobserver.com/search/event/upcoming-events/index.rss?page={n}",
+    "status": "works",
+    "tip": "curl pages 1-12; found Lynn White Christmas Dec 4-6 at Wold Center and Pavo Real Gallery artist event Dec 5."
+   },
+   {
+    "name": "Lynn University events",
+    "url": "https://www.lynn.edu/events/{slug}",
+    "status": "fails",
+    "tip": "WebFetch client error, curl 403; use Observer RSS."
+   },
+   {
+    "name": "Lynn athletics basketball schedules",
+    "url": "https://lynnfightingknights.com/sports/{mens|womens}-basketball/schedule",
+    "status": "works",
+    "tip": "Home doubleheader vs Tampa Dec 5 (2 PM women, 4 PM men)."
+   },
+   {
+    "name": "FAU sports schedules",
+    "url": "https://fausports.com/sports/{sport}/schedule/text",
+    "status": "fails",
+    "tip": "curl 302 to JS loader, WebFetch client error; sports widget only shows near games (MBB at FIU Dec 2)."
+   },
+   {
+    "name": "BettorEdge FAU MBB printable",
+    "url": "https://www.bettoredge.com/printable-schedule/mens-college-basketball/florida-atlantic-owls",
+    "status": "fails",
+    "tip": "Client error this run."
+   },
+   {
+    "name": "Patch Boca Raton calendar",
+    "url": "https://patch.com/florida/boca-raton/calendar",
+    "status": "works",
+    "tip": "NEW: few items; surfaced Candlelight concerts at St. Gregory's Dec 4."
+   },
+   {
+    "name": "Fever Candlelight Boca Raton",
+    "url": "https://feverup.com/en/boca-raton-fl-us/candlelight",
+    "status": "works",
+    "tip": "Dec 4 Fleetwood Mac 6:30 and Michael Jackson 8:30 at St. Gregory's, with prices."
+   },
+   {
+    "name": "St. Gregory's Episcopal Church",
+    "url": "https://www.stgregorysepiscopal.org/",
+    "status": "works",
+    "tip": "Homepage lists Advent items; Dec 5 'event of the season' has no details."
+   },
+   {
+    "name": "Boca Green Market (own site)",
+    "url": "https://bocagreenmarket.com/",
+    "status": "works",
+    "tip": "Sundays 9-1 at 5th Ave Shops, 1954 NE 5th Ave."
+   },
+   {
+    "name": "BocaRaton.com events",
+    "url": "https://bocaraton.com/events/",
+    "status": "works",
+    "tip": "Saturday yoga Sanborn Sq, Thursday Loving Bingo; its Sanborn Night Market (1st Thu) claim not confirmed by city page."
+   },
+   {
+    "name": "City Night Market page",
+    "url": "https://www.myboca.us/2324/Night-Market",
+    "status": "empty",
+    "tip": "Stale (2023 dates); 2026 Holiday Night Market is Dec 10 per fairsandfestivals.net (outside range)."
+   },
+   {
+    "name": "Barrel of Monks all-events",
+    "url": "https://barrelofmonks.com/all-events/",
+    "status": "works",
+    "tip": "Nothing Dec 1-6; next Dec 7."
+   },
+   {
+    "name": "Boca Raton Tribune community calendar",
+    "url": "https://www.bocaratontribune.com/bocaratonnews/category/community-news/calendar/",
+    "status": "works",
+    "tip": "NEW: headlines only; parade Dec 2 article. Events directory /events-directory/ fails."
+   },
+   {
+    "name": "Boca Raton Tribune events directory",
+    "url": "https://www.bocaratontribune.com/events-directory/",
+    "status": "fails",
+    "tip": "Client error."
+   },
+   {
+    "name": "The Palm Beaches holiday press release",
+    "url": "https://www.thepalmbeaches.com/press-releases/holiday-happenings-in-the-palm-beaches-2026",
+    "status": "works",
+    "tip": "Good holiday overview for all three cities (Willow run Dec 4-20, Caring Santa)."
+   },
+   {
+    "name": "Holiday Street Parade city page",
+    "url": "https://www.myboca.us/1465/Holiday-Street-Parade",
+    "status": "works",
+    "tip": "NEW: Dec 2 route, closures, free parking lots."
+   },
+   {
+    "name": "ACG South Florida Coffee Connections",
+    "url": "https://www.acg.org/node/159110",
+    "status": "works",
+    "tip": "December edition Dec 1, 8 AM at Narbona."
+   },
+   {
+    "name": "Boca Raton Regional Hospital maternity (Eventbrite organizer)",
+    "url": "https://www.eventbrite.com/o/maternity-program-boca-raton-regional-hospital-25536228019",
+    "status": "works",
+    "tip": "NEW: childbirth class Dec 5, breastfeeding group Dec 4, postpartum social Dec 1."
+   },
+   {
+    "name": "Rotary Club of Boca Raton",
+    "url": "https://rotaryclubbocaraton.com/",
+    "status": "empty",
+    "tip": "NEW: weekly Wed noon meeting at Crazy Uncle Mike's, no dated events in range."
+   },
+   {
+    "name": "Saint Andrew's School calendar",
+    "url": "https://www.saintandrews.net/calendar",
+    "status": "empty",
+    "tip": "NEW: only internal/alumni items."
+   },
+   {
+    "name": "Festival of the Arts Boca",
+    "url": "https://festivalboca.org/",
+    "status": "empty",
+    "tip": "NEW: next festival Mar 5-14, 2027."
+   },
+   {
+    "name": "Boca Raton Garden Club (Observer/Coastal Star)",
+    "url": "https://bocaratonobserver.com/events/boca-raton-garden-club-presents-holiday-house-3",
+    "status": "empty",
+    "tip": "NEW: only 2023/2018 Holiday House listings; no 2026 date found."
+   },
+   {
+    "name": "The Boca Raton resort holiday page",
+    "url": "https://thebocaraton.com/holiday-festivities-club",
+    "status": "empty",
+    "tip": "NEW: menorah lighting etc. members and resort guests only."
+   },
+   {
+    "name": "Spanish River Church events",
+    "url": "https://www.spanishriver.com/events",
+    "status": "empty",
+    "tip": "NEW: JS calendar, no content via WebFetch."
+   },
+   {
+    "name": "Temple Beth El week view",
+    "url": "https://tbeboca.org/events/week/{yyyy-mm-dd}/",
+    "status": "fails",
+    "tip": "Nov 29 week client error; Dec 6 week only religious school."
+   },
+   {
+    "name": "Biergarten Boca events",
+    "url": "https://www.biergartenboca.com/events/",
+    "status": "empty",
+    "tip": "Only undated 'Riverdown'; /event-directory/ server error."
+   },
+   {
+    "name": "Shops at Boca Center events",
+    "url": "https://bocacenter.com/events",
+    "status": "fails",
+    "tip": "NEW: proxy closes connection / robots unreachable."
+   },
+   {
+    "name": "Mizner Park (Brookfield) events",
+    "url": "https://www.miznerpark.com/en/events",
+    "status": "empty",
+    "tip": "'No news or events available'."
+   },
+   {
+    "name": "Boca Magazine events",
+    "url": "https://bocamag.com/events/month/{yyyy-mm}",
+    "status": "fails",
+    "tip": "Client error."
+   },
+   {
+    "name": "Boca Chamber calendar",
+    "url": "https://business.bocachamber.com/events/calendar",
+    "status": "fails",
+    "tip": "Client error; holiday breakfast is Dec 11 (outside range)."
+   },
+   {
+    "name": "Greater Boca Raton Beach & Park District",
+    "url": "https://www.gbrpd.org/",
+    "status": "fails",
+    "tip": "NEW: robots.txt unreachable; no events found by search."
+   },
+   {
+    "name": "Polo Club / Boca West",
+    "url": "https://www.poloclub.net/en/social-life",
+    "status": "empty",
+    "tip": "NEW (search only): private club events, nothing public in range."
+   },
+   {
+    "name": "Kapow / Tap 42 / Rock Steady live music",
+    "url": "https://tap42.com/",
+    "status": "empty",
+    "tip": "NEW (search only): no dated event listings, only weekly specials."
+   },
+   {
+    "name": "Sugar Sand Park own domain",
+    "url": "https://www.sugarsandpark.org/",
+    "status": "empty",
+    "tip": "Redirects to myboca.us/2469; use city calendar."
+   },
+   {
+    "name": "PBC Sunset Cove Amphitheater page",
+    "url": "https://discover.pbc.gov/parks/amphitheaters/Pages/Sunset-Cove.aspx",
+    "status": "works",
+    "tip": "Lists only through Nov 27; Cyclops Cove Dec 4-6 not shown (use Songkick/Insomniac)."
+   },
+   {
+    "name": "City of Boca Raton calendar (month list)",
+    "url": "https://www.myboca.us/calendar.aspx?view=list&month={m}&year={yyyy}",
+    "status": "works",
+    "tip": "Truncates mid-month and drops Willow Theatre; use the day view instead."
+   },
+   {
+    "name": "Mizner Park Amphitheater (city page)",
+    "url": "https://www.myboca.us/2831",
+    "status": "works",
+    "tip": "Nothing Nov 23-29, 2026; next shows Dec 5 and 13."
+   },
+   {
+    "name": "Boca Raton Public Library LibCal HTML",
+    "url": "https://bocalibrary.libcal.com/calendar/Public?cid=-1&t=d&d={yyyy-mm-dd}&cal=-1&inc=0",
+    "status": "empty",
+    "tip": "JS-rendered, no events; use the AJAX list URL."
+   },
+   {
+    "name": "Boca Raton Museum of Art home",
+    "url": "https://bocamuseum.org/",
+    "status": "empty",
+    "tip": "No exhibition dates or prices shown."
+   },
+   {
+    "name": "Wick Theatre season (Boca Raton Observer article)",
+    "url": "https://bocaratonobserver.com/community/community-news/the-wick-theatre-unveils-its-13th-season/",
+    "status": "works",
+    "tip": "Oliver! Nov 19-Dec 20, 2026; confirm on thewicktheatre.thundertix.com/events."
+   },
+   {
+    "name": "Boca Raton Observer events",
+    "url": "https://bocaratonobserver.com/events/",
+    "status": "works",
+    "tip": "Use the RSS feed instead (search/event/upcoming-events/index.rss?page=N); mostly non-Boca items."
+   },
+   {
+    "name": "Boca Raton Observer events page 2",
+    "url": "https://bocaratonobserver.com/events/?page=2",
+    "status": "fails",
+    "tip": "Client error; can't paginate."
+   },
+   {
+    "name": "Boca Raton Observer venue page (Lynn)",
+    "url": "https://bocaratonobserver.com/locations/lynn-university/",
+    "status": "empty",
+    "tip": "Nothing Nov 15-22, 2026; Observer venue pages for Black Box/Wick empty, Studio at Mizner works."
+   },
+   {
+    "name": "FAU main calendar",
+    "url": "https://calendar.fau.edu/",
+    "status": "works",
+    "tip": "Use Localist API https://calendar.fau.edu/api/2/events?start={yyyy-mm-dd}&end={yyyy-mm-dd}&pp=100 for full list."
+   },
+   {
+    "name": "FAU calendar day view",
+    "url": "https://calendar.fau.edu/calendar/day/{yyyy}/{mm}/{dd}",
+    "status": "fails",
+    "tip": "Client error."
+   },
+   {
+    "name": "FAU theatre dept calendar",
+    "url": "https://calendar.fau.edu/department/theatre-and-dance",
+    "status": "fails",
+    "tip": "Client error (guessed slug)."
+   },
+   {
+    "name": "FAU football schedule",
+    "url": "https://fausports.com/sports/football/schedule/text",
+    "status": "works",
+    "tip": "Nov 28, 2026 is away at East Carolina; no home game in range."
+   },
+   {
+    "name": "FAU men's basketball schedule",
+    "url": "https://fausports.com/sports/mens-basketball/schedule/text",
+    "status": "fails",
+    "tip": "403 again; use BettorEdge printable schedule (home vs Mercer Nov 24, Davidson Nov 29)."
+   },
+   {
+    "name": "FAU women's basketball / volleyball schedule",
+    "url": "https://fausports.com/sports/womens-basketball/schedule/text",
+    "status": "works",
+    "tip": "Non-text https://fausports.com/sports/womens-basketball/schedule works (Thanksgiving Classic Nov 27-28 at Baldwin Arena)."
+   },
+   {
+    "name": "FAU volleyball schedule announcement",
+    "url": "https://fausports.com/news/2026/7/13/womens-volleyball-volleyball-announces-2026-schedule",
+    "status": "works",
+    "tip": "No home matches Nov 15-22, 2026."
+   },
+   {
+    "name": "BettorEdge FAU WBB schedule",
+    "url": "https://www.bettoredge.com/printable-schedule/womens-college-basketball/florida-atlantic-owls",
+    "status": "works",
+    "tip": "Men's version gives home games with times in CT and neutral flags."
+   },
+   {
+    "name": "Lynn Philharmonia season program",
+    "url": "https://spiral.lynn.edu/conservatory_philharmonia/184/",
+    "status": "works",
+    "tip": "Philharmonia No. 3 Sun Nov 15, 2026 3 PM."
+   },
+   {
+    "name": "Boca Raton Historical Society event-calendar",
+    "url": "https://bocahistory.org/event-calendar/",
+    "status": "empty",
+    "tip": "Embedded widget; use /events/."
+   },
+   {
+    "name": "Boca Black Box ShoWare",
+    "url": "https://bocablackbox.showare.com/",
+    "status": "empty",
+    "tip": "Own site bocablackbox.com is Next.js; embedded data has no Nov 22-29 dates."
+   },
+   {
+    "name": "Palm Beach Culture venue page (Black Box)",
+    "url": "https://www.palmbeachculture.com/venue/boca-black-box-center-for-the-arts/",
+    "status": "empty",
+    "tip": "No events listed."
+   },
+   {
+    "name": "allevents.in Boca Raton",
+    "url": "https://allevents.in/boca-raton",
+    "status": "works",
+    "tip": "Good breadth; category pages /boca-raton/{kids|music|festivals|medical|sanborn} also work. Verify addresses."
+   },
+   {
+    "name": "Macaroni Kid Boca Raton",
+    "url": "https://bocaraton.macaronikid.com/events",
+    "status": "fails",
+    "tip": "Client error."
+   },
+   {
+    "name": "Bandsintown Boca Raton",
+    "url": "https://www.bandsintown.com/c/boca-raton-fl",
+    "status": "empty",
+    "tip": "No dated listings in fetch."
+   },
+   {
+    "name": "thepalmbeaches.com event page",
+    "url": "https://www.thepalmbeaches.com/event/{slug}",
+    "status": "fails",
+    "tip": "Client error."
+   },
+   {
+    "name": "Boca GreenMarket (Royal Palm Place)",
+    "url": "https://bocaratonobserver.com/events/fall-green-market-returns-royal-palm-place-october/",
+    "status": "fails",
+    "tip": "Superseded: Boca Green Market runs Sundays 9-1 at 5th Ave Shops (bocagreenmarket.com)."
+   },
+   {
+    "name": "Eventbrite Boca Raton",
+    "url": "https://www.eventbrite.com/d/fl--boca-raton/events/",
+    "status": "untried",
+    "tip": "Likely many networking/classes events."
+   },
+   {
+    "name": "Boca Ballet Theatre",
+    "url": "https://thecoastalstar.com/members/BocaBalletTheatre324",
+    "status": "works",
+    "tip": "Nutcracker Nov 28-29, 2026 at Olympic Heights (outside range); via Coastal Star."
+   },
+   {
+    "name": "The Symphonia",
+    "url": "https://thesymphonia.org",
+    "status": "empty",
+    "tip": "Next concert Dec 5, 2026."
+   },
+   {
+    "name": "Festival Repertory / FAU theatre",
+    "url": "https://southfloridatheater.com/2026/05/26/fau-announces-lineup-for-festival-repertory-theatre-2026/",
+    "status": "empty",
+    "tip": "Theatre Lab productions page says schedule coming soon; VIRGINIA starts Nov 28."
+   },
+   {
+    "name": "Everyparent PBC things to do",
+    "url": "https://www.everyparentpbc.org/things-to-do-detail",
+    "status": "empty",
+    "tip": "Listing showed only Sep-Oct 2026."
+   },
+   {
+    "name": "Boca Raton Tribune",
+    "url": "https://www.bocaratontribune.com/",
+    "status": "untried",
+    "tip": "Search found no calendar page."
+   },
+   {
+    "name": "Boca Post events",
+    "url": "https://bocapost.com/events/",
+    "status": "empty",
+    "tip": "Events page stale (spring 2026)."
+   },
+   {
+    "name": "West Boca News",
+    "url": "https://westbocanews.com/",
+    "status": "untried",
+    "tip": "Only search results; not fetched."
+   },
+   {
+    "name": "Royal Palm Place / Bier Garten / Barrel of Monks",
+    "url": "https://allevents.in/boca-raton",
+    "status": "fails",
+    "tip": "royalpalmplace.com client error/bot check; use Barrel of Monks own site."
+   },
+   {
+    "name": "Boca Raton Bowl / Spirit of Giving",
+    "url": "https://bocaratonbowl.com/",
+    "status": "empty",
+    "tip": "Only the Dec 18, 2026 bowl listed."
+   },
+   {
+    "name": "Boca Raton Observer venue page (Studio at Mizner)",
+    "url": "https://bocaratonobserver.com/locations/studio-mizner-park/",
+    "status": "works",
+    "tip": "Lists Studio at Mizner Park events."
+   },
+   {
+    "name": "PBC amphitheaters events list",
+    "url": "https://discover.pbc.gov/parks/amphitheaters/lists/events/newsdispform.aspx",
+    "status": "works",
+    "tip": "County-wide; most venues not in Boca."
+   },
+   {
+    "name": "FAU galleries exhibitions",
+    "url": "https://www.fau.edu/artsandletters/galleries/exhibitions/",
+    "status": "empty",
+    "tip": "Fall shows closed by Nov 14, 2026."
+   },
+   {
+    "name": "FAU OLLI Boca calendar",
+    "url": "https://calendar.fau.edu/department/osher_lifelong_learning_institute_boca_raton",
+    "status": "empty",
+    "tip": "No upcoming events listed; OLLI items show up on Coastal Star."
+   },
+   {
+    "name": "Palm Beach Illustrated organizer (Lynn)",
+    "url": "https://www.palmbeachillustrated.com/organizer/lynn-university/",
+    "status": "empty",
+    "tip": "Lynn events only through Nov 1, 2026."
+   },
+   {
+    "name": "Lynn Lyric Competition (Observer)",
+    "url": "https://bocaratonobserver.com/events/lynn-s-lyric-competition-final-round/",
+    "status": "works",
+    "tip": "Lynn events surface via Observer RSS since events.lynn.edu fails."
+   },
+   {
+    "name": "refreshmiami Boca tag",
+    "url": "https://refreshmiami.com/events/tag/boca-raton/{yyyy-mm}/",
+    "status": "empty",
+    "tip": "No Boca tech events Nov 2026."
+   },
+   {
+    "name": "Town Center / Shops at Boca Center holiday events",
+    "url": "https://bocaratonobserver.com/events/signature-santa-experience/",
+    "status": "fails",
+    "tip": "Observer pages stale; use Simon holiday stream page (see new entry)."
+   },
+   {
+    "name": "CP Group tree lighting (BRiC)",
+    "url": "https://bocaratonobserver.com/events/cp-group-s-10th-annual-tree-lighting-holiday-extravaganza/",
+    "status": "empty",
+    "tip": "2025 edition only; 2026 date not found."
+   },
+   {
+    "name": "Barrel of Monks about",
+    "url": "https://barrelofmonks.com/about-us/",
+    "status": "works",
+    "tip": "Address 1141 S Rogers Cir #5; links to all-events."
+   },
+   {
+    "name": "GriefShare Boca Raton Community Church",
+    "url": "https://find.griefshare.org/events/298147",
+    "status": "empty",
+    "tip": "Surviving the Holidays is Dec 6, 2026."
+   },
+   {
+    "name": "Sugar Sand Park / Gumbo Limbo own domains",
+    "url": "https://www.gumbolimbo.org/",
+    "status": "empty",
+    "tip": "Redirect to myboca.us; use city calendar."
+   },
+   {
+    "name": "Boca Helping Hands events",
+    "url": "https://bocahelpinghands.org/events/",
+    "status": "works",
+    "tip": "Rock the Relief Nov 29, 2026 at Crazy Uncle Mike's; detail page via WebFetch (curl blocked)."
+   },
+   {
+    "name": "Boca Ballet Theatre season",
+    "url": "https://www.bocaballet.org/season",
+    "status": "works",
+    "tip": "Nutcracker Nov 27-29 times + Gingerbread Ball after matinees."
+   },
+   {
+    "name": "Simon Town Center events",
+    "url": "https://www.simon.com/mall/town-center-at-boca-raton/events",
+    "status": "empty",
+    "tip": "No dated events; links to holiday stream page."
+   },
+   {
+    "name": "Spanish River Church Blessing Tree",
+    "url": "https://www.spanishriver.com/blessing-tree",
+    "status": "empty",
+    "tip": "Gift drive only; campus closed Nov 25-27."
+   },
+   {
+    "name": "Relocating to Boca Thanksgiving guide (realtor blog)",
+    "url": "https://relocatingtoboca.com/blog/thanksgiving-2026-weekend-in-boca-raton/",
+    "status": "works",
+    "tip": "Lead list only (Addison, Green Market, Rock the Relief); confirm on official pages."
+   },
+   {
+    "name": "The Friendly Scoop November events (realtor blog)",
+    "url": "https://thefriendlyscoop.com/news/november-2026-events-broward-palm-beach",
+    "status": "works",
+    "tip": "Lead list; Boca items were already covered."
+   },
+   {
+    "name": "Arts in Boca upcoming events",
+    "url": "https://www.artsinboca.org/upcoming-events",
+    "status": "works",
+    "tip": "Only Wick Oliver! and Boca Ballet Nutcracker in range."
+   },
+   {
+    "name": "Boca Raton Children's Museum",
+    "url": "https://www.bocachildrensmuseum.org/",
+    "status": "fails",
+    "tip": "Host unreachable via proxy."
+   },
+   {
+    "name": "Boca Raton Airport Authority meetings",
+    "url": "https://bocaairport.com/meeting/airport-authority-meeting-{n}",
+    "status": "empty",
+    "tip": "Last meeting Nov 18, 2026; none in range."
+   },
+   {
+    "name": "Palm Beach Culture events",
+    "url": "https://www.palmbeachculture.com/events/",
+    "status": "empty",
+    "tip": "Stale (2023-24 dates)."
+   },
+   {
+    "name": "ACG South Florida Boca Coffee Connections",
+    "url": "https://www.acg.org/southflorida/events/boca-raton-coffee-connections-november-2026",
+    "status": "empty",
+    "tip": "Monthly networking; Nov edition was Nov 3."
+   },
+   {
+    "name": "Loving Bingo (The Vine)",
+    "url": "https://lovingbingo.com/",
+    "status": "untried",
+    "tip": "Every Thursday 6 PM at 1515 S Federal Hwy; no date-specific tickets visible, Thanksgiving unconfirmed."
+   },
+   {
+    "name": "The Addison Thanksgiving",
+    "url": "https://www.theaddisonofbocaraton.com/thanksgiving",
+    "status": "works",
+    "tip": "Thanksgiving dinner 2-6 PM per Downtown Boca calendar; page itself sparse."
+   }
+  ],
+  "boynton_all": [
+   {
+    "name": "City of Boynton Beach calendar (Dec list)",
+    "url": "https://boynton-beach.org/calendar.aspx?view=list&year={yyyy}&month={m}&CID=0",
+    "status": "works",
+    "tip": "Dec list fetched fine; Nov list errored on first try, worked on retry. CID=25 (Rec) and CID=29 add nothing new."
+   },
+   {
+    "name": "City event detail pages",
+    "url": "https://boynton-beach.org/Calendar.aspx?EID={eid}",
+    "status": "works",
+    "tip": "EID 2881 Mix & Slip Dec 4 ($80/$100), 2865 Commission Dec 1."
+   },
+   {
+    "name": "City Holidays in Boynton Beach page",
+    "url": "https://boynton-beach.org/660/Holidays-in-Boynton-Beach",
+    "status": "works",
+    "tip": "2026: Tree Lighting Sat Dec 5 4-10pm Centennial Park (library closed that day); Boat Parade Dec 11."
+   },
+   {
+    "name": "City Signature Events page",
+    "url": "https://boynton-beach.org/639/Signature-Events",
+    "status": "empty",
+    "tip": "Names only, no dates."
+   },
+   {
+    "name": "Visit Palm Beaches holiday press release 2026",
+    "url": "https://www.thepalmbeaches.com/press-releases/holiday-happenings-in-the-palm-beaches-2026",
+    "status": "works",
+    "tip": "Confirms Dec 5 tree lighting theme (Grinch/Whoville, drone show); also Boca/Delray Dec items."
+   },
+   {
+    "name": "Eventeny 2026 Holiday Tree Lighting",
+    "url": "https://www.eventeny.com/events/2026-holiday-tree-lighting-33066/",
+    "status": "fails",
+    "tip": "Page body still 2025 data (Dec 5 2025); ignore."
+   },
+   {
+    "name": "Eventeny First Friday band applications",
+    "url": "https://www.eventeny.com/events/vendor/?id=32878",
+    "status": "empty",
+    "tip": "First Friday @5 runs Jan-Nov only; no Dec 4 First Friday."
+   },
+   {
+    "name": "FairsAndFestivals Winter 1st Friday",
+    "url": "https://www.fairsandfestivals.net/events/details/2026-boynton-beach-winter-1st-friday-event",
+    "status": "empty",
+    "tip": "Claims Dec 4 2026 but contradicts city (no Dec First Friday); not used."
+   },
+   {
+    "name": "Boynton Beach CRA Music on the Rocks",
+    "url": "https://www.catchboynton.com/whats-happening/music-on-the-rocks",
+    "status": "empty",
+    "tip": "3rd Friday Oct-June (Nov 20/Dec 18, outside range); /events/ still client_error; site stale."
+   },
+   {
+    "name": "Boynton Beach City Library iCal feed",
+    "url": "https://bbflpl.libcal.com/ical_subscribe.php?src=p&cid=15277",
+    "status": "works",
+    "tip": "curl works; shows LIBRARY CLOSED Nov 26, Nov 27, Dec 5; several Dec programs CANCELLED/POSTPONED."
+   },
+   {
+    "name": "Boynton LibCal week view",
+    "url": "https://bbflpl.libcal.com/calendar?cid=-1&t=w&d={date}&cal=-1&inc=0",
+    "status": "fails",
+    "tip": "JS-rendered, empty via WebFetch; use iCal."
+   },
+   {
+    "name": "PBC Library West Boynton branch",
+    "url": "https://pbclibrary.bibliocommons.com/v2/events?locations=WBOYNTON&startDate={start}&endDate={end}",
+    "status": "works",
+    "tip": "10 events Nov 25-Dec 6."
+   },
+   {
+    "name": "PBC Library Canyon branch",
+    "url": "https://pbclibrary.bibliocommons.com/v2/events?locations=CANYON&startDate={start}&endDate={end}",
+    "status": "works",
+    "tip": "14 events Nov 25-Dec 6 incl. Dr. Robert Watson talk Dec 5."
+   },
+   {
+    "name": "Green Cay Nature Center program calendar",
+    "url": "https://discover.pbc.gov:443/parks/GreenCay/Public.aspx",
+    "status": "works",
+    "tip": "Recurring: feedings Thu 2:15/Sat 10 & 2:15, encounters Fri 2:15, ethnobotany Sat 11; Wildlife Celebration Dec 5."
+   },
+   {
+    "name": "AllEvents Boynton December",
+    "url": "https://allevents.in/boynton-beach/december",
+    "status": "works",
+    "tip": "Best single source for Dec 1-6; verify each event page."
+   },
+   {
+    "name": "AllEvents Boynton main page",
+    "url": "https://allevents.in/boynton-beach",
+    "status": "works",
+    "tip": "Had extra items not on month page (Ella salsa, HarborChase, Elmo's, Night in Bethlehem)."
+   },
+   {
+    "name": "AllEvents Boynton category Dec pages",
+    "url": "https://allevents.in/boynton-beach/{category}--december",
+    "status": "works",
+    "tip": "parties/food-drinks/health-wellness/workshops/kids/music all useful; music--december errored first try then worked."
+   },
+   {
+    "name": "HappeningNext Boynton",
+    "url": "https://happeningnext.com/boynton+beach",
+    "status": "works",
+    "tip": "Mirror of AllEvents; surfaced European Christmas Market."
+   },
+   {
+    "name": "European Christmas Market FL",
+    "url": "https://www.europeanchristmasmarketfl.com/",
+    "status": "works",
+    "tip": "NEW. Dec 5-6 2026 at 6340 W Boynton Beach Blvd (Faith Church); hours not posted."
+   },
+   {
+    "name": "The Craft Map Boynton fairs",
+    "url": "https://www.thecraftmap.com/fairs/florida/boynton-beach",
+    "status": "works",
+    "tip": "Confirms European Christmas Market Dec 5-6."
+   },
+   {
+    "name": "Eventbrite Boynton events (pages 1-3)",
+    "url": "https://www.eventbrite.com/d/fl--boynton-beach/events/?page={n}",
+    "status": "works",
+    "tip": "Page 2/3 had toy drive Dec 6, Senior Center chair yoga Dec 1/3; date-param URLs fail."
+   },
+   {
+    "name": "Eventbrite Boynton senior-events",
+    "url": "https://www.eventbrite.com/d/fl--boynton-beach/senior-events/",
+    "status": "works",
+    "tip": "Weekly Monday chair yoga at First Presbyterian."
+   },
+   {
+    "name": "Eventbrite category pages (classes, community, free, christmas, music)",
+    "url": "https://www.eventbrite.com/d/fl--boynton-beach/{category}/",
+    "status": "empty",
+    "tip": "Almost all regional (Boca/Delray/WPB); holiday/ category client_error."
+   },
+   {
+    "name": "Patch Boynton Beach calendar",
+    "url": "https://patch.com/florida/boynton-beach-fl/calendar",
+    "status": "works",
+    "tip": "NEW URL (boynton-beach-fl, not boyntonbeach). Aggregates city, Eventbrite, Audubon; date param ignored."
+   },
+   {
+    "name": "Gold Coast Band",
+    "url": "https://goldcoastband.org",
+    "status": "works",
+    "tip": "Dec 5 7:30pm Ringing in the Season, Coral Lakes Theater, $10."
+   },
+   {
+    "name": "Chabad of Greater Boynton",
+    "url": "https://www.chabadboynton.com/events/winter",
+    "status": "works",
+    "tip": "NEW. Chanukah Winter Wonderland Dec 6 4-6pm."
+   },
+   {
+    "name": "Chabad of West Boynton",
+    "url": "https://www.chabadwestboynton.com/",
+    "status": "works",
+    "tip": "NEW. Upcoming list: Nov 29 brunch, Dec 1 ladies lunch, JLI course; Chanukah events undated except Canyon Lights Up."
+   },
+   {
+    "name": "Miami on the Cheap PBC Chanukah roundup 2026",
+    "url": "https://miamionthecheap.com/event/chanukah-and-hanukkah-celebrations-in-palm-beach-county/",
+    "status": "works",
+    "tip": "NEW. Published Nov 23 2026; Boynton Dec 6 events. Its Delray Dec 6 date conflicts with Visit Palm Beaches (Dec 14)."
+   },
+   {
+    "name": "Temple Torat Emet",
+    "url": "https://templetoratemet.org/",
+    "status": "empty",
+    "tip": "NEW. Nothing Nov 25-Dec 6; Hanukkah party Dec 9."
+   },
+   {
+    "name": "BBPD Blue Lights & Holiday Nights",
+    "url": "https://bbpd.org/blue_lights___holiday_nights/index.php",
+    "status": "works",
+    "tip": "NEW. Dec 12 (out of range); BBPD calendar empty."
+   },
+   {
+    "name": "YMCA of South Palm Beach County events",
+    "url": "https://www.ymcaspbc.org/events",
+    "status": "empty",
+    "tip": "Only Sustainable Gardening Group Dec 5 (members/front-desk registration) - not added."
+   },
+   {
+    "name": "Audubon Society of the Everglades events",
+    "url": "https://www.auduboneverglades.org/events/",
+    "status": "works",
+    "tip": "NEW. Dec 5 Loxahatchee NWR bird walk (Boynton address 10216 Lee Rd)."
+   },
+   {
+    "name": "Loxahatchee NWR (FWS) events",
+    "url": "https://www.fws.gov/refuge/arthur-r-marshall-loxahatchee/events",
+    "status": "empty",
+    "tip": "NEW. Only Oct items; paged URL robots-disallowed."
+   },
+   {
+    "name": "Friends of Loxahatchee",
+    "url": "https://www.friendsofloxahatchee.org/",
+    "status": "fails",
+    "tip": "NEW. robots unreachable."
+   },
+   {
+    "name": "Gathering Palm Beach County events",
+    "url": "https://gatheringpb.com/resources/events/",
+    "status": "works",
+    "tip": "NEW. Weekly E-100 men's group Thu 7:15am at Quantum Town Center Dunkin."
+   },
+   {
+    "name": "White Elephant Palm Beach event mirror",
+    "url": "https://www.whiteelephantpalmbeach.com/events/boynton-beach/",
+    "status": "fails",
+    "tip": "NEW. Scraped listings with vague locations (Solstice Reign Nov 25 contradicted by band's own page)."
+   },
+   {
+    "name": "ReverbNation band pages",
+    "url": "https://www.reverbnation.com/{band}/events",
+    "status": "works",
+    "tip": "Useful to verify band gigs; Solstice Reign has no Boynton date in range."
+   },
+   {
+    "name": "Boynton Beach Mall events",
+    "url": "https://www.boyntonbeachmall.com/events",
+    "status": "works",
+    "tip": "Santa Dec 4-24, Paws & Claus Dec 7; no years on page (AllEvents gives 2026)."
+   },
+   {
+    "name": "Two Georges (squarespace mirror)",
+    "url": "https://rycontiki9.squarespace.com/two-georges-boynton-beach",
+    "status": "empty",
+    "tip": "Trivia Wed 7:30, music Sat/Sun 4:15 but no confirmation it's current; not added."
+   },
+   {
+    "name": "NOBO Brewing website",
+    "url": "https://nobobrewing.com",
+    "status": "works",
+    "tip": "Taco Tuesday weekly 4:30-7:30; Nov 28 craft fair/Dec 5 Repeal Day show no year (Nov 28 matches 2025 Black Friday) - not added."
+   },
+   {
+    "name": "Boca Chamber growthzone calendar",
+    "url": "https://thegreaterbocaratonchamberofcommerce.growthzoneapp.com/chamber-events-calendar",
+    "status": "empty",
+    "tip": "NEW. Titles without dates; business.bocachamber.com still client_error."
+   },
+   {
+    "name": "Macaroni Kid Boynton",
+    "url": "https://boyntonbeach.macaronikid.com",
+    "status": "empty",
+    "tip": "Homepage has no events."
+   },
+   {
+    "name": "Meetup find Boynton",
+    "url": "https://www.meetup.com/find/us--fl--boynton-beach/",
+    "status": "empty",
+    "tip": "Cached mid-Nov listings; nothing usable for range."
+   },
+   {
+    "name": "Songkick Miami metro",
+    "url": "https://www.songkick.com/metro-areas/9776-us-miami/boynton-beach",
+    "status": "empty",
+    "tip": "NEW. No Boynton concerts."
+   },
+   {
+    "name": "RunSignup Boynton",
+    "url": "https://runsignup.com/Races/FL/BoyntonBeach",
+    "status": "fails",
+    "tip": "NEW. client_error."
+   },
+   {
+    "name": "RaceEntry Boynton",
+    "url": "https://www.raceentry.com/find-races-by-city/florida/boynton_beach",
+    "status": "empty",
+    "tip": "NEW. Only 2027 races."
+   },
+   {
+    "name": "Find the Run Boynton December",
+    "url": "https://www.findtherun.com/races/boynton-beach-fl/december",
+    "status": "empty",
+    "tip": "Nothing before Dec 21."
+   },
+   {
+    "name": "US Kids Golf / PGA Boynton",
+    "url": "https://tournaments.uskidsgolf.com/node/517836",
+    "status": "empty",
+    "tip": "NEW. Links at Boynton event was Apr 2026; pga.com client_error."
+   },
+   {
+    "name": "The Coastal Star events by date",
+    "url": "https://thecoastalstar.com/events/list/on/{date}",
+    "status": "empty",
+    "tip": "No Boynton items Dec 3/5."
+   },
+   {
+    "name": "PBC Parks amphitheaters events",
+    "url": "https://discover.pbc.gov/parks/amphitheaters/Lists/Events",
+    "status": "empty",
+    "tip": "Range items are Sunset Cove (Boca); Canyon Legends Dec 19."
+   },
+   {
+    "name": "PBC Parks WebTrac",
+    "url": "https://pbcparksregistration.co.palm-beach.fl.us/webtrac/web/search.html",
+    "status": "fails",
+    "tip": "robots_disallowed."
+   },
+   {
+    "name": "Schoolhouse Children's Museum events",
+    "url": "https://www.schoolhousemuseum.org/events.html",
+    "status": "empty",
+    "tip": "Next event Jan 23 2027."
+   },
+   {
+    "name": "South Florida PBS events",
+    "url": "https://www.southfloridapbs.org/events",
+    "status": "empty",
+    "tip": "Only ongoing exhibits (already in existing.json)."
+   },
+   {
+    "name": "Animal EDventure Safari Lights schedule",
+    "url": "https://irp.cdn-website.com/82378108/files/uploaded/SAFARI+LIGHTS+SCHEDULE+2026.pdf",
+    "status": "works",
+    "tip": "Open Nov 26-29 and Dec 3-6; closed Nov 25, Nov 30-Dec 2."
+   },
+   {
+    "name": "City of Boynton Beach calendar (list view)",
+    "url": "https://boynton-beach.org/calendar.aspx?view=list&CID=0",
+    "status": "works",
+    "tip": "Use calendar.aspx?view=list&year=2026&month=11&CID=0 (all calendars); CID=28/25/30/14 subsets add nothing; only ~7 items Nov 22-29."
+   },
+   {
+    "name": "City of Boynton Beach calendar root",
+    "url": "https://www.boynton-beach.org/calendar",
+    "status": "fails",
+    "tip": "Server error via WebFetch; use https://boynton-beach.org/calendar.aspx?view=list&CID=0 instead."
+   },
+   {
+    "name": "Arts & Cultural Center calendar",
+    "url": "https://boynton-beach.org/523/Calendar",
+    "status": "empty",
+    "tip": "'No published events in current month'; also check /878/Special-Ticketed-Events (coming soon) and calendar.aspx?CID=29."
+   },
+   {
+    "name": "Arts & Culture page",
+    "url": "https://boynton-beach.org/507/Arts-Culture",
+    "status": "empty",
+    "tip": "No events; links to classes/gallery pages."
+   },
+   {
+    "name": "City concerts page",
+    "url": "https://www.boynton-beach.org/concerts",
+    "status": "empty",
+    "tip": "Stale (2024 items only)."
+   },
+   {
+    "name": "Boynton Beach CRA events",
+    "url": "https://catchboynton.com/events/",
+    "status": "fails",
+    "tip": "client_error again this run; no alternative found."
+   },
+   {
+    "name": "Boynton Beach City Library LibCal",
+    "url": "https://bbflpl.libcal.com/calendar?cid=-1&t=d&d={date}&cal=-1&inc=0",
+    "status": "works",
+    "tip": "Best: curl https://bbflpl.libcal.com/ical_subscribe.php?src=p&cid=15277 (iCal of all programs, curl allowed); ajax list endpoint returns 0. Event pages fetch fine."
+   },
+   {
+    "name": "PBC Library Happenings",
+    "url": "https://www.pbclibrary.org/blogs/post/happenings-november-2026/",
+    "status": "empty",
+    "tip": "No event list; only links to bibliocommons location filters."
+   },
+   {
+    "name": "AllEvents Boynton November",
+    "url": "https://allevents.in/boynton-beach/november",
+    "status": "works",
+    "tip": "Main source of bar/camp/holiday items; verify each event page; slugs with emoji resolve without the emoji."
+   },
+   {
+    "name": "AllEvents this-week",
+    "url": "https://allevents.in/boynton-beach/this-week",
+    "status": "empty",
+    "tip": "Undated trending items only."
+   },
+   {
+    "name": "Eventbrite Boynton all-events",
+    "url": "https://www.eventbrite.com/d/fl--boynton-beach/all-events/",
+    "status": "works",
+    "tip": "Returned stale/regional Feb listings this run; use /events/ and /senior-events/ instead."
+   },
+   {
+    "name": "Eventbrite Boynton events",
+    "url": "https://www.eventbrite.com/d/fl--boynton-beach/events/",
+    "status": "works",
+    "tip": "Gave Major's Thursday karaoke, Good Day Market fall dates (end Nov 22); many online/regional items."
+   },
+   {
+    "name": "Eventbrite Boynton this week",
+    "url": "https://www.eventbrite.com/d/fl--boynton-beach/events--this-week/",
+    "status": "fails",
+    "tip": "events--this-weekend also client_error."
+   },
+   {
+    "name": "Eventbrite Florida Blue organizer",
+    "url": "https://www.eventbrite.ca/o/florida-blue-31569052235",
+    "status": "works",
+    "tip": "No Palm Beach Center events Nov 15-22 visible ('Show more' not expanded)."
+   },
+   {
+    "name": "Bandsintown Boynton",
+    "url": "https://bandsintown.com/c/boynton-beach-fl",
+    "status": "empty",
+    "tip": "this-week/genre/all-genres showed no Boynton venues."
+   },
+   {
+    "name": "The Coastal Star events",
+    "url": "https://thecoastalstar.com/events?page={n}",
+    "status": "empty",
+    "tip": "list/on/2026-11-28 had no Boynton items."
+   },
+   {
+    "name": "Miami on the Cheap Boynton",
+    "url": "https://miamionthecheap.com/whats-happening-in-and-around-boynton-beach/",
+    "status": "empty",
+    "tip": "No Nov 22-29 items; Dec tree lighting/boat parade only."
+   },
+   {
+    "name": "Sweatpals Boynton",
+    "url": "https://sweatpals.com/s/boynton-beach/social-events",
+    "status": "empty",
+    "tip": "Only old listing."
+   },
+   {
+    "name": "Find the Run Boynton",
+    "url": "https://www.findtherun.com/races/boynton-beach-fl",
+    "status": "empty",
+    "tip": "Races listed are regional, none in Boynton this week."
+   },
+   {
+    "name": "South Florida PBS immersive exhibits",
+    "url": "https://www.southfloridapbs.org/moonwalkers/",
+    "status": "works",
+    "tip": "Moonwalkers Sep 24 2026-Mar 30 2027 Tue-Sun 10-4, $22-$45."
+   },
+   {
+    "name": "thepalmbeaches.com weekend roundup",
+    "url": "https://www.thepalmbeaches.com/blog/things-do-weekend-palm-beaches",
+    "status": "empty",
+    "tip": "Was stale (June 2026) when fetched."
+   },
+   {
+    "name": "Boynton Beach High School events",
+    "url": "https://bbhs.palmbeachschools.org/all-events",
+    "status": "empty",
+    "tip": "Calendar rendered headers only."
+   },
+   {
+    "name": "Mandel JCC Boynton",
+    "url": "https://bb.jcconline.com/events/",
+    "status": "empty",
+    "tip": "bb.jcconline.com pages undated/old; AllEvents carries JCC Krav Maga and Corrective Movement."
+   },
+   {
+    "name": "Eventeny Boynton city events",
+    "url": "https://www.eventeny.com/events/",
+    "status": "empty",
+    "tip": "Good Day Market and Night Market pages are past 2026 dates."
+   },
+   {
+    "name": "Boca Chamber Boynton calendar",
+    "url": "https://business.bocachamber.com/boyntoneventcalendar",
+    "status": "fails",
+    "tip": "client_error again."
+   },
+   {
+    "name": "The PB Moms calendar",
+    "url": "https://thepbmoms.com/events/month/{yyyy-mm}",
+    "status": "fails",
+    "tip": "Server error."
+   },
+   {
+    "name": "WPTV Veterans Day list",
+    "url": "https://wptv.com/news/region-c-palm-beach-county/veterans-day-events-in-south-florida-and-the-treasure-coast",
+    "status": "empty",
+    "tip": "2020 article; no 2026 Boynton Veterans Day listing found anywhere."
+   },
+   {
+    "name": "Accrue Boynton events",
+    "url": "https://accrue.com/events/country/us/boynton-beach",
+    "status": "empty",
+    "tip": "No dates shown."
+   },
+   {
+    "name": "Direct curl to city/CRA sites",
+    "url": "https://www.boynton-beach.org",
+    "status": "fails",
+    "tip": "Proxy blocks (403 CONNECT) for curl; use WebFetch only."
+   },
+   {
+    "name": "Boynton Beach Library city page",
+    "url": "https://www.boynton-beach.org/library",
+    "status": "fails",
+    "tip": "www host client_error; use city calendar CID=28 instead."
+   },
+   {
+    "name": "Forgotten Soldiers Outreach",
+    "url": "https://forgottensoldiers.org",
+    "status": "empty",
+    "tip": "Only Dec 9 luncheon (not Boynton)."
+   },
+   {
+    "name": "Every Parent PBC",
+    "url": "https://www.everyparentpbc.org",
+    "status": "empty",
+    "tip": "things-to-do-detail pages only cover Sep-Oct 2026."
+   },
+   {
+    "name": "Eventbrite Boynton music browse",
+    "url": "https://www.eventbrite.com/b/fl--boynton-beach/music/",
+    "status": "empty",
+    "tip": "Regional Oct-Nov items, none in Boynton."
+   },
+   {
+    "name": "PBC Parks registration (WebTrac)",
+    "url": "https://pbcparksregistration.co.palm-beach.fl.us/webtrac/web/splash.html",
+    "status": "untried",
+    "tip": "Green Cay program session dates incl. Science for Seniors."
+   },
+   {
+    "name": "Boynton Beach Historical Society",
+    "url": "https://www.boyntonhistory.org",
+    "status": "works",
+    "tip": "Nothing Nov 22-Dec; next Jan 16 2027 art show."
+   },
+   {
+    "name": "Fever South Florida PBS venue",
+    "url": "https://feverup.com/en/west-palm-beach/venue/3401-s-congress-ave",
+    "status": "works",
+    "tip": "Becoming Jane https://feverup.com/m/753581 ; run Oct 23 2026-Jan 24 2027 per blooloop."
+   },
+   {
+    "name": "AllEvents relaxation/other categories",
+    "url": "https://allevents.in/boynton-beach/relaxation",
+    "status": "works",
+    "tip": "kids--november, parties--november, workshops--november, health-wellness--november, food-drinks--november, music--november all useful."
+   },
+   {
+    "name": "Jewish Federation PBC calendar",
+    "url": "https://www.jewishpb.org/events/month/{yyyy-mm}/",
+    "status": "works",
+    "tip": "No Boynton venues Nov 22-29."
+   },
+   {
+    "name": "Sole Mio Toast experiences",
+    "url": "https://book.toasttab.com/r/sole-mio-kitchen-bar/experiences",
+    "status": "empty",
+    "tip": "Only undated/old music nights; HappeningNext had current Sole Mio brunch."
+   },
+   {
+    "name": "My Coffee Explorer Boynton events",
+    "url": "https://mycoffeeexplorer.com/guides/boynton-beach-fl/events",
+    "status": "works",
+    "tip": "Pointed to Good Day Market 'Autumn Brunch Market' Nov 22 AllEvents page."
+   },
+   {
+    "name": "United Way PBC volunteer events",
+    "url": "https://unitedwaypbc.org/events/volunteer/literacy-kits-14",
+    "status": "empty",
+    "tip": "Nov 18 literacy kits is in WPB; Boynton kits sessions at Literacy Coalition (3651 Quantum Blvd) on other dates."
+   },
+   {
+    "name": "Fever Animal EDventure venue",
+    "url": "https://feverup.com/en/miami/venue/animal-edventure-park-safari",
+    "status": "empty",
+    "tip": "'Coming soon', no experiences."
+   },
+   {
+    "name": "City Economic Development events",
+    "url": "https://boynton-beach.org/734/ED-Events-Calendar",
+    "status": "empty",
+    "tip": "Business workshops 'bimonthly 3rd Wednesday' without confirmed months."
+   },
+   {
+    "name": "Palm Beach Illustrated events",
+    "url": "https://www.palmbeachillustrated.com/event/downtown-boynton-beach-community-farmers-market-by-the-good-day-market/2026-11-08/",
+    "status": "fails",
+    "tip": "List/search pages robots-disallowed; individual event pages fetch."
+   },
+   {
+    "name": "Ticket Tailor Solasus candlelight",
+    "url": "https://www.tickettailor.com/events/solasus/2433061",
+    "status": "works",
+    "tip": "Christmas Classical by Candlelight at St. Joseph's Episcopal Dec 17 2026."
+   },
+   {
+    "name": "Vivid Seats Boynton",
+    "url": "https://www.vividseats.com/geo/usa/fl/boynton-beach",
+    "status": "empty",
+    "tip": "/theater says no Boynton theater/comedy this week."
+   },
+   {
+    "name": "Find the Run Boynton November",
+    "url": "https://www.findtherun.com/races/boynton-beach-fl/november",
+    "status": "empty",
+    "tip": "No Boynton races Nov 15-22; nearest Delray Turkey Trot Nov 21."
+   },
+   {
+    "name": "Copperpoint Brewing events",
+    "url": "https://www.copperpointbrewing.com/events",
+    "status": "fails",
+    "tip": "client_error; Copperpoint items appear on AllEvents/Meetup."
+   },
+   {
+    "name": "Boynton Beach Mall",
+    "url": "https://boyntonbeachmall.com",
+    "status": "empty",
+    "tip": "Santa Dec 4-24; no Thanksgiving week events."
+   },
+   {
+    "name": "Festivalnet Boynton",
+    "url": "https://festivalnet.com/fairs-festivals/Florida/Boynton-Beach-FL",
+    "status": "empty",
+    "tip": "Only Spring Market Mar 13 2027."
+   },
+   {
+    "name": "FairsAndFestivals Boynton",
+    "url": "https://www.fairsandfestivals.net/events/details/2026-boynton-beach-holiday-first-fridays",
+    "status": "empty",
+    "tip": "Holiday First Friday Nov 6 only."
+   },
+   {
+    "name": "Hypebot concerts Boynton",
+    "url": "https://concerts.hypebot.com/cities/pop/boynton-beach-fl",
+    "status": "empty",
+    "tip": "Regional venues, nothing Nov 22-29."
+   },
+   {
+    "name": "Palm Beach Illustrated venue pages",
+    "url": "https://www.palmbeachillustrated.com/venue/hatch1121/",
+    "status": "empty",
+    "tip": "Hatch1121 is in Lake Worth Beach anyway."
+   },
+   {
+    "name": "Box Office Ticket Sales Boynton",
+    "url": "https://www.boxofficeticketsales.com/boynton-beach/fl",
+    "status": "fails",
+    "tip": "Listings load via JS."
+   },
+   {
+    "name": "City news flash",
+    "url": "https://boynton-beach.org/m/newsflash?cat=24",
+    "status": "empty",
+    "tip": "No event announcements for the week."
+   },
+   {
+    "name": "Patch Boca calendar",
+    "url": "https://patch.com/florida/bocaraton/calendar",
+    "status": "fails",
+    "tip": "client_error."
+   },
+   {
+    "name": "Ticket Spot / HappeningNext Thanksgiving camps",
+    "url": "https://ticketspotapp.com/e/tlkep",
+    "status": "empty",
+    "tip": "Search hits were 2024/2025 camps (Canyon Lakes, My Gym)."
+   },
+   {
+    "name": "Blooloop Becoming Jane article",
+    "url": "https://blooloop.com/national-geographic-becoming-jane-florida/",
+    "status": "works",
+    "tip": "Gives Becoming Jane run dates."
+   },
+   {
+    "name": "Due South Brewing",
+    "url": "https://www.brewbound.com/breweries/due-south-brewing-co",
+    "status": "empty",
+    "tip": "Brewery closed; do not search."
+   }
+  ],
+  "delray_aggregators": [
+   {
+    "name": "Eventbrite city search (per-day)",
+    "url": "https://www.eventbrite.com/d/fl--delray-beach/all-events/?start_date={date}&end_date={date}&page={n}",
+    "status": "works",
+    "tip": "curl + window.__SERVER_DATA__; results are region-wide (35-49 pages/day, ~1 Delray hit per 3 pages); filter primary_venue.address.city. Series children are deduped, so pair with AllEvents slots."
+   },
+   {
+    "name": "Eventbrite keyword search (date range)",
+    "url": "https://www.eventbrite.com/d/fl--delray-beach/{delray|delray-beach|atlantic-avenue|holiday|kids|yoga}/?start_date=2026-11-25&end_date=2026-12-06&page={n}",
+    "status": "works",
+    "tip": "Added 15 Delray events the per-day search missed (Doghouse improv classes, THRoW bingo/trivia, Arts Warehouse workshops)."
+   },
+   {
+    "name": "Eventbrite event page JSON-LD",
+    "url": "https://www.eventbrite.com/e/{id}",
+    "status": "works",
+    "tip": "JSON-LD script tag has data-next-head attr (regex must allow attrs); eventStatus caught 5 cancelled + 1 postponed; AllEvents ids 10000{ebid} map to Eventbrite ids."
+   },
+   {
+    "name": "AllEvents category/date pages incl. --december/--november variants",
+    "url": "https://allevents.in/delray-beach/{category}--december",
+    "status": "works",
+    "tip": "~180 listing pages; harvest links with unicode-safe regex ([^/\"]+ not [a-z0-9-], e.g. thrōw slugs). hanukkah--december, free--december, crafts/dance--this-weekend 404."
+   },
+   {
+    "name": "AllEvents event page",
+    "url": "https://allevents.in/delray-beach/{slug}/{id}",
+    "status": "works",
+    "tip": "JSON-LD @type may be MusicEvent/Festival/etc (accept any with startDate); data-slot-label attrs list recurring dates; pages without Date & Location are expired."
+   },
+   {
+    "name": "HappeningNext categories JSON-LD",
+    "url": "https://happeningnext.com/delray+beach/{music|kids|art|parties|festivals|holiday|christmas|...}",
+    "status": "works",
+    "tip": "Each page has an ld+json Event list (311 events); /this-weekend,/today,/tomorrow 404. Event pages give Schedule text; gave Deck 84 Dec 4-5 acts and First Friday Art Walk."
+   },
+   {
+    "name": "Patch (new) Delray calendar",
+    "url": "https://new.patch.com/florida/delray-beach-fl/calendar?page=1",
+    "status": "works",
+    "tip": "__NEXT_DATA__ objects type=inventoryEvent with local_date/time_display/url covering ~2 weeks ahead; pages 1-3 identical. Best for Arts Garage, Playhouse, Morikami items."
+   },
+   {
+    "name": "Meetup find page",
+    "url": "https://www.meetup.com/find/us--fl--delray-beach/",
+    "status": "works",
+    "tip": "__NEXT_DATA__ has 55 events across South County; event pages have venue in Apollo state. pro.meetup.com/find now 308."
+   },
+   {
+    "name": "The Coastal Star day listing",
+    "url": "https://thecoastalstar.com/events/list/on/{date}",
+    "status": "works",
+    "tip": "Delray items are only Arts Garage shows Nov 25-Dec 6; good corroboration."
+   },
+   {
+    "name": "RunSignup race search API",
+    "url": "https://runsignup.com/Rest/races?format=json&state=FL&zipcode=33444&radius=10&start_date={date}&end_date={date_end}",
+    "status": "empty",
+    "tip": "No Delray races in range; Boca: CityHouse River Run 5K Dec 5, Boca PAL Holiday Mile Dec 2 CANCELED."
+   },
+   {
+    "name": "Yelp events Delray",
+    "url": "https://www.yelp.com/events/delray-beach-fl-us/browse?start_date={yyyymmdd}&end_date={yyyymmdd}",
+    "status": "empty",
+    "tip": "curl ok but listings are Fort Lauderdale/Broward; only Delray item was an Elite-only event."
+   },
+   {
+    "name": "Eventeny location search",
+    "url": "https://www.eventeny.com/events/?location=Delray%20Beach",
+    "status": "empty",
+    "tip": "Only a Delray centennial logo call-to-artists; no events in range."
+   },
+   {
+    "name": "Macaroni KID Boynton-Delray",
+    "url": "https://boyntonbeach.macaronikid.com/events",
+    "status": "works",
+    "tip": "First page only; Delray items duplicate Playhouse/R.G. Taylor/Sandoway."
+   },
+   {
+    "name": "Visit Palm Beaches holiday press release",
+    "url": "https://www.thepalmbeaches.com/press-releases/holiday-happenings-in-the-palm-beaches-2026",
+    "status": "works",
+    "tip": "WebFetch; lists Hanukkah festival Dec 14 (likely stale) while AllEvents/HappeningNext list Grand Delray Chanukah Festival Sun Dec 6 5 PM."
+   },
+   {
+    "name": "Miami on the Cheap December PBC",
+    "url": "https://miamionthecheap.com/top-things-to-do-in-december-in-palm-beach-county",
+    "status": "empty",
+    "tip": "WebFetch ok (curl 403); Dec 2026 page has no dated Delray items besides generic GreenMarket."
+   },
+   {
+    "name": "Bocapost / Yahoo Delray December lineup",
+    "url": "https://bocapost.com/delray-beach-news/delray-beach-sets-full-december-lineup-with-tree-lighting-parade-and-menorah-festival",
+    "status": "empty",
+    "tip": "2025 article (tree lighting Dec 2, 2025); do not use for 2026."
+   },
+   {
+    "name": "Songkick venue/metro",
+    "url": "https://www.songkick.com/venues/1344806-arts-garage",
+    "status": "fails",
+    "tip": "curl 406 now."
+   },
+   {
+    "name": "Bandsintown city",
+    "url": "https://www.bandsintown.com/c/delray-beach-fl",
+    "status": "fails",
+    "tip": "curl 403."
+   },
+   {
+    "name": "Luma discover",
+    "url": "https://luma.com/discover?near=delray-beach",
+    "status": "empty",
+    "tip": "Only city directory, no Delray events."
+   },
+   {
+    "name": "Fever / Sweatpals / Dice / AXS / SeeTickets / TicketWeb / Universe",
+    "url": "https://sweatpals.com/s/delray-beach/run-clubs",
+    "status": "fails",
+    "tip": "Sweatpals and Dice 404, AXS and SeeTickets 403, TicketWeb JS-only, Universe stub page; Fever only surfaced via AllEvents (South Florida PBS exhibits, Boynton)."
+   },
+   {
+    "name": "WebSearch weekend roundups",
+    "url": "WebSearch",
+    "status": "untried",
+    "tip": "Shared 200-search budget was exhausted early this run; Palm Beach Post/Sun Sentinel 2026 roundups not checked."
+   },
+   {
+    "name": "Eventbrite city search (date-filtered)",
+    "url": "https://www.eventbrite.com/d/fl--delray-beach/all-events/?start_date={date}&end_date={date_end}&page={n}",
+    "status": "works",
+    "tip": "curl works; parse window.__SERVER_DATA__ JSON (start_date/time/venue). Pages 1-12 fetched; filter excludes past days (no Nov 22)."
+   },
+   {
+    "name": "Eventbrite category pages",
+    "url": "https://www.eventbrite.com/d/fl--delray-beach/{category}--events/?start_date={date}&end_date={date_end}",
+    "status": "works",
+    "tip": "Fetched 12 categories via curl; mostly duplicates of city search."
+   },
+   {
+    "name": "Eventbrite free events",
+    "url": "https://www.eventbrite.com/d/fl--delray-beach/free--events/?start_date={date}&end_date={date_end}&page={n}",
+    "status": "works",
+    "tip": "Pages 1-9 via curl; duplicates of city search."
+   },
+   {
+    "name": "Eventbrite keyword search",
+    "url": "https://www.eventbrite.com/d/fl--delray-beach/{keyword}/?start_date={date}&end_date={date_end}",
+    "status": "works",
+    "tip": "arts-garage, old-school-square, yoga, thanksgiving, kids, art-class etc. via curl; few uniques."
+   },
+   {
+    "name": "Eventbrite event page",
+    "url": "https://www.eventbrite.com/e/{slug}-tickets-{id}",
+    "status": "works",
+    "tip": "curl + JSON-LD gives exact start/end, eventStatus (caught a postponed event) and low/high price; https://www.eventbrite.com/e/{id} redirects to slug."
+   },
+   {
+    "name": "AllEvents city main page",
+    "url": "https://allevents.in/delray-beach",
+    "status": "empty",
+    "tip": "Stale (October items); use date/weekday/category pages instead."
+   },
+   {
+    "name": "AllEvents date pages",
+    "url": "https://allevents.in/delray-beach/{today|tomorrow|this-weekend|this-week}",
+    "status": "works",
+    "tip": "curl; JSON-LD Event list on page (dates only). Use with event pages for times."
+   },
+   {
+    "name": "AllEvents weekday pages",
+    "url": "https://allevents.in/delray-beach/{monday..sunday}",
+    "status": "works",
+    "tip": "curl; good coverage; harvest all /delray-beach/{slug}/{id} links from pages and fetch them."
+   },
+   {
+    "name": "AllEvents category pages",
+    "url": "https://allevents.in/delray-beach/{category}",
+    "status": "works",
+    "tip": "Also worked: concerts, entertainment, yoga, meetups, holiday, flea-markets, live-music, karaoke, open-mic, trivia, food-drinks, parties, workshops, festivals. 301: free, exhibition, wellness, nightlife, spirituality."
+   },
+   {
+    "name": "HappeningNext city",
+    "url": "https://happeningnext.com/delray+beach",
+    "status": "works",
+    "tip": "Category pages /delray+beach/{cat} work via curl; bare /delray+beach/ (trailing slash) 404. Same data as AllEvents; 1 unique (Retro Sky at THRōW)."
+   },
+   {
+    "name": "HappeningNext categories",
+    "url": "https://happeningnext.com/delray+beach/{music|kids|art|parties|festivals|food-drinks|business|sports|health-wellness|workshops|comedy|christmas|live-music}",
+    "status": "works",
+    "tip": "Parse a.stretched-link title + following date text; mostly AllEvents duplicates."
+   },
+   {
+    "name": "HappeningNext (hyphen URL)",
+    "url": "https://happeningnext.com/delray-beach",
+    "status": "fails",
+    "tip": "client_error; use delray+beach."
+   },
+   {
+    "name": "Meetup find with date filter",
+    "url": "https://www.meetup.com/find/?location=us--fl--Delray%20Beach&source=EVENTS&customStartDate={date}&customEndDate={date_end}",
+    "status": "fails",
+    "tip": "robots_disallowed. Alternative: pro.meetup.com/find/us--fl--delray-beach."
+   },
+   {
+    "name": "Meetup pro find page",
+    "url": "https://pro.meetup.com/find/us--fl--delray-beach",
+    "status": "works",
+    "tip": "curl ok; 53 events, open each meetup.com page (JSON-LD or embedded dateTime/venue). Delray hits: drum circle, Jessica Om beach yoga, Hairspray outing, produce picking."
+   },
+   {
+    "name": "Meetup topic find pages",
+    "url": "https://www.meetup.com/find/us--fl--delray-beach/{topic}/",
+    "status": "works",
+    "tip": "/find/us--fl--delray-beach/ and /meet-new-friends/ ok; outdoors/yoga/music 404; no new Delray hits."
+   },
+   {
+    "name": "Patch calendar",
+    "url": "https://patch.com/florida/delraybeach/calendar",
+    "status": "fails",
+    "tip": "Old patch.com/florida/delraybeach/calendar fails; use new.patch.com/florida/delray-beach-fl/calendar (works)."
+   },
+   {
+    "name": "Songkick Delray metro",
+    "url": "https://www.songkick.com/metro-areas/9776-us-miami/delray-beach",
+    "status": "empty",
+    "tip": "Returns Miami metro listings; venue pages (app.songkick.com/venues/1344806-arts-garage, /venues/863981-kings-point-theatre) had nothing in range."
+   },
+   {
+    "name": "Humanitix city",
+    "url": "https://humanitix.com/events/united-states/delray-beach",
+    "status": "empty",
+    "tip": "Stale 2025 regional items."
+   },
+   {
+    "name": "Visit Palm Beaches events",
+    "url": "https://www.thepalmbeaches.com/events",
+    "status": "fails",
+    "tip": "/events and wp-json return Cloudflare 403 to curl; press release /press-releases/holiday-happenings-in-the-palm-beaches-2026 and /blog/things-do-weekend-palm-beaches fetchable via WebFetch."
+   },
+   {
+    "name": "Miami on the Cheap Palm Beach",
+    "url": "https://miamionthecheap.com/top-things-to-do-in-november-in-palm-beach-county",
+    "status": "works",
+    "tip": "Nov 2026 roundup current but no Delray items in Nov 22-29 (GreenMarket only generic)."
+   },
+   {
+    "name": "Ticketmaster/AXS/Dice/SeeTickets",
+    "url": "WebSearch only (e.g. 'ticketmaster Delray Beach FL events {month} {year}')",
+    "status": "empty",
+    "tip": "No Delray-specific listings surfaced; not fetched directly."
+   },
+   {
+    "name": "Palm Beach Post / Sun Sentinel roundups",
+    "url": "WebSearch 'palmbeachpost things to do this weekend {date}'",
+    "status": "empty",
+    "tip": "Search found no current-week roundup; Visit Palm Beaches weekend blog was mid-Nov."
+   },
+   {
+    "name": "delraybeachrealestate.com November blog",
+    "url": "https://www.delraybeachrealestate.com/blog/november-events-in-delray-beach-things-to-do-in-delray/",
+    "status": "empty",
+    "tip": "2021 content; skip."
+   },
+   {
+    "name": "Downtown Delray Beach events",
+    "url": "https://downtowndelraybeach.com/events",
+    "status": "untried",
+    "tip": "DDA official calendar; seen in search results (also /events?page=1)."
+   },
+   {
+    "name": "City of Delray Beach calendar",
+    "url": "https://www.delraybeachfl.gov/i-want-to/learn-about/city-meetings-events-calendar",
+    "status": "untried",
+    "tip": "Month view pattern: .../calendar-month-view/-curm-{m}/-cury-{yyyy}."
+   },
+   {
+    "name": "Delray Chamber events",
+    "url": "https://delraybeach.com/events-calendar/",
+    "status": "untried",
+    "tip": "Chamber calendar (YPAD etc.); also web.delraybeach.com/events/details/..."
+   },
+   {
+    "name": "Arts Garage calendar",
+    "url": "https://artsgarage.org/",
+    "status": "untried",
+    "tip": "Venue site for concerts/theater."
+   },
+   {
+    "name": "Old School Square / Delray Center for the Arts",
+    "url": "https://www.songkick.com/venues/407586-old-school-square-cultural-arts-center",
+    "status": "untried",
+    "tip": "Venue listing seen in search; official site likely better."
+   },
+   {
+    "name": "Eventeny Delray events",
+    "url": "https://www.eventeny.com/events/",
+    "status": "untried",
+    "tip": "Hosts city free concert series pages (Sunset/Twilight concerts)."
+   },
+   {
+    "name": "Palm Beach Illustrated events",
+    "url": "https://www.palmbeachillustrated.com/event/",
+    "status": "fails",
+    "tip": "/event/ 403 again."
+   },
+   {
+    "name": "The Coastal Star events",
+    "url": "https://thecoastalstar.com/events/",
+    "status": "works",
+    "tip": "Event pages /events/{slug} give times/prices."
+   },
+   {
+    "name": "fairsandfestivals.net Delray",
+    "url": "https://www.fairsandfestivals.net/events/details/{slug}",
+    "status": "empty",
+    "tip": "Only Nov 6 Fall Art Walk; nothing in range."
+   },
+   {
+    "name": "Movies of Delray",
+    "url": "https://allevents.in/delray-beach/ (venue 7421 W Atlantic Ave)",
+    "status": "untried",
+    "tip": "Cinema with live events/Met Opera screenings; official site likely has full schedule."
+   },
+   {
+    "name": "thecraftmap.com Delray fairs",
+    "url": "https://www.thecraftmap.com/fairs/florida/delray-beach/holiday-craft-fairs",
+    "status": "empty",
+    "tip": "No Delray fairs Nov 22-29 2026 (Olde Fashioned Holiday Nov 19-21; Art Festival on 4th Dec 5-6)."
+   },
+   {
+    "name": "Sweatpals Delray",
+    "url": "https://sweatpals.com/s/delray-beach/{run-clubs|fitness-events|social-events}",
+    "status": "empty",
+    "tip": "Guide pages show only spring/summer items; no Nov 2026 events."
+   },
+   {
+    "name": "Ticket Fairy Delray",
+    "url": "https://www.ticketfairy.com/events-in-delray-beach",
+    "status": "empty",
+    "tip": "'No events match this selection.'"
+   },
+   {
+    "name": "mycoffeeexplorer Delray events",
+    "url": "https://mycoffeeexplorer.com/guides/delray-beach-fl/events",
+    "status": "empty",
+    "tip": "Re-lists Coastal Star items for today only; no new info."
+   },
+   {
+    "name": "Boca Magazine events calendar",
+    "url": "https://bocamag.com/events/{date}",
+    "status": "fails",
+    "tip": "/events/{date} 403; /events/ list is stale (2025)."
+   },
+   {
+    "name": "letsdothis / findarace race listings",
+    "url": "https://www.letsdothis.com/us/e/40th-annual-delray-beach-turkey-trot-5k-261135",
+    "status": "fails",
+    "tip": "403 again; use runsignup.com instead (Turkey Trot was Nov 21, out of range)."
+   },
+   {
+    "name": "The PB Moms calendar",
+    "url": "https://thepbmoms.com/events/month/{yyyy-mm}",
+    "status": "fails",
+    "tip": "month and list views 403."
+   },
+   {
+    "name": "EveryParent PBC things-to-do",
+    "url": "https://www.everyparentpbc.org/things-to-do-detail/{slug}",
+    "status": "empty",
+    "tip": "Kids listings found via search only were 2025/May 2026; no listing page URL."
+   },
+   {
+    "name": "Palm Beach Weekender (beehiiv)",
+    "url": "https://thepalmbeachweekender.beehiiv.com/archive",
+    "status": "empty",
+    "tip": "Search hits were 2025 issues; check archive for current weekend."
+   },
+   {
+    "name": "CBS12 / WPTV weekend roundups",
+    "url": "WebSearch 'cbs12 what to do this weekend {month} {year}'",
+    "status": "empty",
+    "tip": "No current-week (Nov 20-22, 2026) roundup surfaced."
+   },
+   {
+    "name": "Visit Palm Beaches weekend blog",
+    "url": "https://www.thepalmbeaches.com/blog/things-do-weekend-palm-beaches",
+    "status": "works",
+    "tip": "WebFetch ok but covered Nov 13-15 this run; exhibit runs (Morikami) still useful."
+   },
+   {
+    "name": "RunSignup race page",
+    "url": "https://runsignup.com/Race/FL/DelrayBeach/{RaceName}",
+    "status": "empty",
+    "tip": "Delray Turkey Trot 2026 was Sat Nov 21 (Anchor Park), out of range."
+   },
+   {
+    "name": "EnduranceGrid Delray races",
+    "url": "https://www.endurancegrid.com/events/running-delray-beach-fl-2026-196775",
+    "status": "empty",
+    "tip": "No races Nov 22-29; next is Jingle Bell Jog Dec 19."
+   },
+   {
+    "name": "FestivalNet Delray",
+    "url": "https://festivalnet.com/fairs-festivals/Florida/Delray-Beach-FL",
+    "status": "empty",
+    "tip": "Only An Olde Fashioned Holiday Nov 19-21."
+   },
+   {
+    "name": "san-francisco.events city pages",
+    "url": "https://san-francisco.events/city/delray-beach-events/",
+    "status": "fails",
+    "tip": "Returns San Francisco listings regardless of city path."
+   },
+   {
+    "name": "Ticketmaster discover",
+    "url": "https://www.ticketmaster.com/discover/concerts/delray-beach",
+    "status": "fails",
+    "tip": "curl 403."
+   },
+   {
+    "name": "StubHub / VividSeats / JamBase / 10times / evvnt",
+    "url": "https://www.stubhub.com/delray-beach-tickets/geography/",
+    "status": "fails",
+    "tip": "curl 403/404 on all; not worth retrying."
+   },
+   {
+    "name": "yopki kids events",
+    "url": "https://yopki.com/explore/us/fl/delray-beach/events",
+    "status": "fails",
+    "tip": "502 error."
+   },
+   {
+    "name": "Kids Out and About",
+    "url": "https://kidsoutandabout.com/",
+    "status": "untried",
+    "tip": "Homepage loads; no Palm Beach region page located."
+   },
+   {
+    "name": "Boca Post Delray news",
+    "url": "https://bocapost.com/delray-beach-news/",
+    "status": "empty",
+    "tip": "Search hit was a Nov 2025 December-lineup article; check for a current-year version."
+   },
+   {
+    "name": "TickPick search",
+    "url": "https://www.tickpick.com/explore?location=Delray%20Beach%2C%20FL",
+    "status": "fails",
+    "tip": "404; only regional event pages via search."
+   }
+  ],
+  "delray_official": [
+   {
+    "name": "Downtown Delray Beach (DDA) events calendar",
+    "url": "https://downtowndelraybeach.com/events/calendar",
+    "status": "works",
+    "tip": "Single page lists ~2 months; open /do/{slug} for year, address, price. Best single Delray source for Dec 1-6."
+   },
+   {
+    "name": "DDA event detail pages",
+    "url": "https://downtowndelraybeach.com/do/{slug}",
+    "status": "works",
+    "tip": "Gave tree lighting, art festival, Chanukah, Delray in White, Kollerism, Sip & Shop details."
+   },
+   {
+    "name": "DDA meetings",
+    "url": "https://downtowndelraybeach.com/about/meetings",
+    "status": "empty",
+    "tip": "No DDA meetings Nov 25-Dec 6 2026."
+   },
+   {
+    "name": "City of Delray Beach Legistar web API",
+    "url": "https://webapi.legistar.com/v1/delraybeach/events?$filter=EventDate+ge+datetime'{yyyy-mm-dd}'+and+EventDate+le+datetime'{yyyy-mm-dd}'",
+    "status": "works",
+    "tip": "NEW: shows FUTURE meetings (Calendar.aspx only shows past); found HPB Dec 2, Board of Adjustment Dec 3."
+   },
+   {
+    "name": "City of Delray Beach Legistar calendar page",
+    "url": "https://delraybeach.legistar.com/Calendar.aspx",
+    "status": "empty",
+    "tip": "Only shows past meetings; use the webapi URL instead."
+   },
+   {
+    "name": "City calendar event detail",
+    "url": "https://www.delraybeachfl.gov/Home/Components/Calendar/Event/{id}/336",
+    "status": "fails",
+    "tip": "Only cached IDs load (<=4683 = Aug 2026); guessed IDs 4720-4800 client_error."
+   },
+   {
+    "name": "City 100 Ft Christmas Tree page",
+    "url": "https://www.delraybeachfl.gov/our-city/things-to-do/100-ft-christmas-tree",
+    "status": "works",
+    "tip": "Dec 1 2026 lighting 6-9 PM; holiday village prices ($6 rides, $20 wristband); season hours TBD."
+   },
+   {
+    "name": "City Creative Arts School $5 Studio Days",
+    "url": "https://www.delraybeachfl.gov/government/city-departments/creative-arts-school/5-studio-days",
+    "status": "empty",
+    "tip": "No dates; registration via WebTrac (myvscloud, robots unreachable)."
+   },
+   {
+    "name": "Delray Parks & Rec WebTrac",
+    "url": "https://fl-delraybeach.myvscloud.com/webtrac/web/search.html",
+    "status": "fails",
+    "tip": "robots unreachable."
+   },
+   {
+    "name": "Old School Square events",
+    "url": "https://delrayoldschoolsquare.com/events",
+    "status": "works",
+    "tip": "Full Squarespace list with Dec dates (tree, Delray in White, Kollerism, Coco Market, Chanukah)."
+   },
+   {
+    "name": "Old School Square Cornell page",
+    "url": "https://delrayoldschoolsquare.com/cornell",
+    "status": "works",
+    "tip": "Exhibit run dates incl. KOLLERISM Dec 4-Mar 21; free admission; live music Wednesdays 3:30-5 PM."
+   },
+   {
+    "name": "Old School Square yoga page",
+    "url": "https://delrayoldschoolsquare.com/yoga-at-the-museum",
+    "status": "works",
+    "tip": "Meditation in the Museum Wed & Fri 11 AM $8."
+   },
+   {
+    "name": "Arts Garage",
+    "url": "https://artsgarage.org/events/",
+    "status": "works",
+    "tip": "List gives all shows through mid-Dec with prices."
+   },
+   {
+    "name": "Arts Warehouse month view",
+    "url": "https://artswarehouse.org/events/month/{yyyy-mm}/",
+    "status": "works",
+    "tip": "Workshops, 3 exhibitions opening Dec 4, canceled notes; prices only on some detail pages."
+   },
+   {
+    "name": "Delray Beach Playhouse season page",
+    "url": "https://delraybeachplayhouse.com/?p=15236",
+    "status": "works",
+    "tip": "Hairspray dates/prices plus Lunch Box matinee (Her Name Is Barbra Nov 30-Dec 2)."
+   },
+   {
+    "name": "Delray Beach Public Library programs",
+    "url": "https://www.delraylibrary.org/classes-programs",
+    "status": "works",
+    "tip": "Calendar titles only; detail pages /classes-programs/{slug}/ give times; skip ones marked full."
+   },
+   {
+    "name": "Delray Library category pages",
+    "url": "https://www.delraylibrary.org/categories/{children|babies-toddlers}/",
+    "status": "works",
+    "tip": "Fall storytimes expired; useful to confirm dates."
+   },
+   {
+    "name": "Morikami upcoming events",
+    "url": "https://morikami.org/upcoming-events/",
+    "status": "works",
+    "tip": "Dec 1+ classes (Ikebana, Kokedama Dec 5); nothing Nov 25-30."
+   },
+   {
+    "name": "Spady Cultural Heritage Museum",
+    "url": "https://spadymuseum.com/events",
+    "status": "works",
+    "tip": "House That Memory Built Nov 30; Kwanzaa Dec 26."
+   },
+   {
+    "name": "Spady Black History Study Program",
+    "url": "https://www.spadymuseum.com/black-history-study/",
+    "status": "works",
+    "tip": "NEW: Saturday class schedule (Dec 5 in person)."
+   },
+   {
+    "name": "Delray Beach Historical Society",
+    "url": "https://delraybeachhistory.org/events/",
+    "status": "works",
+    "tip": "Holiday Sip & Shop Dec 4, Atlantic Ave walking tour Dec 5 ($30/$20)."
+   },
+   {
+    "name": "Sandoway Discovery Center",
+    "url": "https://sandoway.org/your-visit/upcoming-events/",
+    "status": "works",
+    "tip": "Undated Tue-Sun animal talks 1/2/3 PM only."
+   },
+   {
+    "name": "Coastal Star date pages",
+    "url": "https://thecoastalstar.com/events/list/on/{yyyy-mm-dd}",
+    "status": "works",
+    "tip": "Dec 1-6 had only Arts Garage shows for Delray; mostly other cities."
+   },
+   {
+    "name": "Delray Chamber community calendar WP API (EventON)",
+    "url": "https://delraybeach.com/wp-json/wp/v2/ajde_events?per_page=100&page={n}&_fields=id,title,link,date",
+    "status": "works",
+    "tip": "NEW: curl works; then curl each /community/{slug}/ page and read JSON-LD startDate (dates not zero-padded). Found Holly House shop, Aloft Thanksgiving buffet, Chanukah times."
+   },
+   {
+    "name": "Delray Chamber events (tribe API)",
+    "url": "https://delraybeach.com/wp-json/tribe/events/v1/events?start_date={date}&end_date={date}",
+    "status": "works",
+    "tip": "NEW: chamber's own events; only Nonprofit Council Dec 1 in range."
+   },
+   {
+    "name": "Delray Chamber calendar",
+    "url": "https://web.delraybeach.com/events/calendar/{yyyy-mm-dd}",
+    "status": "works",
+    "tip": "Nonprofit Council Dec 1 detail page has time/price."
+   },
+   {
+    "name": "Delray CRA events",
+    "url": "https://delraycra.org/events/",
+    "status": "works",
+    "tip": "CRA Social Dec 3 5-7 PM, location TBA."
+   },
+   {
+    "name": "Tin Roof Delray Beach",
+    "url": "https://tinroofdelraybeach.com/featured-event/motown-mondays/",
+    "status": "works",
+    "tip": "Motown Mondays 6-9 PM weekly; calendar page itself has no dates."
+   },
+   {
+    "name": "Sick Puppies Comedy (Doghouse Theater)",
+    "url": "https://www.sickpuppiescomedy.com/",
+    "status": "works",
+    "tip": "NEW: Saturday 8 PM improv dates with event-details URLs (Nov 28, Dec 5)."
+   },
+   {
+    "name": "Space of Mind events API",
+    "url": "https://findspaceofmind.com/wp-json/tribe/events/v1/events?start_date={date}&end_date={date}",
+    "status": "works",
+    "tip": "NEW: mostly enrolled kids programs; Young Adult Music Jam Dec 5."
+   },
+   {
+    "name": "TreasureHunter.show Delray",
+    "url": "https://www.treasurehunter.show/shows/florida/delray-beach",
+    "status": "works",
+    "tip": "NEW: monthly Delray Card Social at Elks Lodge (Nov 28)."
+   },
+   {
+    "name": "Delray Beach Children's Garden schedule",
+    "url": "https://www.delraybeachchildrensgarden.org/schedule",
+    "status": "works",
+    "tip": "Weekly Tue/Thu/Fri/Sat open-garden programs with prices; 2026 booking links."
+   },
+   {
+    "name": "Silverball Museum Delray iCal",
+    "url": "https://silverballmuseum.com/delray-beach/events/month/{yyyy-mm}/?ical=1",
+    "status": "empty",
+    "tip": "Only weekly admission promos."
+   },
+   {
+    "name": "Seagate Hotel events",
+    "url": "https://www.seagatedelray.com/?p=258",
+    "status": "empty",
+    "tip": "NEW tried: no dated events, only generic beach yoga/bootcamp offerings."
+   },
+   {
+    "name": "The Ray Hotel / Hilton events",
+    "url": "https://www.hilton.com/en/hotels/pbitrqq-the-ray-hotel-delray-beach/events",
+    "status": "empty",
+    "tip": "NEW tried: private events only."
+   },
+   {
+    "name": "Delray Newspaper",
+    "url": "https://thedelraynewspaper.com/",
+    "status": "fails",
+    "tip": "NEW tried: robots unreachable; no web calendar found."
+   },
+   {
+    "name": "St. Paul's Episcopal calendar (CalendarWiz)",
+    "url": "https://www.calendarwiz.com/calendars/calendar.php?crd=stpaulsdelray",
+    "status": "fails",
+    "tip": "NEW tried: robots_disallowed."
+   },
+   {
+    "name": "Cason Church events",
+    "url": "https://www.casonchurch.org/events",
+    "status": "fails",
+    "tip": "NEW tried: robots unreachable (events show up on AllEvents)."
+   },
+   {
+    "name": "Delray Marketplace",
+    "url": "https://www.delraymarketplace.com/events",
+    "status": "fails",
+    "tip": "client_error again."
+   },
+   {
+    "name": "Burt & Max's (Delray Marketplace) live music",
+    "url": "https://burtandmaxs.getbento.com/event/live-music",
+    "status": "fails",
+    "tip": "NEW tried: site gone."
+   },
+   {
+    "name": "Paradise Palms Botanical & Sculpture Garden",
+    "url": "https://paradisepalmsandsculpturegarden.com/",
+    "status": "empty",
+    "tip": "NEW tried: open Wed/Thu/Sat by appointment, no events."
+   },
+   {
+    "name": "Fleet Feet Delray run club",
+    "url": "https://www.fleetfeet.com/s/delray/runclub",
+    "status": "empty",
+    "tip": "NEW tried: Wed 6 PM / Sat 8 AM training-program runs, not public drop-in."
+   },
+   {
+    "name": "DDA venue pages (Johnnie Brown's, Elevate, Rosewater, Doghouse)",
+    "url": "https://downtowndelraybeach.com/go/{slug}",
+    "status": "empty",
+    "tip": "NEW tried: addresses/websites only, no schedules."
+   },
+   {
+    "name": "Tim Finnegans",
+    "url": "https://www.timfinnegans.com/",
+    "status": "fails",
+    "tip": "NEW tried: domain is an Arizona pub; Delray pub has no own calendar."
+   },
+   {
+    "name": "Delray Beach Golf Club / Tennis Center",
+    "url": "web search",
+    "status": "empty",
+    "tip": "NEW tried: no public events Nov 25-Dec 6 2026 (DBO is Feb)."
+   },
+   {
+    "name": "Pineapple Grove",
+    "url": "web search",
+    "status": "empty",
+    "tip": "NEW tried: no 2026 Pineapple Grove events beyond tree-lighting street fair."
+   },
+   {
+    "name": "Jewish Federation (jewishboca.org) week iCal",
+    "url": "https://jewishboca.org/events/week/{yyyy-mm-dd}/?ical=1",
+    "status": "empty",
+    "tip": "curl works; no Delray-located events Nov 25-Dec 6."
+   },
+   {
+    "name": "Palm Beaches holiday press release 2026",
+    "url": "https://www.thepalmbeaches.com/press-releases/holiday-happenings-in-the-palm-beaches-2026",
+    "status": "works",
+    "tip": "Says Hanukkah Festival Dec 14 - conflicts with DDA/OSS/Chamber (Dec 6); trust Dec 6."
+   },
+   {
+    "name": "BocaPost / Yahoo Delray December lineup articles",
+    "url": "https://bocapost.com/delray-beach-news/delray-beach-sets-full-december-lineup-with-tree-lighting-parade-and-menorah-festival",
+    "status": "empty",
+    "tip": "2025 articles; do not use for 2026."
+   },
+   {
+    "name": "City of Delray Beach calendar month view",
+    "url": "https://www.delraybeachfl.gov/services/advanced-components/basic-pages/calendar-month-view/-curm-{month}/-cury-{year}",
+    "status": "fails",
+    "tip": "2026 months return client_error (only 2025 cached); i-want-to/learn-about/city-meetings-events-calendar shows stale Feb 2026. Use Legistar for meetings."
+   },
+   {
+    "name": "Creative Arts School (city)",
+    "url": "https://www.delraybeachfl.gov/government/city-departments/creative-arts-school-classfocus",
+    "status": "empty",
+    "tip": "No class schedule on page; registration is external."
+   },
+   {
+    "name": "oldschoolsquare.org (old site)",
+    "url": "https://oldschoolsquare.org/",
+    "status": "empty",
+    "tip": "Outdated content; use delrayoldschoolsquare.com."
+   },
+   {
+    "name": "Arts Warehouse (artswarehousedelray.com)",
+    "url": "https://www.artswarehousedelray.com/",
+    "status": "fails",
+    "tip": "robots_disallowed; use artswarehouse.org."
+   },
+   {
+    "name": "Delray Beach Playhouse homepage",
+    "url": "https://www.delraybeachplayhouse.com/",
+    "status": "fails",
+    "tip": "Bot-check page; use https://delraybeachplayhouse.com/?p=15236 (season page with show times/prices)."
+   },
+   {
+    "name": "Delray Beach Playhouse calendar",
+    "url": "https://delraybeachplayhouse.com/?p=16873",
+    "status": "fails",
+    "tip": "?p=16873 returned verification/loading screen this run; ?p=15236 season page worked."
+   },
+   {
+    "name": "BroadwayWorld Delray Beach Playhouse",
+    "url": "https://www.broadwayworld.com/miami/regionalshows/delray-beach-playhouse",
+    "status": "works",
+    "tip": "Shows run dates; only ~10 shown."
+   },
+   {
+    "name": "Delray Beach Public Library /events",
+    "url": "https://www.delraylibrary.org/events",
+    "status": "fails",
+    "tip": "client_error; use /classes-programs or /categories/{adults|children|teens|babies-toddlers}/."
+   },
+   {
+    "name": "Morikami /events",
+    "url": "https://morikami.org/events/",
+    "status": "fails",
+    "tip": "client_error; use /upcoming-events/."
+   },
+   {
+    "name": "Delray Chamber community calendar",
+    "url": "https://delraybeach.com/communitycalendar",
+    "status": "fails",
+    "tip": "Dynamic JS, nothing rendered."
+   },
+   {
+    "name": "The Coastal Star events",
+    "url": "https://thecoastalstar.com/events?page={n}",
+    "status": "works",
+    "tip": "Paged list order shifts between fetches; use date pages https://thecoastalstar.com/events/list/on/{yyyy-mm-dd} instead and filter to Delray."
+   },
+   {
+    "name": "Delray Beach Magazine",
+    "url": "https://www.delraybeachmagazine.com/",
+    "status": "fails",
+    "tip": "Redirects to simplecirc subscription page; no calendar."
+   },
+   {
+    "name": "Palm Beach Illustrated Good Day Market West Delray",
+    "url": "https://www.palmbeachillustrated.com/event/the-good-day-market-west-delray-farmers-market/all/",
+    "status": "empty",
+    "tip": "Still ends May 2026; organizer Eventeny shows fall series in Boynton only."
+   },
+   {
+    "name": "Museum of Central American Art",
+    "url": "https://thecoastalstar.com/events/printmaking-hands-on-demo",
+    "status": "works",
+    "tip": "MoCAA events found via Coastal Star; own site MoCAArt.org untried."
+   },
+   {
+    "name": "Museum of Central American Art (MoCAA)",
+    "url": "https://mocaart.org/",
+    "status": "works",
+    "tip": "Homepage lists current exhibit and events at The Annex, 290 SE 2nd Ave."
+   },
+   {
+    "name": "Delray CRA",
+    "url": "https://delraycra.org/",
+    "status": "empty",
+    "tip": "/events/ lists only CRA Socials (Dec 3); board meetings are on Legistar."
+   },
+   {
+    "name": "Delray Beach Parks & Recreation",
+    "url": "https://www.delraybeachfl.gov/government/city-departments/parks-and-recreation",
+    "status": "empty",
+    "tip": "Events section empty; city special events show up on DDA calendar."
+   },
+   {
+    "name": "Eventeny (Old School Square / city events)",
+    "url": "https://www.eventeny.com/company/?c=435624",
+    "status": "empty",
+    "tip": "Company page stale (2024 art walk only)."
+   },
+   {
+    "name": "Arts Warehouse on Eventbrite",
+    "url": "https://www.eventbrite.com/d/fl--delray-beach/events/",
+    "status": "untried",
+    "tip": "Workshop prices not on artswarehouse.org pages."
+   },
+   {
+    "name": "Bandsintown Delray Beach",
+    "url": "https://www.bandsintown.com/c/delray-beach-fl",
+    "status": "untried",
+    "tip": "Live music at Atlantic Ave venues."
+   },
+   {
+    "name": "Delray Beach Open / Tennis Center",
+    "url": "https://www.delraybeachopen.com/",
+    "status": "empty",
+    "tip": "/tennis-events lists only February DBO-week events; BJK Cup on DDA."
+   },
+   {
+    "name": "Boca Magazine events",
+    "url": "https://bocamag.com/events/",
+    "status": "empty",
+    "tip": "/events/ page shows only Boca venue promos; no Delray date listings."
+   },
+   {
+    "name": "Macaroni Kid Boynton Beach",
+    "url": "https://boyntonbeach.macaronikid.com/events",
+    "status": "fails",
+    "tip": "client_error on /events."
+   },
+   {
+    "name": "Every Parent PBC",
+    "url": "https://www.everyparentpbc.org/things-to-do",
+    "status": "fails",
+    "tip": "/things-to-do client_error; detail pages load but found items were 2025."
+   },
+   {
+    "name": "Arts Garage iCal feed",
+    "url": "https://artsgarage.org/events/photo/{yyyy-mm-dd}/?ical=1",
+    "status": "fails",
+    "tip": "?ical=1 for 2026-11-22 returned robots_disallowed this run; the 2026-11-14 iCal URL (seen in search) worked; /events/ list also works."
+   },
+   {
+    "name": "Saltwater Brewery events",
+    "url": "https://saltwaterbrewery.com/pages/delray-beach-brewery-events",
+    "status": "works",
+    "tip": "Weekly Wed trivia & Thu bingo 7-9 PM at 1701 W Atlantic; Tue club night; no one-off events listed Nov 15-22."
+   },
+   {
+    "name": "Delray Chamber event pages (delraybeach.com/event)",
+    "url": "https://delraybeach.com/event/{slug}/",
+    "status": "works",
+    "tip": "Chamber event posts (YPAD etc.); community calendar itself is JS-only."
+   },
+   {
+    "name": "Chamber calendar (chamber.delraybeach.com)",
+    "url": "https://chamber.delraybeach.com/chamber-calendar",
+    "status": "fails",
+    "tip": "client_error."
+   },
+   {
+    "name": "Morikami current exhibitions",
+    "url": "https://morikami.org/current-exhibitions/",
+    "status": "works",
+    "tip": "Exhibit titles with start/end dates; no per-exhibit URLs."
+   },
+   {
+    "name": "First Presbyterian Church of Delray Beach concert series",
+    "url": "https://firstpresbyterianchurchofdelraybeach.cloversites.com/concert-series",
+    "status": "empty",
+    "tip": "Only 2024 series posted."
+   },
+   {
+    "name": "St. Paul's Episcopal Delray music ministry",
+    "url": "https://stpaulsdelray.org/music-ministry/",
+    "status": "empty",
+    "tip": "No concert dates on page; try its Calendar link."
+   },
+   {
+    "name": "Chabad of Delray Beach calendar",
+    "url": "https://www.chabad.org/calendar/view/month_cdo/mosadid/371",
+    "status": "empty",
+    "tip": "Only weekly prayer services (not public events)."
+   },
+   {
+    "name": "Everglades Audubon (ecbirds.org) calendar",
+    "url": "https://ecbirds.org/calendar/list/",
+    "status": "empty",
+    "tip": "No Nov 2026 events rendered (Wakodahatchee walks not listed)."
+   },
+   {
+    "name": "Delray Beach Orchid Society (orchids.org)",
+    "url": "https://orchids.org/organizations/delray-beach-orchid-society",
+    "status": "empty",
+    "tip": "No 2026 events listed."
+   },
+   {
+    "name": "Unity Church of Delray Beach (PBI venue page)",
+    "url": "https://www.palmbeachillustrated.com/venue/unity-church-of-delray-beach/",
+    "status": "empty",
+    "tip": "Only Jan 2026 concert."
+   },
+   {
+    "name": "Spady Museum registration (charityproud)",
+    "url": "https://spadymuseum.charityproud.org/EventRegistration/Index/{id}",
+    "status": "works",
+    "tip": "Registration pages for Spady programs."
+   },
+   {
+    "name": "Bandsintown / Eventbrite",
+    "url": "https://www.bandsintown.com/c/delray-beach-fl",
+    "status": "untried",
+    "tip": "Aggregators - covered by another slice."
+   },
+   {
+    "name": "Tin Roof Delray Beach calendar",
+    "url": "https://tinroofdelraybeach.com/calendar/",
+    "status": "works",
+    "tip": "Featured-event pages give weekly Motown Mondays and holiday lineups (3 Days of Thanks Nov 25-27) with times; no year on pages."
+   },
+   {
+    "name": "Johnnie Brown's",
+    "url": "https://johnniebrowns.com/events",
+    "status": "empty",
+    "tip": "Only hours; 'live music 7 days' with no lineups."
+   },
+   {
+    "name": "Boston's on the Beach live music",
+    "url": "https://www.bostonsonthebeach.com/live-music-schedule",
+    "status": "empty",
+    "tip": "Stale (2024 latest)."
+   },
+   {
+    "name": "The Atlantic Current events",
+    "url": "https://theatlanticcurrent.com/events",
+    "status": "works",
+    "tip": "Local Delray mag calendar; sparse (Sandoway feeding Nov 22 only)."
+   },
+   {
+    "name": "Atlantic Ave Magazine",
+    "url": "https://www.atlanticavemagazine.com/",
+    "status": "empty",
+    "tip": "Feature articles only, no calendar."
+   },
+   {
+    "name": "DDA live music venue directory",
+    "url": "https://downtowndelraybeach.com/experience/dine/live-music-venue",
+    "status": "works",
+    "tip": "Lists 8 live-music venues + their websites (Tin Roof, Johnnie Brown's, Elevate, Rosewater, THRoW Social...)."
+   },
+   {
+    "name": "Delray Beach ITF junior tennis",
+    "url": "https://delraybeachopen.com/delray-beach-itf",
+    "status": "empty",
+    "tip": "Nov 14-21 2026; ends before window."
+   },
+   {
+    "name": "Delray Beach Turkey Trot (RunSignUp)",
+    "url": "https://runsignup.com/Race/FL/DelrayBeach/40thAnnualDelrayBeachTurkeyTrot5K",
+    "status": "empty",
+    "tip": "2026 race is Sat Nov 21 (before window)."
+   },
+   {
+    "name": "PBC ERM Delray Oaks Natural Area",
+    "url": "https://discover.pbc.gov/erm/NaturalAreas/Delray-Oaks.aspx",
+    "status": "empty",
+    "tip": "No scheduled walks listed."
+   },
+   {
+    "name": "St. Paul's Episcopal newsletter posts",
+    "url": "https://stpaulsdelray.org/?p=4175",
+    "status": "empty",
+    "tip": "Joint Thanksgiving Eve service post has no year (stale)."
+   }
+  ],
+  "seasonal": [
+   {
+    "name": "City of Delray Beach 100 Ft Christmas Tree page",
+    "url": "https://www.delraybeachfl.gov/our-city/things-to-do/100-ft-christmas-tree",
+    "status": "works",
+    "tip": "WebFetch OK; 2026 tree lighting Dec 1 6-9 PM and Holiday Village prices; season hours TBD. Calendar Event/{id} pages 403/client_error."
+   },
+   {
+    "name": "City of Delray Beach calendar event pages",
+    "url": "https://www.delraybeachfl.gov/Home/Components/Calendar/Event/{id}/",
+    "status": "fails",
+    "tip": "curl 403 (Akamai) and WebFetch client_error for 2026 ids; use downtowndelraybeach.com instead."
+   },
+   {
+    "name": "Downtown Delray Beach (DDA) events calendar",
+    "url": "https://downtowndelraybeach.com/events/calendar",
+    "status": "works",
+    "tip": "WebFetch gives full list with /do/{slug} pages; found Delray In White toy-drive dinner, Holiday Sip and Shop, Chanukah festival, Shop Small."
+   },
+   {
+    "name": "City of Boynton Beach Holidays page",
+    "url": "https://boynton-beach.org/660/Holidays-in-Boynton-Beach",
+    "status": "works",
+    "tip": "2026 tree lighting Dec 5 4-10 PM (drone show) and boat parade Dec 11; no prices."
+   },
+   {
+    "name": "City of Boca Raton calendar day view (holiday filter)",
+    "url": "https://www.myboca.us/calendar.aspx?view=list&year={yyyy}&month={m}&day={d}",
+    "status": "works",
+    "tip": "curl; Holiday Street Parade Dec 2 (EID 15807, new Mizner Blvd route), Holiday POPS Dec 5 ($25-60), Gumbo Limbo Ornaments Naturally Dec 5-6."
+   },
+   {
+    "name": "City of Boca Raton Merry in Mizner page",
+    "url": "https://www.myboca.us/2074/Merry-in-Mizner",
+    "status": "works",
+    "tip": "Surf's Up Santa Dec 8 and Stuff-a-Plush Dec 15 (both after Dec 6). /BocaJolly and canva Boca Jolly Days pages 404."
+   },
+   {
+    "name": "Downtown Boca CRA calendar (curl)",
+    "url": "https://www.downtownboca.org/calendar.aspx?view=list&year={yyyy}&month={m}",
+    "status": "works",
+    "tip": "curl now returns 0 bytes; WebFetch month list works (Scrooge at Studio Dec 4, Holiday Pops Dec 5)."
+   },
+   {
+    "name": "The Studio at Mizner Park shows",
+    "url": "https://thestudioatmiznerpark.org/shows-events/",
+    "status": "works",
+    "tip": "WebFetch OK (new .org domain); event pages /events/{slug}-2026/ give all dates and seat prices. Scroogé musical Dec 4-12."
+   },
+   {
+    "name": "Miami on the Cheap Chanukah in PBC 2026",
+    "url": "https://miamionthecheap.com/event/chanukah-and-hanukkah-celebrations-in-palm-beach-county/",
+    "status": "works",
+    "tip": "Best single Hanukkah roundup: Delray OSS Dec 6, B'nai Torah Fire & Ice, Chabad Boynton Winter Wonderland, Canyon Lights Up."
+   },
+   {
+    "name": "Miami on the Cheap pb-holiday tag",
+    "url": "https://miamionthecheap.com/tag/pb-holiday",
+    "status": "works",
+    "tip": "Index of 2026 PBC holiday posts; Delray Holiday Village Dec 1-27 post has prices."
+   },
+   {
+    "name": "Chabad West Boca events list",
+    "url": "https://www.chabadwestboca.com/templates/events.htm",
+    "status": "works",
+    "tip": "Lists dated events incl. Chanukah Festival Sun Dec 6 and Town Center lighting Dec 10; /calendar/ views are robots-disallowed."
+   },
+   {
+    "name": "Chabad of Boca Raton",
+    "url": "https://www.chabadboca.com/templates/articlecco_cdo/aid/5101347/jewish/Boca-Raton-Chanukah-Festival.htm",
+    "status": "works",
+    "tip": "Festival page has venue (South County Regional Park) and prices but no date; date from Chabad West Boca list."
+   },
+   {
+    "name": "Chabad of West Boynton Chanukah section",
+    "url": "https://www.chabadwestboynton.com/7632337",
+    "status": "works",
+    "tip": "Dated list: Menorahs & Martinis Dec 3, Latke Wars Dec 5, Canyon Lights Up Dec 6."
+   },
+   {
+    "name": "Chabad Greater Boynton events",
+    "url": "https://www.chabadboynton.com/events/winter",
+    "status": "works",
+    "tip": "Chanukah Winter Wonderland Dec 6 4-6 PM free w/ registration."
+   },
+   {
+    "name": "Chabad of Delray Beach",
+    "url": "https://www.chabaddelray.com/7615592",
+    "status": "empty",
+    "tip": "Chanukah RSVP page has no dates; calendar views robots-disallowed."
+   },
+   {
+    "name": "B'nai Torah Hanukkah form (ShulCloud)",
+    "url": "https://btcboca.shulcloud.com/form/hanukkah-2026",
+    "status": "works",
+    "tip": "Prices only; date/time from Miami on the Cheap (Dec 6 5:30-7:30)."
+   },
+   {
+    "name": "Jewish Federation (jewishboca.org) week view",
+    "url": "https://jewishboca.org/events/week/{yyyy-mm-dd}/",
+    "status": "works",
+    "tip": "WebFetch; mostly donor/member events; JFS Hanukkah meal packing Dec 6 public volunteer."
+   },
+   {
+    "name": "Temple Beth El Boca week view",
+    "url": "https://tbeboca.org/events/week/{yyyy-mm-dd}/",
+    "status": "empty",
+    "tip": "Chanukah items are ELC-family only; second week fetch failed."
+   },
+   {
+    "name": "Levis JCC events",
+    "url": "https://levisjcc.org/events",
+    "status": "empty",
+    "tip": "No Chanukah events listed through Dec 12."
+   },
+   {
+    "name": "RunSignup Levis JCC Turkey Trot",
+    "url": "https://runsignup.com/Race/Info/FL/BocaRaton/LevisJCCTurkeyTrot5k",
+    "status": "works",
+    "tip": "Shows SOLD OUT, start times and prices."
+   },
+   {
+    "name": "RunSignup Delray Beach Turkey Trot",
+    "url": "https://runsignup.com/Race/FL/DelrayBeach/40thAnnualDelrayBeachTurkeyTrot5K",
+    "status": "works",
+    "tip": "2026 race was Nov 21 (outside range)."
+   },
+   {
+    "name": "RaceEntry Boca Raton Turkey Trot",
+    "url": "https://www.raceentry.com/boca-raton-turkey-trot/race-information",
+    "status": "works",
+    "tip": "Non-2026 slug works: Nov 26 9 AM at 1000 Spanish River Blvd; registration page client_error; the -2026 slug fails."
+   },
+   {
+    "name": "Eventbrite keyword search per city (holiday words)",
+    "url": "https://www.eventbrite.com/d/fl--{city}/{keyword}/?start_date={date}&end_date={date}&page={n}",
+    "status": "works",
+    "tip": "Parse __SERVER_DATA__ with json raw_decode (regex breaks); ~1/3 requests rate-limited (2 KB page), sleep 2s; event pages' ld+json show price and EventCancelled."
+   },
+   {
+    "name": "AllEvents city holiday categories",
+    "url": "https://allevents.in/{city}/{christmas|hanukkah|thanksgiving}",
+    "status": "works",
+    "tip": "Mostly region-wide; found SantaCon Delray, Klezmer Hanukkah at Movies of Delray, Mandel JCC Boynton items; event ld+json via curl."
+   },
+   {
+    "name": "Palm Beach County Library BiblioCommons API (holiday filter)",
+    "url": "https://gateway.bibliocommons.com/v2/libraries/pbclibrary/events?startDate={start}&endDate={end}&limit=500",
+    "status": "works",
+    "tip": "HAGEN (Delray 33446), WBOYNTON, CANYON, GLADESRD holiday programs; Canyon address is 8915 Senator Joe Abruzzo Ave."
+   },
+   {
+    "name": "Boynton Beach City Library iCal",
+    "url": "https://bbflpl.libcal.com/ical_subscribe.php?src=p&cid=15277",
+    "status": "works",
+    "tip": "Holly Jolly Holiday Party Dec 3 and Snowy Drifts are CANCELLED; closed Nov 26-27."
+   },
+   {
+    "name": "Boca Raton Public Library LibCal AJAX",
+    "url": "https://bocalibrary.libcal.com/ajax/calendar/list?c=-1&date={yyyy-mm-dd}&perpage=100&page=1&audience=&cats=&camps=&inc=0",
+    "status": "empty",
+    "tip": "No holiday programs Nov 25-Dec 6 (only Winter Make and Take Dec 4)."
+   },
+   {
+    "name": "Simon Town Center holiday stream",
+    "url": "https://www.simon.com/mall/town-center-at-boca-raton/stores/management-office/stream/its-a-holiday-thing-at-town-center-at-boca-raton-6291081",
+    "status": "works",
+    "tip": "Caring Santa Dec 6, Santa-line magician Dec 5, free cocoa Dec 5-6, Black Friday hours."
+   },
+   {
+    "name": "Boynton Beach Mall events",
+    "url": "https://www.boyntonbeachmall.com/event/41617-photos-visits-with-santa",
+    "status": "works",
+    "tip": "curl OK (then IP block after a few requests); Santa Dec 4-24 with daily hours; Paws & Claus Dec 7."
+   },
+   {
+    "name": "Delray Marketplace site",
+    "url": "https://www.delraymarketplace.com/events",
+    "status": "fails",
+    "tip": "Domain now parked at HugeDomains."
+   },
+   {
+    "name": "St. Gregory's Episcopal (Boca)",
+    "url": "https://www.stgregorysepiscopal.org/hollyversary",
+    "status": "works",
+    "tip": "HollyVersary gala Dec 5 ($75); Rise and Shine Advent service Dec 6."
+   },
+   {
+    "name": "First Presbyterian Church Delray upcoming events",
+    "url": "https://firstdelray.com/upcoming-events",
+    "status": "works",
+    "tip": "Holly House gift shop Tue/Thu/Sat 10-noon; Christmas pageant Dec 13."
+   },
+   {
+    "name": "Spanish River Church",
+    "url": "https://www.spanishriver.com/christmas",
+    "status": "works",
+    "tip": "Christmas concert Dec 12 (outside range); campus closed Nov 25-27."
+   },
+   {
+    "name": "St. Paul's Episcopal Delray",
+    "url": "https://stpaulsdelray.org/",
+    "status": "empty",
+    "tip": "Homepage no seasonal events; calendarwiz calendar robots-disallowed."
+   },
+   {
+    "name": "Advent Church Boca",
+    "url": "https://adventchurchboca.org/events/",
+    "status": "empty",
+    "tip": "Google Calendar embed; no dates readable."
+   },
+   {
+    "name": "St. Joan of Arc Boca",
+    "url": "https://stjoan.org/wp/",
+    "status": "empty",
+    "tip": "Merry & Bright gala page (onecau.se/merrybright) has no readable date."
+   },
+   {
+    "name": "St. Joseph's Episcopal Boynton",
+    "url": "https://stjoesboynton.org/",
+    "status": "empty",
+    "tip": "Christmas market only as image; AllEvents gives Nov 28 9-4."
+   },
+   {
+    "name": "Delray Beach Playhouse month view",
+    "url": "https://delraybeachplayhouse.com/events/month/{yyyy-mm}/",
+    "status": "empty",
+    "tip": "No holiday shows Nov 25-Dec 6 (Edwards Twins Nov 23, Mr. Christmas Dec 21)."
+   },
+   {
+    "name": "Arts Garage events",
+    "url": "https://artsgarage.org/events/",
+    "status": "empty",
+    "tip": "No holiday-themed shows in range."
+   },
+   {
+    "name": "Sandoway Discovery Center",
+    "url": "https://sandoway.org/your-visit/upcoming-events/",
+    "status": "empty",
+    "tip": "No dated holiday events; /events client_error."
+   },
+   {
+    "name": "Morikami",
+    "url": "https://morikami.org/",
+    "status": "empty",
+    "tip": "/events client_error; homepage has no dated items in range."
+   },
+   {
+    "name": "FAU Localist API (holiday filter)",
+    "url": "https://calendar.fau.edu/api/2/events?start={start}&end={end}&pp=100",
+    "status": "empty",
+    "tip": "Only 20 items Nov 25-Dec 6, none holiday; Holiday Spectacular Concert Dec 8 seen on Observer."
+   },
+   {
+    "name": "Boca Raton Observer RSS (holiday filter)",
+    "url": "https://bocaratonobserver.com/search/event/upcoming-events/index.rss?page={n}",
+    "status": "works",
+    "tip": "30 pages = 1.3 MB; holiday items mostly Broward/WPB; confirms Caring Santa, Nutcracker, Carnival of Music."
+   },
+   {
+    "name": "The Coastal Star day list (holiday filter)",
+    "url": "https://thecoastalstar.com/events/list/on/{yyyy-mm-dd}",
+    "status": "empty",
+    "tip": "No new local holiday items Nov 25-Dec 6."
+   },
+   {
+    "name": "Daggerwing / Green Cay program calendars",
+    "url": "https://discover.pbc.gov/parks/daggerwing/programcalendar.aspx",
+    "status": "empty",
+    "tip": "Holiday archery Dec 19 only; Green Cay nothing holiday in range."
+   },
+   {
+    "name": "Boca Post Delray December lineup",
+    "url": "https://bocapost.com/delray-beach-news/delray-beach-sets-full-december-lineup-with-tree-lighting-parade-and-menorah-festival",
+    "status": "fails",
+    "tip": "2025 article (stale); use for lead names only."
+   },
+   {
+    "name": "Boca Magazine holiday fun",
+    "url": "https://bocamag.com/holiday-fun-in-boca-raton-and-beyond/",
+    "status": "fails",
+    "tip": "2025 article; stale dates."
+   },
+   {
+    "name": "Visit Palm Beaches holiday press release 2026",
+    "url": "https://www.thepalmbeaches.com/press-releases/holiday-happenings-in-the-palm-beaches-2026",
+    "status": "works",
+    "tip": "2026 overview; Delray menorah listed Dec 14 there but Delray/MOTC pages say Dec 6."
+   },
+   {
+    "name": "Lynn University / Delray library / Boca Children's Museum",
+    "url": "https://events.lynn.edu/",
+    "status": "fails",
+    "tip": "Lynn 403; delraylibrary.org unreachable; not retried."
+   }
+  ],
+  "arts_community": [
+   {
+    "name": "City of Boca Raton calendar (day view)",
+    "url": "https://www.myboca.us/calendar.aspx?view=list&year={yyyy}&month={m}&day={d}",
+    "status": "works",
+    "tip": "curl OK; today's date returned 0 items; Willow Theatre, speaker series, P&Z/CAB/Sustainability boards Dec 1-6; EID pages give cost."
+   },
+   {
+    "name": "Boca Raton Public Library LibCal AJAX list",
+    "url": "https://bocalibrary.libcal.com/ajax/calendar/list?c=-1&date={yyyy-mm-dd}&perpage=100&page=1&audience=&cats=&camps=&inc=0",
+    "status": "works",
+    "tip": "curl per day; filter audiences Adults/All Ages; Socrates Cafe, Poets on the Fringe, Sunday Music Matinee."
+   },
+   {
+    "name": "Boynton Beach City Library iCal",
+    "url": "https://bbflpl.libcal.com/ical_subscribe.php?src=p&cid=15277",
+    "status": "works",
+    "tip": "curl; many Dec items CANCELLED/POSTPONED; library closed Nov 26-27 and Dec 5 (tree lighting)."
+   },
+   {
+    "name": "PBC Library BiblioCommons API",
+    "url": "https://gateway.bibliocommons.com/v2/libraries/pbclibrary/events?startDate={start}&endDate={end}&limit=500",
+    "status": "works",
+    "tip": "Filter branchLocationId GLADESRD, WBOCA, WBOYNTON, CANYON, HAGEN (Hagen Ranch = west Delray); 24 adult programs Nov 30-Dec 5."
+   },
+   {
+    "name": "The Coastal Star day list",
+    "url": "https://thecoastalstar.com/events/list/on/{yyyy-mm-dd}",
+    "status": "works",
+    "tip": "curl; OLLI lectures, Breakfast with the Chief, Arts Garage; event pages give price."
+   },
+   {
+    "name": "OLLI at FAU Boca course catalog (NEW)",
+    "url": "https://olli.fau.edu/ollifau/course/course.aspx?catId=13",
+    "status": "works",
+    "tip": "curl 2.6MB page; parse 'Location:/Date:/Time:/Fees' blocks; 17 Boca lectures Nov 30-Dec 4 with member/non-member prices; no per-course URLs."
+   },
+   {
+    "name": "FAU Localist API",
+    "url": "https://calendar.fau.edu/api/2/events?start={start}&end={end}&pp=100",
+    "status": "works",
+    "tip": "Only ~20 items; Wind Ensemble Dec 2, BFA Senior Show Dec 4, VIRGINIA prices $60-75."
+   },
+   {
+    "name": "FAU arts calendar",
+    "url": "https://calendar.fau.edu/arts",
+    "status": "works",
+    "tip": "WebFetch; nothing Nov 25-Dec 5 besides Virginia; Holiday Spectacular Dec 8, Messiah Dec 11, Tuba Christmas Dec 13."
+   },
+   {
+    "name": "Arts Garage events list",
+    "url": "https://artsgarage.org/events/",
+    "status": "works",
+    "tip": "curl OK; list shows ~2.5 weeks with prices; event URLs artsgarage.org/event/{slug}/."
+   },
+   {
+    "name": "Morikami upcoming events + event pages",
+    "url": "https://morikami.org/event/{slug}/",
+    "status": "works",
+    "tip": "WebFetch; Kokedama Dec 5, Ikebana sessions Dec 1/2, Sado Dec 6 with prices; nothing Nov 25-30."
+   },
+   {
+    "name": "Delray Beach Historical Society events (NEW)",
+    "url": "https://delraybeachhistory.org/events/",
+    "status": "works",
+    "tip": "WebFetch; Holiday Sip & Shop Dec 4, Atlantic Ave walking tour Dec 5 (body text says Nov 21; headline Dec 5)."
+   },
+   {
+    "name": "Boca Raton Historical Society events",
+    "url": "https://bocahistory.org/events/",
+    "status": "works",
+    "tip": "WebFetch; Museum Store Sunday Nov 29, Free Fun Saturday Dec 5 (Santa)."
+   },
+   {
+    "name": "Boca Raton Museum of Art events",
+    "url": "https://bocamuseum.org/visit/events",
+    "status": "works",
+    "tip": "WebFetch only (curl 403); Dec 3 Beat movement lecture; no event URLs or prices exposed; event slugs 404."
+   },
+   {
+    "name": "Old School Square events",
+    "url": "https://delrayoldschoolsquare.com/events",
+    "status": "works",
+    "tip": "WebFetch; Koller opening Dec 3, Delray in White Dec 2, Coco Market & Chanukah fest Dec 6; event pages give prices."
+   },
+   {
+    "name": "Arts Warehouse month view",
+    "url": "https://artswarehouse.org/events/month/{yyyy-mm}/",
+    "status": "works",
+    "tip": "WebFetch; Dec 4 First Friday + 3 exhibitions; workshop prices on event pages; Dec 5 self-portrait canceled."
+   },
+   {
+    "name": "Downtown Delray Beach calendar",
+    "url": "https://downtowndelraybeach.com/events/calendar",
+    "status": "works",
+    "tip": "WebFetch; ask for a date window; /do/{slug} pages give Art Walk galleries and Art Festival Dec 5-6."
+   },
+   {
+    "name": "Spady Museum events",
+    "url": "https://spadymuseum.com/events",
+    "status": "works",
+    "tip": "House That Memory Built sessions (Nov 30); exhibit through Dec 19."
+   },
+   {
+    "name": "Delray Beach Public Library adults category",
+    "url": "https://www.delraylibrary.org/categories/adults/",
+    "status": "works",
+    "tip": "WebFetch; open each /classes-programs/{slug}/ for time; Writers Studio is Zoom except listed dates."
+   },
+   {
+    "name": "Delray Legistar Web API (NEW)",
+    "url": "https://webapi.legistar.com/v1/delraybeach/events?$filter=EventDate+ge+datetime'{start}'+and+EventDate+le+datetime'{end}'",
+    "status": "works",
+    "tip": "curl JSON with future meetings (HTML calendar only shows past ~3 weeks); boca/boyntonbeach clients not on Legistar."
+   },
+   {
+    "name": "Delray CRA events",
+    "url": "https://delraycra.org/events/",
+    "status": "empty",
+    "tip": "CRA Social Dec 3 5-7 PM but location TBA; not added."
+   },
+   {
+    "name": "City of Boynton Beach calendar",
+    "url": "https://boynton-beach.org/calendar.aspx?view=list&year={yyyy}&month={m}&CID=0",
+    "status": "works",
+    "tip": "WebFetch; Commission Dec 1, Mix & Slip Dec 4 (EID pages give cost)."
+   },
+   {
+    "name": "Boynton Holidays page",
+    "url": "https://boynton-beach.org/660/Holidays-in-Boynton-Beach",
+    "status": "works",
+    "tip": "Tree lighting Dec 5 4-10 PM; Ocean Ave closed from Dec 4."
+   },
+   {
+    "name": "Boca Raton Observer RSS",
+    "url": "https://bocaratonobserver.com/search/event/upcoming-events/index.rss?page={n}",
+    "status": "works",
+    "tip": "60 pages reach Dec 31; ~90% non-local; found Lynn White Christmas, Temple Anshei Shalom flea market, Pavo Real, Holiday Carnival of Music."
+   },
+   {
+    "name": "Jewish Federation weekly calendar",
+    "url": "https://jewishboca.org/events/week/{yyyy-mm-dd}/",
+    "status": "works",
+    "tip": "WebFetch (iCal ?ical=1 now 403 to curl); Comedy Heals Dec 1, JFS Hanukkah packing Dec 6; many internal donor events."
+   },
+   {
+    "name": "Israel Heart2Heart Comedy Heals (NEW)",
+    "url": "https://israelh2h.org/ComedyHeals2026",
+    "status": "works",
+    "tip": "Dec 1 Boca Black Box fundraiser with prices."
+   },
+   {
+    "name": "B'nai Torah Congregation events",
+    "url": "https://www.btcboca.org/events/",
+    "status": "works",
+    "tip": "Page >100k chars; use /events-calendar/month/{yyyy-mm}/ with offset; Fire & Ice Hanukkah Dec 6, Lunch & Learn Dec 1."
+   },
+   {
+    "name": "Miami on the Cheap PBC Chanukah roundup (NEW)",
+    "url": "https://miamionthecheap.com/?p=1233508",
+    "status": "works",
+    "tip": "2026 edition (Nov 23); Boynton Chabad Winter Wonderland, Canyon Lights Up, BTC prices."
+   },
+   {
+    "name": "Chabad of Greater Boynton event page (NEW)",
+    "url": "https://www.chabadboynton.com/events/winter",
+    "status": "works",
+    "tip": "Chanukah Winter Wonderland Dec 6 details; /5713308 holiday page has no events."
+   },
+   {
+    "name": "Chabad of West Boynton (NEW)",
+    "url": "https://www.chabadwestboynton.com/",
+    "status": "empty",
+    "tip": "Lists Canyon Lights Up without date details."
+   },
+   {
+    "name": "Palm Beach Culture city search (NEW pattern)",
+    "url": "https://go.palmbeachculture.com/event/?do_search=yes&event_city=Boca%20Raton&view=list",
+    "status": "works",
+    "tip": "curl -L; city filter works but date filter ignored and few items; found B&N Boca author signing Dec 6."
+   },
+   {
+    "name": "Arts in Boca upcoming events",
+    "url": "https://www.artsinboca.org/upcoming-events",
+    "status": "works",
+    "tip": "Great Boca arts aggregator; event pages /upcoming-events/{slug} give dates; found Scrooge at The Studio at Mizner Park."
+   },
+   {
+    "name": "Delray Beach Playhouse season page",
+    "url": "https://delraybeachplayhouse.com/?p=15236",
+    "status": "works",
+    "tip": "Her Name Is Barbra lunch matinees Nov 30-Dec 2; Hairspray dates."
+   },
+   {
+    "name": "St. Gregory's Episcopal homepage",
+    "url": "https://www.stgregorysepiscopal.org/",
+    "status": "works",
+    "tip": "Hollyversary Dec 5 (no time), Coffee & Conversation Dec 2."
+   },
+   {
+    "name": "Wick Theatre ThunderTix",
+    "url": "https://thewicktheatre.thundertix.com/events",
+    "status": "works",
+    "tip": "WebFetch only; Nicolas King Supper Club Dec 6 6 PM; no hrefs exposed."
+   },
+   {
+    "name": "Songkick Boca Black Box calendar",
+    "url": "https://www.songkick.com/venues/3169779-boca-black-box-center-for-the-arts/calendar",
+    "status": "works",
+    "tip": "Only music (Southern Cross Dec 5); comedy shows come from Eventbrite."
+   },
+   {
+    "name": "Boca Black Box ShoWare",
+    "url": "https://bocablackbox.showare.com/default.asp?searchdate={mm/dd/yyyy}",
+    "status": "fails",
+    "tip": "Listings load via JS; no event links in HTML."
+   },
+   {
+    "name": "Eventbrite per-day category pages",
+    "url": "https://www.eventbrite.com/d/{fl--boca-raton|fl--delray-beach|fl--boynton-beach}/{business|charity-and-causes|community|arts|science-and-tech}--events/?start_date={date}&end_date={date}",
+    "status": "works",
+    "tip": "curl; parse __SERVER_DATA__ with json raw_decode (regex end fails); event ld+json gives price; many networking items Dec 1-5."
+   },
+   {
+    "name": "Patch new calendar (Delray/Boynton)",
+    "url": "https://new.patch.com/florida/{delray-beach-fl|boynton-beach-fl}/calendar",
+    "status": "works",
+    "tip": "curl; Boynton list led to Florida Blue Healthy Holiday FunFest; boca-raton-fl 404."
+   },
+   {
+    "name": "Greater Delray Chamber calendar",
+    "url": "https://web.delraybeach.com/events/calendar/{yyyy-mm-dd}",
+    "status": "works",
+    "tip": "Nonprofit Council Dec 1; details page gives price; delraybeach.com/events-calendar/ adds Board & Breakfast Dec 9."
+   },
+   {
+    "name": "Boca Chamber site",
+    "url": "https://www.bocachamber.com/events/",
+    "status": "fails",
+    "tip": "client_error; Networking Beast events at the Chamber show on Eventbrite."
+   },
+   {
+    "name": "Greater Boynton Chamber (guessed)",
+    "url": "https://www.boyntonbeach.org/events",
+    "status": "fails",
+    "tip": "client_error; no Boynton chamber calendar found."
+   },
+   {
+    "name": "Boca Helping Hands events",
+    "url": "https://bocahelpinghands.org/events/",
+    "status": "works",
+    "tip": "Only Rock the Relief Nov 29 (already in existing)."
+   },
+   {
+    "name": "Lynn University events / Live at Lynn",
+    "url": "https://www.lynn.edu/events/live-at-lynn",
+    "status": "fails",
+    "tip": "403 to curl and WebFetch; use Observer RSS or BusinessWire season release."
+   },
+   {
+    "name": "BusinessWire Live at Lynn 2026-27 release (NEW)",
+    "url": "https://www.businesswire.com/news/home/20260901814976/en/Lynn-University-Unveils-202627-Live-at-Lynn-Performances",
+    "status": "works",
+    "tip": "White Christmas Dec 4-6, Gingerbread concert Dec 13 (outside range)."
+   },
+   {
+    "name": "Gold Coast Band",
+    "url": "https://goldcoastband.org",
+    "status": "works",
+    "tip": "Ringing in the Season Dec 5 7:30 PM at Coral Lakes Theater, $10."
+   },
+   {
+    "name": "Murder on the Beach bookstore",
+    "url": "https://www.murderonthebeach.com/",
+    "status": "empty",
+    "tip": "Page returned no content to WebFetch."
+   },
+   {
+    "name": "Place of Hope events",
+    "url": "https://www.placeofhope.com/events/",
+    "status": "fails",
+    "tip": "client_error."
+   },
+   {
+    "name": "HabCenter events",
+    "url": "https://www.habcenter.org/events",
+    "status": "empty",
+    "tip": "No upcoming events listed."
+   },
+   {
+    "name": "Volen Center events",
+    "url": "https://www.volencenter.org/events",
+    "status": "fails",
+    "tip": "robots unreachable."
+   },
+   {
+    "name": "FAU University Galleries",
+    "url": "https://www.fau.edu/artsandletters/galleries/exhibitions/",
+    "status": "empty",
+    "tip": "Fall shows closed Nov 14."
+   },
+   {
+    "name": "FairsAndFestivals Boynton Winter 1st Friday",
+    "url": "https://www.fairsandfestivals.net/events/details/2026-boynton-beach-winter-1st-friday-event",
+    "status": "empty",
+    "tip": "Claims Dec 4 at Centennial Park but city calendar lacks it and Ocean Ave closes Dec 4; not added."
+   },
+   {
+    "name": "Boca Post Delray December lineup",
+    "url": "https://bocapost.com/news/florida/palm-beach-county/delray-beach-news/delray-beach-sets-full-december-lineup-with-tree-lighting-parade-and-menorah-festival/",
+    "status": "empty",
+    "tip": "2025 article; stale."
+   }
+  ],
+  "food_nightlife": [
+   {
+    "name": "Crazy Uncle Mike's Beats calendar",
+    "url": "https://crazyunclemikes.com/beats/",
+    "status": "works",
+    "tip": "curl OK; ld+json on list page gives every show through Dec 7; event pages give start/end; no prices."
+   },
+   {
+    "name": "The Funky Biscuit (own site)",
+    "url": "https://www.funkybiscuit.com/",
+    "status": "works",
+    "tip": "curl 403; WebFetch lists all shows with doors/show times, prices and seetickets links."
+   },
+   {
+    "name": "Arts Garage events list",
+    "url": "https://artsgarage.org/events/",
+    "status": "works",
+    "tip": "curl OK; ld+json has all shows with prices through mid-Dec."
+   },
+   {
+    "name": "Saltwater Brewery weekly pages",
+    "url": "https://saltwaterbrewery.com/pages/{trivia-night-delray-beach|bingo-night-delray-beach|reef-room-events}",
+    "status": "works",
+    "tip": "Trivia Wed 7-9, Bingo Thu 7-9, Tuesday Club Night 6-9; free; no dated one-offs."
+   },
+   {
+    "name": "Barrel of Monks all-events",
+    "url": "https://barrelofmonks.com/all-events/",
+    "status": "works",
+    "tip": "ld+json list; event pages need WebFetch for price/time."
+   },
+   {
+    "name": "Boca Black Box ShoWare calendar API",
+    "url": "https://bocablackbox.showare.com/include/widgets/calendar/calendarRequests.asp?action=eventdate&calMonth={m}/1/{yyyy}&iEvent={evt}&iBundle=0&iCategory=0&cp=0",
+    "status": "works",
+    "tip": "NEW: action=getDateRangeEvents gives all evt IDs; loop IDs >=1700 for dates; title from eventperformances.asp?evt={id}. Found Michael Rapaport Dec 1, Alice Jr Dec 6."
+   },
+   {
+    "name": "Boca Black Box own site",
+    "url": "https://www.bocablackbox.com/",
+    "status": "empty",
+    "tip": "Next.js data has titles/admission but no dates."
+   },
+   {
+    "name": "Songkick Boca Black Box calendar",
+    "url": "https://www.songkick.com/venues/3169779-boca-black-box-center-for-the-arts/calendar",
+    "status": "works",
+    "tip": "WebFetch; only music acts (Southern Cross Dec 5)."
+   },
+   {
+    "name": "Songkick Studio at Mizner Park",
+    "url": "https://www.songkick.com/venues/4476215/calendar",
+    "status": "empty",
+    "tip": "Next shows Dec 8-9."
+   },
+   {
+    "name": "AllEvents category pages x3 cities",
+    "url": "https://allevents.in/{boca-raton|delray-beach|boynton-beach}/{food-drinks|music|comedy|parties|live-music|trivia|karaoke|open-mic|workshops|nightlife|concerts|entertainment}",
+    "status": "works",
+    "tip": "curl OK; parse ld+json + linked event pages; filter out Miami/Hollywood items and auto-generated artist pages (3300... ids)."
+   },
+   {
+    "name": "Eventbrite category per-day pages",
+    "url": "https://www.eventbrite.com/d/fl--{city}/{food-and-drink|nightlife|music|comedy|performances|classes}--events/?start_date={date}&end_date={date}&page={1,2}",
+    "status": "works",
+    "tip": "curl OK; __SERVER_DATA__; city field sometimes UPPERCASE so match case-insensitively."
+   },
+   {
+    "name": "Eventbrite organizer pages",
+    "url": "https://www.eventbrite.com/o/{slug-id}",
+    "status": "works",
+    "tip": "NEW: get organizer from event page; lists series (Square Peg, Sushi Dojo, Cellar Market, Spirits & Spice). Series parent page HTML shows next child date and series end."
+   },
+   {
+    "name": "Sick Puppies Comedy (Doghouse Theater)",
+    "url": "https://www.sickpuppiescomedy.com/shows",
+    "status": "works",
+    "tip": "NEW: WebFetch gives dated improv (Sat 8 PM) and First Friday stand-up with prices; doghousetheater.com list is stale."
+   },
+   {
+    "name": "Tin Roof Delray calendar",
+    "url": "https://tinroofdelraybeach.com/calendar/",
+    "status": "works",
+    "tip": "Weekly Motown Mondays 6-9 PM; no dated December events; lineleap link fails."
+   },
+   {
+    "name": "Deck 84 live music calendar",
+    "url": "https://www.deck84.com/event/livemusic/",
+    "status": "works",
+    "tip": "NEW: WebFetch gives performer per date (Fri 3-5:30, Sat/Sun 2-5:30) through Dec 31."
+   },
+   {
+    "name": "Biergarten Boca EventON AJAX",
+    "url": "https://www.biergartenboca.com/wp-admin/admin-ajax.php (POST action=the_ajax_hook + shortcode from data-sc)",
+    "status": "works",
+    "tip": "NEW: returns json of all events incl. repeats (Tuesday trivia 7 PM); bands posted only ~2 weeks out."
+   },
+   {
+    "name": "Copperpoint Brewing simple-calendar",
+    "url": "https://copperpointbrewingcompany.com/food-truck-schedule/ (POST admin-ajax.php action=simcal_default_calendar_draw_grid&month={m}&year={yyyy}&id=16184)",
+    "status": "works",
+    "tip": "NEW: Nov page has events; December only food trucks. Old copperpointbrewing.com/events redirects."
+   },
+   {
+    "name": "NOBO Brewing website",
+    "url": "https://nobobrewing.com",
+    "status": "empty",
+    "tip": "Event list is from 2025 (no years); Meetup had a 2026 Music Bingo Dec 2 instead."
+   },
+   {
+    "name": "Downtown Delray (DDA) events calendar",
+    "url": "https://downtowndelraybeach.com/events/calendar",
+    "status": "works",
+    "tip": "curl OK; /do/{slug} pages need WebFetch for details (Delray In White Dec 2, Le Colonial Thanksgiving)."
+   },
+   {
+    "name": "Boca Raton Observer RSS",
+    "url": "https://bocaratonobserver.com/search/event/upcoming-events/index.rss?page={n}",
+    "status": "works",
+    "tip": "15 pages; mostly Broward/WPB; nothing new for food/nightlife this run."
+   },
+   {
+    "name": "The Coastal Star day list",
+    "url": "https://thecoastalstar.com/events/list/on/{yyyy-mm-dd}",
+    "status": "empty",
+    "tip": "Few Boca/Delray items; nothing for food/nightlife."
+   },
+   {
+    "name": "Salsa Vida Boca socials",
+    "url": "https://www.salsavida.com/guides/florida/boca-raton/socials/",
+    "status": "works",
+    "tip": "NEW: Latin Wednesdays at Cosmo's (free class + social) and Monday fundamentals class with venue pages."
+   },
+   {
+    "name": "FairsAndFestivals.net",
+    "url": "https://www.fairsandfestivals.net/events/details/2026-boynton-beach-winter-1st-friday-event",
+    "status": "works",
+    "tip": "NEW: Boynton Winter 1st Friday Dec 4 at Centennial Park."
+   },
+   {
+    "name": "Cozymeal Boca cooking classes",
+    "url": "https://www.cozymeal.com/boca-raton/cooking-classes",
+    "status": "works",
+    "tip": "NEW: shows next date per class; group classes hide venue until booking; many are in-home private (skip those)."
+   },
+   {
+    "name": "Meetup mirror (pro.meetup.com)",
+    "url": "https://pro.meetup.com/find/us--fl--{city}/",
+    "status": "works",
+    "tip": "Walk __NEXT_DATA__ pageProps for Event objects (not Apollo state); meetup.com event pages give ld+json. Found NOBO music bingo, Rosewater rooftop, Ladies of D'Vine."
+   },
+   {
+    "name": "Fever Candlelight Boca",
+    "url": "https://feverup.com/en/boca-raton-fl-us/candlelight",
+    "status": "works",
+    "tip": "Dec 4: Fleetwood Mac 6:30 and Michael Jackson 8:30 at St. Gregory's; AllEvents listing (Beatles) was wrong."
+   },
+   {
+    "name": "Patch Boca calendar",
+    "url": "https://new.patch.com/florida/boca-raton/calendar",
+    "status": "works",
+    "tip": "Mostly dupes; event pages confirm Candlelight times. Boynton calendar 404."
+   },
+   {
+    "name": "The Symphonia what's on",
+    "url": "https://thesymphonia.org/attend/whats-on/",
+    "status": "works",
+    "tip": "NEW: Holiday Pops Dec 5 7 PM Mizner Park Amphitheater."
+   },
+   {
+    "name": "JamBase festival page",
+    "url": "https://www.jambase.com/festival/cyclops-cove-2026",
+    "status": "works",
+    "tip": "NEW: Cyclops Cove Dec 4-6 at Sunset Cove (not on PBC county list; subtronics.net tour page empty)."
+   },
+   {
+    "name": "PBC amphitheater event detail",
+    "url": "https://discover.pbc.gov/parks/amphitheaters/Lists/Events/NewsDispForm.aspx?ID={id}",
+    "status": "works",
+    "tip": "IDs 418-433 current; no Sunset Cove events after Nov 27."
+   },
+   {
+    "name": "Sub-culture group happenings (Honey, Dada, Rosewater)",
+    "url": "https://sub-culture.org/happenings",
+    "status": "empty",
+    "tip": "NEW: only a WPB event; honeydelray.com redirects here with no listings."
+   },
+   {
+    "name": "Sudsbehindthemic shows",
+    "url": "https://sudsbehindthemic.com/shows",
+    "status": "works",
+    "tip": "NEW: karaoke host schedule; only Batch Delray Nov 27 in range."
+   },
+   {
+    "name": "Total Wine store events",
+    "url": "https://www.totalwine.com/events/fl/delray-beach/942",
+    "status": "fails",
+    "tip": "Store page geolocates to another state; event pages ec{id} work but cannot be listed by store."
+   },
+   {
+    "name": "Tock city page",
+    "url": "https://www.exploretock.com/city/boca-raton",
+    "status": "fails",
+    "tip": "client_error."
+   },
+   {
+    "name": "Resy city page",
+    "url": "https://resy.com/cities/boca-raton-fl",
+    "status": "fails",
+    "tip": "JS-only, no events in fetch."
+   },
+   {
+    "name": "The Cellar Market events",
+    "url": "https://www.thecellarmarket.com/events",
+    "status": "fails",
+    "tip": "client_error; use Eventbrite organizer the-cellar-market-121117841370."
+   },
+   {
+    "name": "Delray Beach Distilling",
+    "url": "https://delraybeachdistilling.com/",
+    "status": "fails",
+    "tip": "robots unreachable."
+   },
+   {
+    "name": "Tim Finnegans site",
+    "url": "https://www.timfinnegans.com/",
+    "status": "fails",
+    "tip": "Domain is an Arizona pub, not Delray's."
+   },
+   {
+    "name": "The Wine Room Delray",
+    "url": "https://www.thewineroomonline.com/delray-beach",
+    "status": "empty",
+    "tip": "No dated events; closed Thanksgiving."
+   },
+   {
+    "name": "Biergarten event pages / feed",
+    "url": "https://www.biergartenboca.com/events/feed/",
+    "status": "empty",
+    "tip": "Titles only, no dates; use the AJAX endpoint."
+   },
+   {
+    "name": "Warren Delray Eventbrite collection",
+    "url": "https://www.eventbrite.com/cc/complimentary-spirit-wine-tastings-in-delray-3737619",
+    "status": "empty",
+    "tip": "No upcoming events."
+   },
+   {
+    "name": "Ethnic Food Lovers of PBC Meetup",
+    "url": "https://www.meetup.com/ethnic_food_lovers/events/",
+    "status": "empty",
+    "tip": "0 upcoming."
+   },
+   {
+    "name": "Studio at Mizner Park (Observer venue)",
+    "url": "https://bocaratonobserver.com/locations/studio-mizner-park/",
+    "status": "empty",
+    "tip": "Next show Dec 9."
+   },
+   {
+    "name": "Square Peg Pizzeria Eventbrite organizer",
+    "url": "https://www.eventbrite.com/o/square-peg-pizzeria-40036949473",
+    "status": "empty",
+    "tip": "Shows Connecticut location; Delray series are under organizer the-pinkerton-agency-107489841501."
+   },
+   {
+    "name": "ShoWare default.asp searchdate",
+    "url": "https://bocablackbox.showare.com/default.asp?searchdate={m/d/yyyy}",
+    "status": "empty",
+    "tip": "Returns no events; use calendarRequests API."
+   }
+  ],
+  "outdoors_sports": [
+   {
+    "name": "RunSignup REST race search",
+    "url": "https://runsignup.com/Rest/races?format=json&zipcode={zip}&radius=10&start_date={date}&end_date={date_end}&events=T",
+    "status": "works",
+    "tip": "curl JSON, no key; city= filter or zipcode+radius; gave Levis JCC Turkey Trot and CityHouse River Run 5K Dec 5; names flag CANCELED (Boca PAL Holiday Mile)."
+   },
+   {
+    "name": "RunSignup race page",
+    "url": "https://runsignup.com/Race/FL/{City}/{RaceName}",
+    "status": "works",
+    "tip": "WebFetch gives date, start times, prices by deadline, address."
+   },
+   {
+    "name": "Running in the USA city list",
+    "url": "https://runningintheusa.com/race/list/boca-raton-fl/upcoming",
+    "status": "fails",
+    "tip": "curl 403 and WebFetch client_error."
+   },
+   {
+    "name": "Find the Run Boca December",
+    "url": "https://www.findtherun.com/races/boca-raton-fl/december",
+    "status": "empty",
+    "tip": "Stale (shows older-year Dec 21 Holiday Mile)."
+   },
+   {
+    "name": "Active.com city running",
+    "url": "https://www.active.com/{city}-fl/running",
+    "status": "empty",
+    "tip": "WebFetch works but only Broward/Miami races; none in Boca/Delray/Boynton."
+   },
+   {
+    "name": "Race Roster search",
+    "url": "https://raceroster.com/search?q=boca%20raton",
+    "status": "fails",
+    "tip": "JS-rendered; no listings in fetch."
+   },
+   {
+    "name": "EnduranceGrid Boca",
+    "url": "https://www.endurancegrid.com/events/running-boca-raton-fl-2026",
+    "status": "fails",
+    "tip": "client_error (guessed slug)."
+   },
+   {
+    "name": "RunGuides search",
+    "url": "https://www.runguides.com/event/search?l=Boca+Raton%2C+FL",
+    "status": "fails",
+    "tip": "client_error."
+   },
+   {
+    "name": "Sweatpals city run-clubs guides",
+    "url": "https://sweatpals.com/s/{boca-raton|delray-beach}/run-clubs",
+    "status": "empty",
+    "tip": "Stale spring 2026 items only; use Eventbrite organizer API for Sweatpals instead."
+   },
+   {
+    "name": "Eventbrite organizer events API (no token)",
+    "url": "https://www.eventbrite.com/api/v3/organizers/{organizer_id}/events/?status=live&order_by=start_asc&expand=venue&continuation={token}",
+    "status": "works",
+    "tip": "NEW: curl JSON with venue city; page with continuation. Sweatpals org 51363333023 (849 events, filter city) gave Friday Night Rally Delray Nov 27/Dec 4."
+   },
+   {
+    "name": "Eventbrite keyword search, date range",
+    "url": "https://www.eventbrite.com/d/fl--{city}/{keyword}/?start_date={date}&end_date={date_end}&page={n}",
+    "status": "works",
+    "tip": "Parse __SERVER_DATA__ via raw_decode (regex fails); keyword mostly ignored; per-day ranges surface recurring-series occurrences."
+   },
+   {
+    "name": "Eventbrite per-day category pages",
+    "url": "https://www.eventbrite.com/d/fl--{city}/{sports-and-fitness--events|health--events|yoga|run}/?start_date={date}&end_date={date}",
+    "status": "works",
+    "tip": "Best for weekly beach yoga/bootcamp occurrences (Seagate, South Beach Park, Gulfstream, Wildflower)."
+   },
+   {
+    "name": "Eventbrite event page ld+json",
+    "url": "https://www.eventbrite.com/e/{id}",
+    "status": "works",
+    "tip": "curl -L; ld+json startDate/location/offers/eventStatus."
+   },
+   {
+    "name": "AllEvents sports/fitness categories",
+    "url": "https://allevents.in/{boca-raton|delray-beach|boynton-beach}/{sports|health-wellness|yoga|fitness|running|tennis|pickleball|volunteering|hiking|car-shows|cars}",
+    "status": "works",
+    "tip": "curl --compressed; harvest event links, fetch pages for ld+json; found Boynton pickleball round robin, Tree Nursery volunteer day, Cars & Coffee Palm Beach Dec 6 at BRiC."
+   },
+   {
+    "name": "AllEvents 5k category",
+    "url": "https://allevents.in/{city}/5k",
+    "status": "fails",
+    "tip": "HTTP 410."
+   },
+   {
+    "name": "Meetup find mirror (category pages)",
+    "url": "https://pro.meetup.com/find/us--fl--{city}/{''|sports-fitness|health-wellbeing}",
+    "status": "works",
+    "tip": "Needs trailing slash (redirects); __NEXT_DATA__ event objects; outdoors-adventure slug 404."
+   },
+   {
+    "name": "Meetup group events pages",
+    "url": "https://www.meetup.com/{group}/events/",
+    "status": "works",
+    "tip": "NEW: __NEXT_DATA__ lists upcoming events; event pages give venue + series text (e.g. 'Every week on Saturday'). Useful groups: beachbladers, palmbeachuwh, outdoor-adventures-socials-for-40, florida-trail-association-loxahatchee-chapter-pbcounty, sunsetyogaonthebeach, serenity-yoga-at-the-beach-withrachel, delraybeachdrumcircle, wildflower-free-wellness-events, next-level-yoga-community."
+   },
+   {
+    "name": "Green Cay Nature Center program calendar",
+    "url": "https://discover.pbc.gov/parks/GreenCay/Public.aspx",
+    "status": "works",
+    "tip": "curl; monthly recurring (feedings Thu/Sat, encounters Fri, ethnobotany Sat 11) + one-offs (Wildlife Celebration Dec 5)."
+   },
+   {
+    "name": "Daggerwing Nature Center program calendar",
+    "url": "https://discover.pbc.gov/parks/daggerwing/programcalendar.aspx",
+    "status": "works",
+    "tip": "curl; feedings Wed-Fri 2:45, Sat 1:00 + dated programs."
+   },
+   {
+    "name": "PBC Parks WebTrac activity search",
+    "url": "https://pbcparksregistration.co.palm-beach.fl.us/webtrac/web/search.html?Action=Start&SubAction=&module=AR&location={DWING|GRCAY|WBOYN|WDRPK|SCRP}&display=Listing&search=yes",
+    "status": "works",
+    "tip": "NEW: curl with cookie jar; gives exact program start/end times; do NOT add month filters (returns nothing)."
+   },
+   {
+    "name": "City of Boca WebTrac",
+    "url": "https://flbocaratonweb.myvscloud.com/webtrac/web/search.html",
+    "status": "fails",
+    "tip": "403 to curl and WebFetch client_error."
+   },
+   {
+    "name": "City of Boca Raton calendar day view",
+    "url": "https://www.myboca.us/calendar.aspx?view=list&year={yyyy}&month={m}&day={d}",
+    "status": "works",
+    "tip": "Gumbo Limbo: Nature Connections Sat/Sun, Island Treks Tue, After Hours Tours Dec 4, Ornaments Naturally Dec 5-6; EID pages give cost."
+   },
+   {
+    "name": "Sandoway Discovery Center upcoming events",
+    "url": "https://sandoway.org/your-visit/upcoming-events/",
+    "status": "works",
+    "tip": "Daily animal talks Tue-Sun 1/2/3 PM; beach cleanups only April/Sept."
+   },
+   {
+    "name": "Audubon Society of the Everglades calendar",
+    "url": "https://www.auduboneverglades.org/events/month/",
+    "status": "works",
+    "tip": "NEW: WebFetch only (curl 406); mostly WPB/Jupiter trips; Loxahatchee NWR birding Dec 5; trips registered via Eventbrite collection cc/field-trips-1623819."
+   },
+   {
+    "name": "BettorEdge printable schedules",
+    "url": "https://www.bettoredge.com/printable-schedule/{college-basketball|womens-college-basketball}/florida-atlantic-owls",
+    "status": "works",
+    "tip": "Men's slug is college-basketball (not mens-...); embedded JSON has UTC times and home flags."
+   },
+   {
+    "name": "fausports.com schedules",
+    "url": "https://fausports.com/sports/{sport}/schedule",
+    "status": "fails",
+    "tip": "403 curl and WebFetch client_error this run."
+   },
+   {
+    "name": "Lynn athletics schedules",
+    "url": "https://lynnfightingknights.com/sports/{mens-basketball|womens-basketball|womens-volleyball|womens-soccer}/schedule",
+    "status": "works",
+    "tip": "WebFetch; home doubleheader vs Tampa Dec 5 (2 & 4 PM); /calendar renders empty."
+   },
+   {
+    "name": "FAU Localist API",
+    "url": "https://calendar.fau.edu/api/2/events?start={date}&end={date_end}&pp=100",
+    "status": "works",
+    "tip": "No athletics/rec items Nov 25-Dec 6."
+   },
+   {
+    "name": "FHSAA / MaxPreps playoff brackets",
+    "url": "https://www.maxpreps.com/fl/football/playoffs/",
+    "status": "fails",
+    "tip": "MaxPreps 403; fhsaa.com football page is only a JS widget; no high school playoff games found."
+   },
+   {
+    "name": "PBC Golf / Osprey Point events",
+    "url": "https://www.pbcospreypointgolf.com/events",
+    "status": "empty",
+    "tip": "WebFetch: 'no upcoming events'; curl 403; month/2026-12 URL client_error."
+   },
+   {
+    "name": "Delray Beach Golf Club",
+    "url": "https://www.delraybeachgolfclub.com/",
+    "status": "empty",
+    "tip": "Closed for renovations until Feb 2027."
+   },
+   {
+    "name": "pickleballtournaments.com search",
+    "url": "https://pickleballtournaments.com/search?state=FL",
+    "status": "fails",
+    "tip": "JS search; no listings."
+   },
+   {
+    "name": "HappeningNext sports categories",
+    "url": "https://happeningnext.com/{city}/{sports|fitness|yoga|health-wellness}",
+    "status": "works",
+    "tip": "Only duplicates of Eventbrite/AllEvents (FAU games, Pickle Cup, Vikings party)."
+   },
+   {
+    "name": "PBC amphitheaters events list",
+    "url": "https://discover.pbc.gov/parks/amphitheaters/Lists/Events/AllItems.aspx",
+    "status": "empty",
+    "tip": "Nothing at Sunset Cove/Canyon Dec 1-6."
+   },
+   {
+    "name": "Coastal Star day list",
+    "url": "https://thecoastalstar.com/events/list/on/{date}",
+    "status": "empty",
+    "tip": "No outdoor/sports items in range."
+   },
+   {
+    "name": "Downtown Delray DDA calendar",
+    "url": "https://downtowndelraybeach.com/events/calendar",
+    "status": "empty",
+    "tip": "No runs/yoga/fitness Nov 25-Dec 6 (Full Moon Yoga was Nov 24)."
+   },
+   {
+    "name": "Boynton Beach city calendar",
+    "url": "https://boynton-beach.org/calendar.aspx?view=list&year=2026&month=12&CID=0",
+    "status": "empty",
+    "tip": "No sports/outdoor items Dec 1-6."
+   },
+   {
+    "name": "BocaRaton.com events",
+    "url": "https://bocaraton.com/events/",
+    "status": "works",
+    "tip": "Page content is stale (May) but lists Yoga in the Park with Leslie every Saturday 9 AM at Sanborn Square."
+   },
+   {
+    "name": "Runner's Edge Boca",
+    "url": "https://www.runnersedgeboca.com/",
+    "status": "empty",
+    "tip": "Store site; no group run schedule."
+   },
+   {
+    "name": "Saltwater Brewery events",
+    "url": "https://www.saltwaterbrewery.com/pages/delray-beach-brewery-events",
+    "status": "empty",
+    "tip": "No run club; Tuesday Club Night 6-9 PM for clubs, trivia Wed, bingo Thu."
+   },
+   {
+    "name": "lululemon store pages (Mizner/Town Center)",
+    "url": "https://shop.lululemon.com/stores/us/boca-raton/mizner-park",
+    "status": "fails",
+    "tip": "403."
+   },
+   {
+    "name": "Delray Marketplace events",
+    "url": "https://www.delraymarketplace.com/events",
+    "status": "fails",
+    "tip": "403/client_error."
+   },
+   {
+    "name": "Morikami events",
+    "url": "https://morikami.org/events/",
+    "status": "fails",
+    "tip": "404; event list pages redirect to single events; Stroll for Well-Being has no dates."
+   }
+  ],
+  "kids_family": [
+   {
+    "name": "Boca Raton Public Library LibCal AJAX list",
+    "url": "https://bocalibrary.libcal.com/ajax/calendar/list?c=-1&date={yyyy-mm-dd}&perpage=100&page=1&audience=&cats=&camps=&inc=0",
+    "status": "works",
+    "tip": "curl per day; filter calendar=='Youth Services' and online_event false; 25 kids/teen items Nov 25-Dec 6 (two branches duplicate storytimes)."
+   },
+   {
+    "name": "PBC Library BiblioCommons API",
+    "url": "https://gateway.bibliocommons.com/v2/libraries/pbclibrary/events?startDate={start}&endDate={end}&limit=500",
+    "status": "works",
+    "tip": "One call covers range; filter branchLocationId HAGEN (Delray), CANYON/WBOYNTON (Boynton), WBOCA/GLADESRD (Boca) and audiences Children/Teens/Babies/Toddlers/PreSchoolers; 21 items."
+   },
+   {
+    "name": "Boynton Beach City Library LibCal AJAX list",
+    "url": "https://bbflpl.libcal.com/ajax/calendar/list?c=-1&date={yyyy-mm-dd}&perpage=100&page=1&audience=&cats=&camps=&inc=0",
+    "status": "works",
+    "tip": "AJAX now returns data (was 0 last run); very sparse, several Dec kids programs CANCELLED; library closed Dec 5."
+   },
+   {
+    "name": "Boynton Beach City Library iCal feed",
+    "url": "https://bbflpl.libcal.com/ical_subscribe.php?src=p&cid=15277",
+    "status": "works",
+    "tip": "Same items as AJAX; DTSTART in UTC."
+   },
+   {
+    "name": "Delray Beach Public Library category pages",
+    "url": "https://www.delraylibrary.org/categories/{children|babies-toddlers|teens}/",
+    "status": "works",
+    "tip": "WebFetch gives titles by date; curl each /classes-programs/{slug}/ and read 'Date ... Time ...' block for times."
+   },
+   {
+    "name": "Delray Beach Public Library program pages",
+    "url": "https://www.delraylibrary.org/classes-programs/{slug}/",
+    "status": "works",
+    "tip": "curl ok this run; Books & Badges (Mon Nov 30), STEM Camp Dec 5, Young Singers recital Dec 5 2 PM."
+   },
+   {
+    "name": "City of Boca Raton calendar (day view)",
+    "url": "https://www.myboca.us/calendar.aspx?view=list&year={yyyy}&month={m}&day={d}",
+    "status": "works",
+    "tip": "Sugar Sand session classes, Explorium Science Squad/Make & Take, Gumbo Limbo programs, Holiday Street Parade Dec 2; Nov 25 day view empty; skipped multi-week registered classes."
+   },
+   {
+    "name": "City of Boca Raton event detail",
+    "url": "https://www.myboca.us/Calendar.aspx?EID={id}",
+    "status": "works",
+    "tip": "curl gives Cost line (Explorium $10/$12.50, Ornaments Naturally $20/$24, Pooh $12/$9)."
+   },
+   {
+    "name": "Daggerwing Nature Center program calendar",
+    "url": "https://discover.pbc.gov/parks/daggerwing/programcalendar.aspx",
+    "status": "works",
+    "tip": "curl; Dec 1 Mother Nature & Me, Dec 5 Sensational Snakes, feedings Wed-Fri 2:45 / Sat 1 PM."
+   },
+   {
+    "name": "Green Cay Nature Center program calendar",
+    "url": "https://discover.pbc.gov/parks/GreenCay/Public.aspx",
+    "status": "works",
+    "tip": "curl; Wildlife Celebration Dec 5 9-3 free; Night Stalkers Nov 25; feedings Thu/Sat, encounters Fri."
+   },
+   {
+    "name": "City of Boynton Beach calendar list",
+    "url": "https://boynton-beach.org/calendar.aspx?view=list&year={yyyy}&month={m}&CID=0",
+    "status": "works",
+    "tip": "Few kids items; Breakfast with Santa is Dec 12 (out of range)."
+   },
+   {
+    "name": "Boynton Beach holidays page",
+    "url": "https://boynton-beach.org/660/Holidays-in-Boynton-Beach",
+    "status": "works",
+    "tip": "2026 tree lighting Dec 5 4-10 PM (children's stage); boat parade Dec 11."
+   },
+   {
+    "name": "Macaroni KID Boynton-Delray events",
+    "url": "https://boyntonbeach.macaronikid.com/events",
+    "status": "works",
+    "tip": "curl; parse <script> JSON {'tz':..,'events':[...]} (title, from, start, place); detail pages are client-side (?yodelEventId= link fails via WebFetch); Delray library times shifted +5h."
+   },
+   {
+    "name": "Macaroni KID Boca Raton events",
+    "url": "https://bocaraton.macaronikid.com/events",
+    "status": "works",
+    "tip": "Same JSON embed as Boynton edition (prior run said empty/fails); Tower of Games Family Trivia Sundays, Neiman Santa breakfast."
+   },
+   {
+    "name": "Eventbrite keyword search (kids terms)",
+    "url": "https://www.eventbrite.com/d/fl--{city}/{santa|kids|baby|childbirth|breastfeeding|postpartum|...}/?start_date={start}&end_date={end}&page={n}",
+    "status": "works",
+    "tip": "Results regional; filter primary_venue.address.city; ~140 local items, ~12 kid-relevant."
+   },
+   {
+    "name": "Eventbrite organizer pages",
+    "url": "https://www.eventbrite.com/o/{slug-id}",
+    "status": "works",
+    "tip": "curl; regex url/start_date/is_online_event pairs. Boca Regional maternity program (25536228019) lists all childbirth/breastfeeding/postpartum classes; Bluebird Kids events mostly outside area."
+   },
+   {
+    "name": "AllEvents category/date pages",
+    "url": "https://allevents.in/{boca-raton|delray-beach|boynton-beach}/{kids|kids--this-week|kids--december|christmas|holiday|workshops}",
+    "status": "works",
+    "tip": "curl; ld+json lists + crawl 220 linked event pages; found Chanukah events, Elsa tea party, Night in Bethlehem, Nurtured Nest."
+   },
+   {
+    "name": "HappeningNext kids/christmas pages",
+    "url": "https://happeningnext.com/{boca+raton|delray+beach|boynton+beach}/{kids|christmas}",
+    "status": "works",
+    "tip": "ld+json; /family 404. Mostly AllEvents dupes; Nurtured Nest keepsake workshop unique."
+   },
+   {
+    "name": "Town Center at Boca Raton holiday page (Simon)",
+    "url": "https://www.simon.com/mall/town-center-at-boca-raton/stores/management-office/stream/its-a-holiday-thing-at-town-center-at-boca-raton-6291081",
+    "status": "works",
+    "tip": "Caring Santa Dec 6 9-10:30 AM; Strolling Santa magician Dec 5/12/19 12-4."
+   },
+   {
+    "name": "Delray 100 Ft Christmas Tree page",
+    "url": "https://www.delraybeachfl.gov/our-city/things-to-do/100-ft-christmas-tree",
+    "status": "works",
+    "tip": "2026 lighting Dec 1 6-9 PM; Holiday Village $6 rides/$20 wristband; Santa's House schedule TBD."
+   },
+   {
+    "name": "Downtown Delray (DDA) calendar",
+    "url": "https://downtowndelraybeach.com/events/calendar",
+    "status": "works",
+    "tip": "WebFetch; Chanukah Festival Dec 6 6-9 PM; Sandoway Santa breakfast Nov 29."
+   },
+   {
+    "name": "Sandoway Discovery Center events",
+    "url": "https://sandoway.org/your-visit/upcoming-events/",
+    "status": "works",
+    "tip": "Only recurring Tue-Sun 1/2/3 PM feedings and encounter; no dated holiday events."
+   },
+   {
+    "name": "Delray Beach Children's Garden schedule",
+    "url": "https://www.delraybeachchildrensgarden.org/schedule",
+    "status": "works",
+    "tip": "NEW: Open Garden Play Tue/Thu/Fri/Sat with prices; booking links show 2026; address 137 SW 2nd Ave."
+   },
+   {
+    "name": "The Little Gym West Boca events",
+    "url": "https://www.thelittlegym.com/florida-west-boca/events-more",
+    "status": "works",
+    "tip": "NEW: Read, Move & Groove drop-in Dec 4 $10; Parents' Survival Night Dec 19."
+   },
+   {
+    "name": "The Little Gym Boca-Delray events",
+    "url": "https://www.thelittlegym.com/florida-boca-delray/events-more/",
+    "status": "empty",
+    "tip": "NEW: nothing Nov 25-Dec 6; Holiday Pajama Party Dec 19."
+   },
+   {
+    "name": "Miami on the Cheap Chanukah roundup",
+    "url": "https://miamionthecheap.com/event/chanukah-and-hanukkah-celebrations-in-palm-beach-county/",
+    "status": "works",
+    "tip": "NEW: 2026 list; B'nai Torah Fire & Ice, Chabad Boynton Winter Wonderland, Canyon Lights Up (all Dec 6)."
+   },
+   {
+    "name": "Mommy Poppins South Florida holiday kids list",
+    "url": "https://mommypoppins.com/miami-south-florida-kids/christmashanukkah/holiday-events-for-kids-christmas-activities-miami-south-florida",
+    "status": "works",
+    "tip": "Updated Nov 22 2026; only Delray tree/Chanukah fest in range; event pages give venue/time."
+   },
+   {
+    "name": "Mommy Poppins Palm Beach County calendar",
+    "url": "https://mommypoppins.com/events/2459/palm-beach-county/all/tag/all/age/{yyyy-mm-dd}/all/all/type/0/deals/0/near/all",
+    "status": "empty",
+    "tip": "Date in segment after age/; no Boca/Delray/Boynton items."
+   },
+   {
+    "name": "Mommy Poppins Neiman Breakfast with Santa page",
+    "url": "https://mommypoppins.com/miami-south-florida-kids/event/events/breakfast-with-santa-at-neiman-marcus-in-boca-raton",
+    "status": "fails",
+    "tip": "Stale year (Dec 7, past); use Eventbrite listing for 2026."
+   },
+   {
+    "name": "Visit Palm Beaches holiday press release 2026",
+    "url": "https://www.thepalmbeaches.com/press-releases/holiday-happenings-in-the-palm-beaches-2026",
+    "status": "works",
+    "tip": "Overview: Boynton tree lighting, Caring Santa, Boca parade."
+   },
+   {
+    "name": "Boca Post Delray December lineup",
+    "url": "https://bocapost.com/delray-beach-news/delray-beach-sets-full-december-lineup-with-tree-lighting-parade-and-menorah-festival",
+    "status": "fails",
+    "tip": "2025 article; not current."
+   },
+   {
+    "name": "Schoolhouse Children's Museum events/classes",
+    "url": "https://www.schoolhousemuseum.org/visit/weekly-classes.html",
+    "status": "empty",
+    "tip": "Class schedule is in images; only Imagine That! Nov 25 via Macaroni Kid."
+   },
+   {
+    "name": "Boca Raton Museum of Art events",
+    "url": "https://bocamuseum.org/visit/events",
+    "status": "empty",
+    "tip": "No family programs Nov 25-Dec 6 2026."
+   },
+   {
+    "name": "Morikami upcoming events",
+    "url": "https://morikami.org/upcoming-events/",
+    "status": "empty",
+    "tip": "Only adult classes; first Family Fun Day Dec 12."
+   },
+   {
+    "name": "Levis JCC events",
+    "url": "https://levisjcc.org/events",
+    "status": "empty",
+    "tip": "No kids/Hanukkah items in range."
+   },
+   {
+    "name": "The Coastal Star day list (kids filter)",
+    "url": "https://thecoastalstar.com/events/list/on/{yyyy-mm-dd}",
+    "status": "empty",
+    "tip": "No new kids items in the three cities."
+   },
+   {
+    "name": "Patch Boca calendar",
+    "url": "https://patch.com/florida/boca-raton/calendar",
+    "status": "empty",
+    "tip": "Only Toastmasters teen session Nov 25 (dupe)."
+   },
+   {
+    "name": "YMCA of South Palm Beach County Santa page",
+    "url": "https://www.ymcaspbc.org/santa",
+    "status": "fails",
+    "tip": "Stale 2020 content."
+   },
+   {
+    "name": "Cozymeal kids/family cooking classes",
+    "url": "https://www.cozymeal.com/cooking-class/{id}/{slug}",
+    "status": "empty",
+    "tip": "NEW: Boca family cookie classes only Dec 20/24; location hidden until booking."
+   },
+   {
+    "name": "Sky Zone Boynton Beach programs",
+    "url": "https://www.skyzone.com/boyntonbeach/programs/sensory-hours/",
+    "status": "fails",
+    "tip": "NEW: 404; park at 729 N Congress Ave; no program schedule found."
+   },
+   {
+    "name": "Slimeology Sawyer schedule",
+    "url": "https://www.hisawyer.com/slimeology/schedules",
+    "status": "fails",
+    "tip": "NEW: client_error via WebFetch."
+   },
+   {
+    "name": "Kids Out and About",
+    "url": "https://kidsoutandabout.com/",
+    "status": "untried",
+    "tip": "No Palm Beach region page found via search."
+   },
+   {
+    "name": "PB Parenting magazine (issuu)",
+    "url": "https://issuu.com/felonicedesigns/docs/pbp_{mmyy}",
+    "status": "untried",
+    "tip": "Monthly issue PDFs on issuu; no 2026 December issue found."
+   },
+   {
+    "name": "EveryParent PBC things-to-do",
+    "url": "https://www.everyparentpbc.org/things-to-do-detail/{slug}",
+    "status": "empty",
+    "tip": "Search hits are older years; no listing page."
+   }
+  ],
+  "facebook": [
+   {
+    "name": "Facebook Events search (Claude in Chrome, signed in)",
+    "url": "https://www.facebook.com/events/search/?q={city}",
+    "status": "works",
+    "tip": "Run fb_grab.js, then get_page_text; times show in the browser's zone (CST when Justin is in Chicago); fb_parse.py converts to Eastern."
+   }
+  ]
+ }
+}
